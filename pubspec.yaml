@@ -47,6 +47,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  google_fonts:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -64,6 +65,7 @@ flutter:
     - assets/images/Baby_bloom.png
     - assets/images/On-board-pic1.png
     - assets/images/On-board-pic2.png
+    - lib/onboarding_screen2.dart
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

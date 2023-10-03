@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/colors.dart';
-import 'package:fyp/onboarding_screen2.dart';
+import 'package:fyp/onboarding_screen1.dart';
 
-class Onboarding_Screen1 extends StatelessWidget {
+class Onboarding_Screen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,20 +10,19 @@ class Onboarding_Screen1 extends StatelessWidget {
         padding: const EdgeInsets.all(15),
         width: double.infinity,
         height: double.infinity,
-        color: Onboardcolor1,
+        color: Onboardcolor2,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Image(
-                image: AssetImage('assets/images/On-board-pic1.png'),
-                width: 200,
-                height: 155),
-
+                image: AssetImage('assets/images/On-board-pic2.png'),
+                width: 300,
+                height: 130),
             // const SizedBox(
-            //   height: 100,
+            //   height: 1,
             // ),
             Text(
-              'Find Trusted Doctors',
+              'In app consultation',
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontSize: 18,
@@ -31,7 +30,7 @@ class Onboarding_Screen1 extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                   height: 1.2,
                   letterSpacing: 0.5,
-                  color: Colors.black.withOpacity(0.75999)),
+                  color: Colors.white),
             ),
             SizedBox(height: 10),
             // Padding(padding: EdgeInsets.only(top: 5)),
@@ -45,16 +44,17 @@ class Onboarding_Screen1 extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   height: 1.2,
                   letterSpacing: -0.30,
-                  color: Colors.black.withOpacity(0.75999)),
+                  color: Colors.white),
             ),
             SizedBox(height: 70),
 
             ElevatedButton(
+                style: ButtonStyle(),
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Onboarding_Screen2(),
+                        builder: (context) => Onboarding_Screen1(),
                       ));
                 },
                 child: Text('Skip'))
