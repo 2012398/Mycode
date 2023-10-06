@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/colors.dart';
 import 'package:fyp/onboarding_screen2.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen1 extends StatelessWidget {
   @override
@@ -13,6 +14,7 @@ class Onboarding_Screen1 extends StatelessWidget {
         color: Onboardcolor1,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image(
                 image: AssetImage('assets/images/On-board-pic1.png'),
@@ -25,30 +27,27 @@ class Onboarding_Screen1 extends StatelessWidget {
             Text(
               'Find Trusted Doctors',
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: GoogleFonts.rubik(
                   fontSize: 30,
-                  fontFamily: 'Rubik',
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   height: 1.2,
-                  letterSpacing: 0.5,
+                  letterSpacing: -0.30,
                   color: Colors.black.withOpacity(0.75999)),
             ),
             SizedBox(height: 10),
             // Padding(padding: EdgeInsets.only(top: 5)),
 
             Text(
-              'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontSize: 24,
-                  fontFamily: 'Rubik',
-                  fontWeight: FontWeight.w400,
-                  height: 1.2,
-                  letterSpacing: -0.30,
-                  color: Colors.black.withOpacity(0.75999)),
-            ),
+                'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.rubik(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                    height: 1.2,
+                    letterSpacing: -0.30,
+                    color: Color(0xE5677294))),
             SizedBox(height: 70),
-            ElevatedButtonExample(),
+            ElevatedButton1(),
           ],
         ),
       ),
@@ -56,20 +55,20 @@ class Onboarding_Screen1 extends StatelessWidget {
   }
 }
 
-class ElevatedButtonExample extends StatefulWidget {
-  const ElevatedButtonExample({super.key});
+class ElevatedButton1 extends StatefulWidget {
+  const ElevatedButton1({super.key});
 
   @override
-  State<ElevatedButtonExample> createState() => _ElevatedButtonExampleState();
+  State<ElevatedButton1> createState() => _ElevatedButton1();
 }
 
-class _ElevatedButtonExampleState extends State<ElevatedButtonExample> {
+class _ElevatedButton1 extends State<ElevatedButton1> {
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: [
           ElevatedButton(
             style: bluestyle,
             onPressed: () {
@@ -92,14 +91,13 @@ class _ElevatedButtonExampleState extends State<ElevatedButtonExample> {
                     builder: (context) => Onboarding_Screen2(),
                   ));
             },
-            child: const Text(
-              "skip",
-              style: TextStyle(
+            child: Text("skip",
+                style: GoogleFonts.rubik(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,
                   height: 0.12,
-                  letterSpacing: -0.30),
-            ),
+                  letterSpacing: -0.30,
+                )),
           )
         ],
       ),
@@ -108,13 +106,9 @@ class _ElevatedButtonExampleState extends State<ElevatedButtonExample> {
 }
 
 final ButtonStyle bluestyle = ElevatedButton.styleFrom(
-  padding: (EdgeInsets.fromLTRB(100, 20, 110, 20)),
-  textStyle: const TextStyle(
-    fontFamily: 'Rubik',
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    height: 0,
-  ),
+  padding: (EdgeInsets.fromLTRB(100, 20, 100, 20)),
+  textStyle:
+      GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w600, height: 0),
   backgroundColor: Color(0xff374366),
   foregroundColor: Colors.white,
 );
