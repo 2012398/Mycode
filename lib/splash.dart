@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fyp/onboarding_screen1.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -52,16 +53,11 @@ class _SplashScreenState extends State<SplashScreen> {
                 const SizedBox(
                   height: 15,
                 ),
-                Text(
-                  "BabyBloom",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.w900,
-                      height: 0,
-                      letterSpacing: -0.30,
-                      color: Colors.black.withOpacity(0.75999)),
-                ),
+                Text("BabyBloom",
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 30,
+                        color: Colors.black.withOpacity(0.7599999904632568))),
               ],
             ),
           ],
