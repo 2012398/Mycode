@@ -65,7 +65,7 @@ flutter:
     - assets/images/Baby_bloom.png
     - assets/images/On-board-pic1.png
     - assets/images/On-board-pic2.png
-    - assets/images/Medicine.png
+
     - lib/onboarding_screen2.dart
 
   #   - images/a_dot_ham.jpeg
