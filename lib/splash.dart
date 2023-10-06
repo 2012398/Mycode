@@ -46,8 +46,8 @@ class _SplashScreenState extends State<SplashScreen> {
               children: [
                 Image.asset(
                   'assets/images/Baby_bloom.png',
-                  width: 85,
-                  height: 85,
+                  width: 150,
+                  height: 150,
                 ),
                 const SizedBox(
                   height: 15,
@@ -55,7 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 Text(
                   "BabyBloom",
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 30,
                       fontFamily: 'Montserrat',
                       fontWeight: FontWeight.w900,
                       height: 0,

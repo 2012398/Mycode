@@ -16,8 +16,8 @@ class Onboarding_Screen2 extends StatelessWidget {
           children: [
             Image(
                 image: AssetImage('assets/images/On-board-pic2.png'),
-                width: 300,
-                height: 130),
+                width: 500,
+                height: 300),
             // const SizedBox(
             //   height: 1,
             // ),
@@ -25,7 +25,7 @@ class Onboarding_Screen2 extends StatelessWidget {
               'In app consultation',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 30,
                   fontFamily: 'Rubik',
                   fontWeight: FontWeight.w700,
                   height: 1.2,
@@ -39,7 +39,7 @@ class Onboarding_Screen2 extends StatelessWidget {
               'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
               textAlign: TextAlign.center,
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 24,
                   fontFamily: 'Rubik',
                   fontWeight: FontWeight.w400,
                   height: 1.2,
@@ -48,16 +48,32 @@ class Onboarding_Screen2 extends StatelessWidget {
             ),
             SizedBox(height: 70),
 
-            ElevatedButton(
-                style: ButtonStyle(),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Onboarding_Screen1(),
-                      ));
-                },
-                child: Text('Skip'))
+            TextButton(
+              style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all(Colors.white)),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Onboarding_Screen1(),
+                    ));
+              },
+              child: const Text(
+                "skip",
+                style: TextStyle(fontSize: 30),
+              ),
+            )
+
+            // ElevatedButton(
+            //     style: ButtonStyle(),
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => Onboarding_Screen1(),
+            //           ));
+            //     },
+            //     child: Text('Skip'))
           ],
         ),
       ),
