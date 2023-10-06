@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/colors.dart';
 import 'package:fyp/menu_screen.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen2 extends StatelessWidget {
