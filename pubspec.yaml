@@ -65,6 +65,14 @@ flutter:
     - assets/images/Baby_bloom.png
     - assets/images/On-board-pic1.png
     - assets/images/On-board-pic2.png
+    - assets/images/Nutrition.jpg
+    - assets/images/Bath.jpg
+    - assets/images/Feeders.jpg
+    - assets/images/Nipples.jpg
+    - assets/images/Skincare.jpg
+    - assets/images/Toys.jpg
+    - assets/images/Wipes.jpg
+    - assets/images/Medicine.png
 
     - lib/onboarding_screen2.dart
 

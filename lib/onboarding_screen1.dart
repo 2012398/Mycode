@@ -17,7 +17,7 @@ class Onboarding_Screen1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image(
-                image: AssetImage('assets/images/On-board-pic1.png'),
+                image: AssetImage('images/On-board-pic1.png'),
                 width: 400,
                 height: 400),
 
@@ -28,7 +28,7 @@ class Onboarding_Screen1 extends StatelessWidget {
               'Find Trusted Doctors',
               textAlign: TextAlign.center,
               style: GoogleFonts.rubik(
-                  fontSize: 30,
+                  fontSize: 25,
                   fontWeight: FontWeight.w500,
                   height: 1.2,
                   letterSpacing: -0.30,
@@ -41,12 +41,12 @@ class Onboarding_Screen1 extends StatelessWidget {
                 'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.rubik(
-                    fontSize: 24,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                     height: 1.2,
                     letterSpacing: -0.30,
                     color: Color(0xE5677294))),
-            SizedBox(height: 70),
+            SizedBox(height: 20),
             ElevatedButton1(),
           ],
         ),
@@ -108,7 +108,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
 final ButtonStyle bluestyle = ElevatedButton.styleFrom(
   padding: (EdgeInsets.fromLTRB(100, 20, 100, 20)),
   textStyle:
-      GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w600, height: 0),
+      GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w400, height: 0),
   backgroundColor: Color(0xff374366),
   foregroundColor: Colors.white,
 );

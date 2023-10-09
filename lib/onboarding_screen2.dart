@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/colors.dart';
-import 'package:fyp/menu_screen.dart';
+import 'package:fyp/menu_screen1.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: const EdgeInsets.all(15),
         width: double.infinity,
@@ -16,7 +18,7 @@ class Onboarding_Screen2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Image(
-                image: AssetImage('assets/images/On-board-pic2.png'),
+                image: AssetImage('images/On-board-pic2.png'),
                 width: 500,
                 height: 300),
             // const SizedBox(
@@ -26,7 +28,7 @@ class Onboarding_Screen2 extends StatelessWidget {
               'In app consultation',
               textAlign: TextAlign.center,
               style: GoogleFonts.rubik(
-                  fontSize: 30,
+                  fontSize: 25,
                   fontWeight: FontWeight.w500,
                   height: 1.2,
                   letterSpacing: -0.30,
@@ -39,13 +41,13 @@ class Onboarding_Screen2 extends StatelessWidget {
               'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
               textAlign: TextAlign.center,
               style: GoogleFonts.rubik(
-                  fontSize: 24,
+                  fontSize: 15,
                   fontWeight: FontWeight.w400,
                   height: 1.2,
                   letterSpacing: -0.30,
                   color: Color(0xE5677294)),
             ),
-            SizedBox(height: 70),
+            SizedBox(height: 20),
             ElevatedButton1(),
           ],
         ),
@@ -74,7 +76,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MenuScreen(),
+                    builder: (context) => MenuScreen1(),
                   ));
             },
             child: const Text('Get Started'),
