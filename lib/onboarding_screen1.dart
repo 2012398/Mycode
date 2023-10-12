@@ -4,6 +4,7 @@ import 'package:fyp/onboarding_screen2.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen1 extends StatelessWidget {
+  const Onboarding_Screen1({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +17,7 @@ class Onboarding_Screen1 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image(
+            const Image(
                 image: AssetImage('images/On-board-pic1.png'),
                 width: 400,
                 height: 400),
@@ -34,7 +35,7 @@ class Onboarding_Screen1 extends StatelessWidget {
                   letterSpacing: -0.30,
                   color: Colors.black.withOpacity(0.75999)),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Padding(padding: EdgeInsets.only(top: 5)),
 
             Text(
@@ -45,9 +46,9 @@ class Onboarding_Screen1 extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     height: 1.2,
                     letterSpacing: -0.30,
-                    color: Color(0xE5677294))),
-            SizedBox(height: 20),
-            ElevatedButton1(),
+                    color: const Color(0xE5677294))),
+            const SizedBox(height: 20),
+            const ElevatedButton1(),
           ],
         ),
       ),
@@ -75,7 +76,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen2(),
+                    builder: (context) => const Onboarding_Screen2(),
                   ));
             },
             child: const Text('Get Started'),
@@ -83,12 +84,13 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
           const SizedBox(height: 10),
           TextButton(
             style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(Color(0xFF677294))),
+                foregroundColor:
+                    MaterialStateProperty.all(const Color(0xFF677294))),
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen2(),
+                    builder: (context) => const Onboarding_Screen2(),
                   ));
             },
             child: Text("skip",
@@ -106,9 +108,9 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
 }
 
 final ButtonStyle bluestyle = ElevatedButton.styleFrom(
-  padding: (EdgeInsets.fromLTRB(100, 20, 100, 20)),
+  padding: (const EdgeInsets.fromLTRB(100, 20, 100, 20)),
   textStyle:
       GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w400, height: 0),
-  backgroundColor: Color(0xff374366),
+  backgroundColor: const Color(0xff374366),
   foregroundColor: Colors.white,
 );

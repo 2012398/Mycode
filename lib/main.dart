@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:fyp/splash.dart';
+import 'package:fyp/menu_screen1.dart';
 
 void main() {
   runApp(FypApp());
@@ -13,7 +12,7 @@ class FypApp extends StatelessWidget {
       title: "Babybloom",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: SplashScreen(),
+      home: MenuScreen1(),
     );
   }
 }
