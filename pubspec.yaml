@@ -73,6 +73,7 @@ flutter:
     - assets/images/Toys.jpg
     - assets/images/Wipes.jpg
     - assets/images/Medicine.png
+    - assets/images/Nabeel.png
 
     - lib/onboarding_screen2.dart
 

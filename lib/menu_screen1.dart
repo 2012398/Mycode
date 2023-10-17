@@ -22,16 +22,17 @@ class MenuScreen1 extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Color(0xff374366),
-        actions: [
-          const Padding(
+        backgroundColor: const Color(0xff374366),
+        actions: const [
+          Padding(
             padding: EdgeInsets.all(10),
-            child: Icon(Icons.shopping_cart_checkout_rounded),
+            child: Icon(
+              Icons.shopping_cart_checkout_rounded,
+            ),
           ),
         ],
       ),
       drawer: MainDrawer(),
-      drawerEnableOpenDragGesture: true,
       body: Center(
         child: Column(
           children: [
@@ -60,14 +61,14 @@ class MenuScreen1 extends StatelessWidget {
                           width: 130,
                           height: 130,
                           decoration: BoxDecoration(
-                              boxShadow: [
-                                const BoxShadow(
+                              boxShadow: const [
+                                BoxShadow(
                                     offset: Offset(0, 17),
                                     blurRadius: 17,
                                     spreadRadius: -25)
                               ],
                               borderRadius: BorderRadius.circular(15),
-                              color: Colors.greenAccent,
+                              color: Colors.white70,
                               image: DecorationImage(
                                   image: AssetImage(_photos[index].image),
                                   fit: BoxFit.cover)),
@@ -83,7 +84,7 @@ class MenuScreen1 extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             letterSpacing: -0.30,
                             fontSize: 14),
-                      )
+                      ),
                     ],
                   );
                 },
