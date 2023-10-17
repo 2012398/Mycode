@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:fyp/menu_screen1.dart';
 
 void main() {
-  runApp(FypApp());
+  runApp(const FypApp());
 }
 
 class FypApp extends StatelessWidget {
+  const FypApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
