@@ -3,7 +3,14 @@ import 'package:fyp/data.dart';
 import 'package:fyp/main_drawer.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class MenuScreen1 extends StatelessWidget {
+class MenuScreen1 extends StatefulWidget {
+  MenuScreen1({super.key});
+
+  @override
+  State<MenuScreen1> createState() => _MenuScreen1State();
+}
+
+class _MenuScreen1State extends State<MenuScreen1> {
   final List _photos = [
     Data(image: "images/Nutrition.jpg", text: "Nutritions\n & Supplements"),
     Data(image: "images/Medicine.png", text: "Medicine"),
@@ -14,8 +21,6 @@ class MenuScreen1 extends StatelessWidget {
     Data(image: "images/Bath.jpg", text: "Bath accessories"),
     Data(image: "images/Nipples.jpg", text: "Nipple\n & Pacifiers")
   ];
-
-  MenuScreen1({super.key});
 
   @override
   Widget build(BuildContext context) {

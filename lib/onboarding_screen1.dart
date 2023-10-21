@@ -90,10 +90,11 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
                     MaterialStateProperty.all(const Color(0xFF677294))),
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Onboarding_Screen2(),
-                  ));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Onboarding_Screen2(),
+                ),
+              );
             },
             child: Text("skip",
                 style: GoogleFonts.rubik(
