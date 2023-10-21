@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "447142790265",
+    "project_id": "fyp-babybloom",
+    "storage_bucket": "fyp-babybloom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447142790265:android:3c88cd3c21fb9e114b40a8",
+        "android_client_info": {
+          "package_name": "com.example.fyp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_b7vrW6LEgxD7gVb0jbwIOiKopTVdNZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
