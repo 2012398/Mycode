@@ -1,10 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp/menu_screen1.dart';
+
 import 'package:fyp/signin_screen.dart';
 import 'package:fyp/splash.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const FypApp());
 }
 
@@ -17,7 +22,7 @@ class FypApp extends StatelessWidget {
       title: "Babybloom",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Signin(),
+      home: const SplashScreen(),
     );
   }
 }
