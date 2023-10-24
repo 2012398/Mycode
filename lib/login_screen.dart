@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp/menu_screen1.dart';
+import 'package:fyp/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -30,10 +32,10 @@ class LoginScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Text(
-              "We're Delighted to Have You \nHere at Baby Bloom!",
+              "Hello, BabyBloomer!",
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
-                  fontSize: 24, fontWeight: FontWeight.w600),
+                  fontSize: 24, fontWeight: FontWeight.w500),
             ),
           ),
           const Padding(
@@ -97,7 +99,7 @@ class _FormFieldsState extends State<FormFields> {
                   if (value == null || value.isEmpty) {
                     return "Please enter your email.";
                   }
-                  if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+                  if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$")
                       .hasMatch(value)) {
                     return "Email not in the correct format.";
                   }
@@ -123,7 +125,15 @@ class _FormFieldsState extends State<FormFields> {
                   if (value == null || value.isEmpty) {
                     return "Please enter your password.";
                   }
+                  if (RegExp(
+                          r"^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$")
+                      .hasMatch(value)) {
+                    return "Invalid password";
+                  }
                   return null;
+                },
+                onChanged: (value) {
+                  validatePass(value);
                 },
               ),
               // if (_errorMessage.isNotEmpty)
@@ -138,10 +148,12 @@ class _FormFieldsState extends State<FormFields> {
           ),
         ),
         const SizedBox(
-          height: 50,
+          height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 50, top: 10),
+          padding: const EdgeInsets.only(
+            bottom: 10,
+          ),
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.elliptical(40, 40)),
             child: ElevatedButton(
@@ -155,6 +167,33 @@ class _FormFieldsState extends State<FormFields> {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "Don't have an account? ",
+                  style: GoogleFonts.rubik(color: Colors.black),
+                ),
+                TextSpan(
+                  text: "Sign Up",
+                  style: GoogleFonts.rubik(
+                      color: Color(0xff374366), fontWeight: FontWeight.w500),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupScreen(),
+                        ),
+                      );
+                    },
+                )
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
@@ -181,12 +220,15 @@ class _FormFieldsState extends State<FormFields> {
   void initState() {
     super.initState();
     emailController.addListener(_printLatestValue);
+    passwordController.addListener(_printLatestValue);
   }
 
   void _printLatestValue() {
     final text = emailController.text;
+    final pass = passwordController.text;
 
     print('Second text field: $text (${text.characters.length})');
+    print('Second text field: $pass (${pass.characters.length})');
   }
 
   void validateEmail(String val) {
@@ -194,9 +236,27 @@ class _FormFieldsState extends State<FormFields> {
       setState(() {
         _errorMessage = "Email can not be empty";
       });
-    } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(val)) {
+    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(val)) {
       setState(() {
         _errorMessage = "Invalid Email Address";
+      });
+    } else {
+      setState(() {
+        _errorMessage = "";
+      });
+    }
+  }
+
+  void validatePass(String val) {
+    if (val.isEmpty) {
+      setState(() {
+        _errorMessage = "Password is invalid";
+      });
+    } else if (RegExp(
+            r"^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$")
+        .hasMatch(val)) {
+      setState(() {
+        _errorMessage = "Pass must contain atleast one letterh of six";
       });
     } else {
       setState(() {
