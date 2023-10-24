@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp/menu_screen1.dart';
+import 'package:fyp/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -8,7 +10,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,18 +34,18 @@ class LoginScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Text(
-              "We're Delighted to Have You \nHere at Baby Bloom!",
+              "Hello, BabyBloomer!",
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
-                  fontSize: 24, fontWeight: FontWeight.w600),
+                  fontSize: 24, fontWeight: FontWeight.w500),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.only(
+          Padding(
+            padding: const EdgeInsets.only(
               left: 30,
               right: 30,
             ),
-            child: FormFields(),
+            child: FormFields(scaffoldKey: _scaffoldKey),
           )
         ],
       ),
@@ -50,7 +54,9 @@ class LoginScreen extends StatelessWidget {
 }
 
 class FormFields extends StatefulWidget {
-  const FormFields({super.key});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const FormFields({Key? key, required this.scaffoldKey}) : super(key: key);
 
   @override
   State<FormFields> createState() => _FormFieldsState();
@@ -97,7 +103,7 @@ class _FormFieldsState extends State<FormFields> {
                   if (value == null || value.isEmpty) {
                     return "Please enter your email.";
                   }
-                  if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+                  if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$")
                       .hasMatch(value)) {
                     return "Email not in the correct format.";
                   }
@@ -123,10 +129,37 @@ class _FormFieldsState extends State<FormFields> {
                   if (value == null || value.isEmpty) {
                     return "Please enter your password.";
                   }
+                  if (value.length < 6) {
+                    return "Invalid password";
+                  }
                   return null;
                 },
+                onChanged: (value) {
+                  validatePass(value);
+                },
               ),
-              // if (_errorMessage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Forgot password?",
+                            style: GoogleFonts.rubik(
+                                color: const Color(0xff374366),
+                                fontWeight: FontWeight.w500),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = showForgotPassBottomSheet,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
@@ -138,10 +171,12 @@ class _FormFieldsState extends State<FormFields> {
           ),
         ),
         const SizedBox(
-          height: 50,
+          height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 50, top: 10),
+          padding: const EdgeInsets.only(
+            bottom: 10,
+          ),
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.elliptical(40, 40)),
             child: ElevatedButton(
@@ -155,7 +190,76 @@ class _FormFieldsState extends State<FormFields> {
             ),
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: "Don't have an account? ",
+                  style: GoogleFonts.rubik(color: Colors.black),
+                ),
+                TextSpan(
+                  text: "Sign Up",
+                  style: GoogleFonts.rubik(
+                      color: const Color(0xff374366),
+                      fontWeight: FontWeight.w500),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignupScreen(),
+                        ),
+                      );
+                    },
+                )
+              ],
+            ),
+          ),
+        )
       ],
+    );
+  }
+
+  void showForgotPassBottomSheet() {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true, // Make the bottom sheet full-screen
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: Stack(
+            children: [
+              // Background overlay
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              // Content of the bottom sheet
+              Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.elliptical(40, 40),
+                    topRight: Radius.elliptical(40, 40),
+                  ),
+                  color: Colors.white,
+                ),
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Column(
+                  children: [Container()],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -168,7 +272,7 @@ class _FormFieldsState extends State<FormFields> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MenuScreen1()),
+        MaterialPageRoute(builder: (context) => const MenuScreen1()),
       );
     } on FirebaseAuthException {
       setState(() {
@@ -181,12 +285,15 @@ class _FormFieldsState extends State<FormFields> {
   void initState() {
     super.initState();
     emailController.addListener(_printLatestValue);
+    passwordController.addListener(_printLatestValue);
   }
 
   void _printLatestValue() {
     final text = emailController.text;
+    final pass = passwordController.text;
 
     print('Second text field: $text (${text.characters.length})');
+    print('Second text field: $pass (${pass.characters.length})');
   }
 
   void validateEmail(String val) {
@@ -194,9 +301,25 @@ class _FormFieldsState extends State<FormFields> {
       setState(() {
         _errorMessage = "Email can not be empty";
       });
-    } else if (!RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(val)) {
+    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(val)) {
       setState(() {
         _errorMessage = "Invalid Email Address";
+      });
+    } else {
+      setState(() {
+        _errorMessage = "";
+      });
+    }
+  }
+
+  void validatePass(String val) {
+    if (val.isEmpty) {
+      setState(() {
+        _errorMessage = "Password is invalid";
+      });
+    } else if (val.length < 6) {
+      setState(() {
+        _errorMessage = "Password must contain atleast six characters";
       });
     } else {
       setState(() {
