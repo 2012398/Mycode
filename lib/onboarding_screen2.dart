@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/colors.dart';
+import 'package:fyp/login_screen.dart';
 import 'package:fyp/menu_screen1.dart';
-import 'package:fyp/signin_screen.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -78,7 +78,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Signin(),
+                    builder: (context) => LoginScreen(),
                   ));
             },
             child: const Text('Get Started'),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/colors.dart';
+import 'package:fyp/login_screen.dart';
 import 'package:fyp/onboarding_screen2.dart';
-import 'package:fyp/signin_screen.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen1 extends StatelessWidget {
@@ -78,7 +79,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const Signin(),
+                    builder: (context) => LoginScreen(),
                   ));
             },
             child: const Text('Get Started'),
