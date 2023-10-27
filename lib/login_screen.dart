@@ -2,61 +2,73 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp/menu_screen1.dart';
+import 'package:fyp/onboarding_screen1.dart';
 import 'package:fyp/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+void main() => runApp(
+      MaterialApp(
+        home: Scaffold(
+          body: LoginScreen(),
+        ),
+      ),
+    );
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: _scaffoldKey,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.blue.shade200,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.elliptical(40, 40),
-                bottomRight: Radius.elliptical(40, 40),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              height: 200,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade200,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.elliptical(40, 40),
+                  bottomRight: Radius.elliptical(40, 40),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Image.asset("assets/images/welcome.png"),
               ),
             ),
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Image.asset("images/welcome.png"),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 10,
+                right: 10,
+                top: 30,
+                bottom: 50,
+              ),
+              child: Text(
+                "Hello, BabyBloomer!",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.montserrat(
+                    fontSize: 24, fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            child: Text(
-              "Hello, BabyBloomer!",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.montserrat(
-                  fontSize: 24, fontWeight: FontWeight.w500),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 30,
-              right: 30,
-            ),
-            child: FormFields(scaffoldKey: _scaffoldKey),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              child: FormFields(),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
 class FormFields extends StatefulWidget {
-  final GlobalKey<ScaffoldState> scaffoldKey;
-
-  const FormFields({Key? key, required this.scaffoldKey}) : super(key: key);
+  const FormFields({super.key});
 
   @override
   State<FormFields> createState() => _FormFieldsState();
@@ -67,7 +79,7 @@ class _FormFieldsState extends State<FormFields> {
   final _auth = FirebaseAuth.instance;
   String _errorMessage = "";
   final ButtonStyle bluestyle = ElevatedButton.styleFrom(
-    padding: (const EdgeInsets.fromLTRB(130, 20, 130, 20)),
+    padding: (const EdgeInsets.fromLTRB(100, 20, 100, 20)),
     textStyle:
         GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w400, height: 0),
     backgroundColor: const Color(0xff374366),
@@ -75,6 +87,7 @@ class _FormFieldsState extends State<FormFields> {
   );
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // Toggle password visibility
 
   @override
   void dispose() {
@@ -94,11 +107,12 @@ class _FormFieldsState extends State<FormFields> {
               TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
-                    hintText: "Email",
-                    prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
-                    )),
+                  hintText: "Email",
+                  prefixIcon: Icon(Icons.email_outlined),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your email.";
@@ -118,13 +132,27 @@ class _FormFieldsState extends State<FormFields> {
               ),
               TextFormField(
                 controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                    hintText: "Password",
-                    prefixIcon: Icon(Icons.password_outlined),
-                    border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.all(Radius.elliptical(40, 40)))),
+                obscureText: !_isPasswordVisible,
+                // Toggle based on this flag
+                decoration: InputDecoration(
+                  hintText: "Password",
+                  prefixIcon: const Icon(Icons.password_outlined),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.grey),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                  border: const OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.elliptical(40, 40))),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "Please enter your password.";
@@ -152,7 +180,9 @@ class _FormFieldsState extends State<FormFields> {
                                 color: const Color(0xff374366),
                                 fontWeight: FontWeight.w500),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = showForgotPassBottomSheet,
+                              ..onTap = () {
+                                showForgotPassBottomSheet(context);
+                              },
                           )
                         ],
                       ),
@@ -207,11 +237,9 @@ class _FormFieldsState extends State<FormFields> {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SignupScreen(),
-                        ),
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupScreen()));
                     },
                 )
               ],
@@ -222,48 +250,38 @@ class _FormFieldsState extends State<FormFields> {
     );
   }
 
-  void showForgotPassBottomSheet() {
+  void showForgotPassBottomSheet(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true, // Make the bottom sheet full-screen
       builder: (context) {
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.3,
-          child: Stack(
-            children: [
-              // Background overlay
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                  color: Colors.black.withOpacity(0.5),
+        return GestureDetector(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Container(
+            height: MediaQuery.of(context).size.height *
+                0.3, // Adjust the height as needed
+            color: Colors.black.withOpacity(0.5), // Adjust opacity as needed
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.elliptical(40, 40),
+                  topLeft: Radius.elliptical(40, 40),
                 ),
               ),
-              // Content of the bottom sheet
-              Container(
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.elliptical(40, 40),
-                    topRight: Radius.elliptical(40, 40),
-                  ),
-                  color: Colors.white,
-                ),
-                padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewInsets.bottom,
-                ),
-                child: Column(
-                  children: [Container()],
-                ),
+              child: Center(
+                child: ForgotPasswordForm(),
               ),
-            ],
+            ),
           ),
         );
       },
     );
   }
 
-  void login() async {
+  Future<void> login() async {
     try {
       await _auth.signInWithEmailAndPassword(
         email: emailController.text,
@@ -272,28 +290,15 @@ class _FormFieldsState extends State<FormFields> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MenuScreen1()),
+        MaterialPageRoute(
+          builder: (context) => MenuScreen1(),
+        ),
       );
     } on FirebaseAuthException {
       setState(() {
         _errorMessage = "Incorrect Email/pass";
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    emailController.addListener(_printLatestValue);
-    passwordController.addListener(_printLatestValue);
-  }
-
-  void _printLatestValue() {
-    final text = emailController.text;
-    final pass = passwordController.text;
-
-    print('Second text field: $text (${text.characters.length})');
-    print('Second text field: $pass (${pass.characters.length})');
   }
 
   void validateEmail(String val) {
@@ -319,11 +324,125 @@ class _FormFieldsState extends State<FormFields> {
       });
     } else if (val.length < 6) {
       setState(() {
-        _errorMessage = "Password must contain atleast six characters";
+        _errorMessage = "Password must contain at least six characters";
       });
     } else {
       setState(() {
         _errorMessage = "";
+      });
+    }
+  }
+}
+
+class ForgotPasswordForm extends StatefulWidget {
+  @override
+  _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
+}
+
+class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
+  final TextEditingController emailController1 = TextEditingController();
+  final ButtonStyle button = ElevatedButton.styleFrom(
+    padding: (const EdgeInsets.fromLTRB(20, 20, 20, 20)),
+    textStyle:
+        GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w400, height: 0),
+    backgroundColor: const Color(0xff374366),
+    foregroundColor: Colors.white,
+  );
+  String _errorMessage1 = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        Form(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+                child: TextFormField(
+                  controller: emailController1,
+                  decoration: const InputDecoration(
+                    hintText: "Email",
+                    prefixIcon: Icon(Icons.email_outlined),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Please enter your email.";
+                    }
+                    if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$")
+                        .hasMatch(value)) {
+                      return "Email not in the correct format.";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(height: 5),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  _errorMessage1,
+                  style: const TextStyle(color: Colors.red),
+                ),
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+                child: ElevatedButton(
+                  style: button,
+                  onPressed: () {
+                    if (validateEmail(emailController1.text)) {
+                      sendResetLink(emailController1.text);
+                    }
+                  },
+                  child: const Text("Send Reset Link"),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  bool validateEmail(String email) {
+    if (email.isEmpty) {
+      setState(() {
+        _errorMessage1 = "Email can not be empty";
+      });
+      return false;
+    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(email)) {
+      setState(() {
+        _errorMessage1 = "Invalid Email Address";
+      });
+      return false;
+    } else {
+      setState(() {
+        _errorMessage1 = "";
+      });
+      return true;
+    }
+  }
+
+  void sendResetLink(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Password reset link sent successfully.'),
+        ),
+      );
+      Navigator.of(context).pop(); // Close the bottom sheet
+    } catch (e) {
+      setState(() {
+        _errorMessage1 =
+            "An error occurred. Please check your email and try again.";
       });
     }
   }

@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen2 extends StatelessWidget {
   const Onboarding_Screen2({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +21,7 @@ class Onboarding_Screen2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const Image(
-                image: AssetImage('images/On-board-pic2.png'),
+                image: AssetImage('assets/images/On-board-pic2.png'),
                 width: 500,
                 height: 300),
             // const SizedBox(

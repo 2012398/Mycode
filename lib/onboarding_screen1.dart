@@ -21,7 +21,7 @@ class Onboarding_Screen1 extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Image(
-                image: AssetImage('images/On-board-pic1.png'),
+                image: AssetImage('assets/images/On-board-pic1.png'),
                 width: 400,
                 height: 400),
 
@@ -79,7 +79,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
+                    builder: (context) => const LoginScreen(),
                   ));
             },
             child: const Text('Get Started'),

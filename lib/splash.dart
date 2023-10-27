@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -14,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // Timer to display on screen
     super.initState();
-    Timer(const Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 3), () {
       // push navigator to display another screen on stack
       Navigator.pushReplacement(
           context,
@@ -47,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Column(
               children: [
                 Image.asset(
-                  'images/Baby_bloom.png',
+                  'assets/images/Baby_bloom.png',
                   width: 150,
                   height: 150,
                 ),

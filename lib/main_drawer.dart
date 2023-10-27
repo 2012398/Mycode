@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/login_screen.dart';
 import 'package:fyp/onboarding_screen1.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -136,7 +138,7 @@ class MainDrawer extends StatelessWidget {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Onboarding_Screen1(),
+                      builder: (context) => LoginScreen(),
                     ));
               },
               title: Text(

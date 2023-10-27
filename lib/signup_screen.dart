@@ -10,27 +10,29 @@ class SignupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Center(
-              child: Text(
-            "Create Account",
-            style: GoogleFonts.montserrat(
-                fontSize: 24, fontWeight: FontWeight.w500),
-          )),
-          const SizedBox(height: 5),
-          const Padding(
-            padding: EdgeInsets.only(
-              left: 30,
-              right: 30,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(
+              height: 50,
             ),
-            child: SignupForm(),
-          ),
-        ],
+            Center(
+                child: Text(
+              "Create Account",
+              style: GoogleFonts.montserrat(
+                  fontSize: 24, fontWeight: FontWeight.w500),
+            )),
+            const SizedBox(height: 70),
+            const Padding(
+              padding: EdgeInsets.only(
+                left: 30,
+                right: 30,
+              ),
+              child: SignupForm(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -48,7 +50,7 @@ class _SignupFormState extends State<SignupForm> {
   final _auth = FirebaseAuth.instance;
   String _errorMessage = "";
   final ButtonStyle bluestyle = ElevatedButton.styleFrom(
-    padding: const EdgeInsets.fromLTRB(90, 20, 90, 20),
+    padding: const EdgeInsets.fromLTRB(70, 20, 70, 20),
     textStyle:
         GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w400, height: 0),
     backgroundColor: const Color(0xff374366),
@@ -57,7 +59,10 @@ class _SignupFormState extends State<SignupForm> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
   final mobileController = TextEditingController();
+  bool _isPasswordHidden = true;
+  bool _isConfirmPasswordHidden = true;
 
   @override
   void dispose() {
@@ -65,6 +70,7 @@ class _SignupFormState extends State<SignupForm> {
     nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
+    confirmPasswordController.dispose();
     mobileController.dispose();
   }
 
@@ -130,7 +136,7 @@ class _SignupFormState extends State<SignupForm> {
               TextFormField(
                 controller: mobileController,
                 decoration: const InputDecoration(
-                  hintText: "Mobile Number",
+                  hintText: "03xxxxxxxxx",
                   prefixIcon: Icon(Icons.phone),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
@@ -154,11 +160,21 @@ class _SignupFormState extends State<SignupForm> {
               ),
               TextFormField(
                 controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: _isPasswordHidden,
+                decoration: InputDecoration(
                   hintText: "Password",
                   prefixIcon: Icon(Icons.password_outlined),
-                  border: OutlineInputBorder(
+                  suffixIcon: IconButton(
+                    icon: Icon(_isPasswordHidden
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordHidden = !_isPasswordHidden;
+                      });
+                    },
+                  ),
+                  border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
                   ),
                 ),
@@ -172,8 +188,40 @@ class _SignupFormState extends State<SignupForm> {
                   validatePass(value);
                 },
               ),
-              // Display error message if applicable
+              const SizedBox(
+                height: 20,
+              ),
+              TextFormField(
+                controller: confirmPasswordController,
+                obscureText: _isConfirmPasswordHidden,
+                decoration: InputDecoration(
+                  hintText: "Confirm Password",
+                  prefixIcon: Icon(Icons.password_outlined),
+                  suffixIcon: IconButton(
+                    icon: Icon(_isConfirmPasswordHidden
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                    onPressed: () {
+                      setState(() {
+                        _isConfirmPasswordHidden = !_isConfirmPasswordHidden;
+                      });
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please confirm your password.";
+                  }
 
+                  if (value != passwordController.text) {
+                    return "Password do not match.";
+                  }
+                  return null;
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
@@ -188,7 +236,7 @@ class _SignupFormState extends State<SignupForm> {
           height: 10,
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 10, top: 100),
+          padding: const EdgeInsets.only(bottom: 10, top: 70),
           child: ClipRRect(
             borderRadius: const BorderRadius.all(Radius.elliptical(40, 40)),
             child: ElevatedButton(
@@ -202,7 +250,6 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
         ),
-        // Already have an account? Sign in link
         Padding(
           padding: const EdgeInsets.only(bottom: 30),
           child: RichText(
@@ -239,9 +286,8 @@ class _SignupFormState extends State<SignupForm> {
   Future<void> signup() async {
     try {
       await _auth.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+          email: emailController.text, password: passwordController.text);
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Account created successfully!!'),
@@ -263,6 +309,7 @@ class _SignupFormState extends State<SignupForm> {
     emailController.addListener(_printLatestValue);
     passwordController.addListener(_printLatestValue);
     mobileController.addListener(_printLatestValue);
+    nameController.addListener(_printLatestValue);
   }
 
   void _printLatestValue() {
@@ -271,16 +318,16 @@ class _SignupFormState extends State<SignupForm> {
     final numb = mobileController.text;
     final name = nameController.text;
 
-    print('Second text field: $email (${email.characters.length})');
-    print('Second text field: $pass (${pass.characters.length})');
-    print('Second text field: $numb (${numb.characters.length})');
-    print('Second text field: $name (${name.characters.length})');
+    print('Email field: $email (${email.characters.length})');
+    print('Password field: $pass (${pass.characters.length})');
+    print('Mobile field: $numb (${numb.characters.length})');
+    print('Name field: $name (${name.characters.length})');
   }
 
   void validateName(String val) {
     if (val.isEmpty) {
       setState(() {
-        _errorMessage = "Name can not be empty";
+        _errorMessage = "Name cannot be empty";
       });
     } else if (!RegExp(r"^[A-Za-z]+ [A-Za-z]+$").hasMatch(val)) {
       setState(() {
@@ -296,7 +343,7 @@ class _SignupFormState extends State<SignupForm> {
   void validateEmail(String val) {
     if (val.isEmpty) {
       setState(() {
-        _errorMessage = "Email can not be empty";
+        _errorMessage = "Email cannot be empty";
       });
     } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(val)) {
       setState(() {
@@ -312,7 +359,7 @@ class _SignupFormState extends State<SignupForm> {
   void validatePass(String val) {
     if (val.isEmpty) {
       setState(() {
-        _errorMessage = "Password is invalid";
+        _errorMessage = "Password cannot be empty";
       });
     } else if (val.length < 6) {
       setState(() {
@@ -332,7 +379,7 @@ class _SignupFormState extends State<SignupForm> {
       });
     } else if (!RegExp(r"^(03[0-9]{9})$").hasMatch(val)) {
       setState(() {
-        _errorMessage = "Please enter valid phone number";
+        _errorMessage = "Please enter a valid phone number";
       });
     } else {
       setState(() {
