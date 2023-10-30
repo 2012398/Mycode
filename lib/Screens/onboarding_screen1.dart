@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/colors.dart';
-import 'package:fyp/login_screen.dart';
-import 'package:fyp/onboarding_screen2.dart';
+import 'package:fyp/Screens/colors.dart';
+import 'package:fyp/Screens/login_screen.dart';
+import 'package:fyp/Screens/onboarding_screen2.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
+// ignore: camel_case_types
 class Onboarding_Screen1 extends StatelessWidget {
   const Onboarding_Screen1({super.key});
 

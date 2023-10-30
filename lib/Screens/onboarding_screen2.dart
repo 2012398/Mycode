@@ -1,7 +1,8 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
-import 'package:fyp/colors.dart';
-import 'package:fyp/login_screen.dart';
-import 'package:fyp/menu_screen1.dart';
+import 'package:fyp/Screens/colors.dart';
+import 'package:fyp/Screens/login_screen.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -79,7 +80,7 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
+                    builder: (context) => const LoginScreen(),
                   ));
             },
             child: const Text('Get Started'),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/login_screen.dart';
-import 'package:fyp/onboarding_screen1.dart';
+import 'package:fyp/Screens/login_screen.dart';
+import 'package:fyp/Screens/onboarding_screen1.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -84,6 +84,48 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Medical Records",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.baby_changing_station_outlined),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Onboarding_Screen1(),
+                  ));
+            },
+            title: Text(
+              "Add Baby",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.note_alt_sharp),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Onboarding_Screen1(),
+                  ));
+            },
+            title: Text(
+              "Educational Resources",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.chat),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Onboarding_Screen1(),
+                  ));
+            },
+            title: Text(
+              "Pediatrician consultation",
               style: GoogleFonts.rubik(),
             ),
           ),

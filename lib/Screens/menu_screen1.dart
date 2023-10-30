@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fyp/data.dart';
-import 'package:fyp/main_drawer.dart';
+import 'package:fyp/Screens/data.dart';
+import 'package:fyp/Screens/main_drawer.dart';
 import 'package:fyp/menu_screen_navigate/bath_accessories_screen.dart';
 import 'package:fyp/menu_screen_navigate/feeding_bottles_screen.dart';
 import 'package:fyp/menu_screen_navigate/medicine_screen.dart';
@@ -136,7 +136,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
                         ),
                         Expanded(
                           child: Container(
-                            margin: EdgeInsets.only(bottom: 10),
+                            margin: const EdgeInsets.only(bottom: 10),
                             child: Text(
                               _photos[index].text,
                               textAlign: TextAlign.center,
@@ -153,7 +153,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
                 },
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             )
           ],

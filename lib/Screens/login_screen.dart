@@ -1,13 +1,14 @@
+// ignore_for_file: use_build_context_synchronously, use_key_in_widget_constructors
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fyp/menu_screen1.dart';
-import 'package:fyp/onboarding_screen1.dart';
-import 'package:fyp/signup_screen.dart';
+import 'package:fyp/Screens/menu_screen1.dart';
+import 'package:fyp/Screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() => runApp(
-      MaterialApp(
+      const MaterialApp(
         home: Scaffold(
           body: LoginScreen(),
         ),
@@ -53,8 +54,8 @@ class LoginScreen extends StatelessWidget {
                     fontSize: 24, fontWeight: FontWeight.w500),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
+            const Padding(
+              padding: EdgeInsets.only(
                 left: 30,
                 right: 30,
               ),
@@ -239,7 +240,7 @@ class _FormFieldsState extends State<FormFields> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignupScreen()));
+                              builder: (context) => const SignupScreen()));
                     },
                 )
               ],
@@ -264,7 +265,7 @@ class _FormFieldsState extends State<FormFields> {
                 0.3, // Adjust the height as needed
             color: Colors.black.withOpacity(0.5), // Adjust opacity as needed
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.elliptical(40, 40),
@@ -291,7 +292,7 @@ class _FormFieldsState extends State<FormFields> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => MenuScreen1(),
+          builder: (context) => const MenuScreen1(),
         ),
       );
     } on FirebaseAuthException {
@@ -336,6 +337,7 @@ class _FormFieldsState extends State<FormFields> {
 
 class ForgotPasswordForm extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
 }
 
@@ -390,7 +392,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 ),
               ),
               ClipRRect(
-                borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+                borderRadius: const BorderRadius.all(Radius.elliptical(40, 40)),
                 child: ElevatedButton(
                   style: button,
                   onPressed: () {
@@ -401,7 +403,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                   child: const Text("Send Reset Link"),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               )
             ],
