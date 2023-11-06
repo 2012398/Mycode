@@ -7,14 +7,6 @@ import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:fyp/Screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() => runApp(
-      const MaterialApp(
-        home: Scaffold(
-          body: LoginScreen(),
-        ),
-      ),
-    );
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -282,26 +274,6 @@ class _FormFieldsState extends State<FormFields> {
     );
   }
 
-  Future<void> login() async {
-    try {
-      await _auth.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MenuScreen1(),
-        ),
-      );
-    } on FirebaseAuthException {
-      setState(() {
-        _errorMessage = "Incorrect Email/pass";
-      });
-    }
-  }
-
   void validateEmail(String val) {
     if (val.isEmpty) {
       setState(() {
@@ -330,6 +302,26 @@ class _FormFieldsState extends State<FormFields> {
     } else {
       setState(() {
         _errorMessage = "";
+      });
+    }
+  }
+
+  Future<void> login() async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MenuScreen1(),
+        ),
+      );
+    } on FirebaseAuthException {
+      setState(() {
+        _errorMessage = "Incorrect Email/pass";
       });
     }
   }

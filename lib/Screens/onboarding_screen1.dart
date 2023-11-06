@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fyp/Screens/colors.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen2.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 
 // ignore: camel_case_types
@@ -43,7 +42,7 @@ class Onboarding_Screen1 extends StatelessWidget {
             // Padding(padding: EdgeInsets.only(top: 5)),
 
             Text(
-                'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
+                "Finding the right doctor is the first step to a healthier, happier life. We're here to help you connect with trusted doctors who genuinely care about your child's well-being.",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.rubik(
                     fontSize: 15,
@@ -88,8 +87,10 @@ class _ElevatedButton1 extends State<ElevatedButton1> {
           const SizedBox(height: 10),
           TextButton(
             style: ButtonStyle(
-                foregroundColor:
-                    MaterialStateProperty.all(const Color(0xFF677294))),
+              foregroundColor: MaterialStateProperty.all(
+                const Color(0xFF677294),
+              ),
+            ),
             onPressed: () {
               Navigator.push(
                 context,

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/colors.dart';
 import 'package:fyp/Screens/login_screen.dart';
-
 import 'package:google_fonts/google_fonts.dart';
 
 class Onboarding_Screen2 extends StatelessWidget {
@@ -42,7 +41,7 @@ class Onboarding_Screen2 extends StatelessWidget {
             // Padding(padding: EdgeInsets.only(top: 5)),
 
             Text(
-              'Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of it over 2000 years old.',
+              "Get the advice you need without leaving your home. Our in-app consultation feature brings professionals to you. It's like having a trusted advisor in your pocket!",
               textAlign: TextAlign.center,
               style: GoogleFonts.rubik(
                   fontSize: 15,
