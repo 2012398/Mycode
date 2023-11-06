@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, use_key_in_widget_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -308,20 +309,38 @@ class _FormFieldsState extends State<FormFields> {
 
   Future<void> login() async {
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      // Check if the user exists in Fire store with the provided email
+      QuerySnapshot users = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: emailController.text)
+          .get();
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MenuScreen1(),
-        ),
-      );
+      if (users.docs.isNotEmpty) {
+        // User with the provided email exists in Fire store
+        await _auth.signInWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+
+        // After successful login, navigate to the menu screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const MenuScreen1(),
+          ),
+        );
+      } else {
+        // User with the provided email does not exist in Fire store
+
+        setState(() {
+          _errorMessage = "Please Register your account";
+        });
+      }
     } on FirebaseAuthException {
+      // Handle FirebaseAuthException, for e.g., if there's an issue with Firebase Authentication
+
       setState(() {
-        _errorMessage = "Incorrect Email/pass";
+        _errorMessage = "Incorrect Email/Pass";
       });
     }
   }

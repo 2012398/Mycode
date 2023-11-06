@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,6 +46,7 @@ class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SignupFormState createState() => _SignupFormState();
 }
 
@@ -164,7 +168,7 @@ class _SignupFormState extends State<SignupForm> {
                 obscureText: _isPasswordHidden,
                 decoration: InputDecoration(
                   hintText: "Password",
-                  prefixIcon: Icon(Icons.password_outlined),
+                  prefixIcon: const Icon(Icons.password_outlined),
                   suffixIcon: IconButton(
                     icon: Icon(_isPasswordHidden
                         ? Icons.visibility
@@ -197,7 +201,7 @@ class _SignupFormState extends State<SignupForm> {
                 obscureText: _isConfirmPasswordHidden,
                 decoration: InputDecoration(
                   hintText: "Confirm Password",
-                  prefixIcon: Icon(Icons.password_outlined),
+                  prefixIcon: const Icon(Icons.password_outlined),
                   suffixIcon: IconButton(
                     icon: Icon(_isConfirmPasswordHidden
                         ? Icons.visibility
@@ -208,7 +212,7 @@ class _SignupFormState extends State<SignupForm> {
                       });
                     },
                   ),
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
                   ),
                 ),
@@ -286,8 +290,18 @@ class _SignupFormState extends State<SignupForm> {
 
   Future<void> signup() async {
     try {
-      await _auth.createUserWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text);
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
+
+      String uid = userCredential.user!.uid;
+
+      // Store user data in Firestore
+      await FirebaseFirestore.instance.collection('users').doc(uid).set({
+        'name': nameController.text,
+        'email': emailController.text,
+        'mobile': mobileController.text,
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -364,7 +378,7 @@ class _SignupFormState extends State<SignupForm> {
       });
     } else if (val.length < 6) {
       setState(() {
-        _errorMessage = "Password must contain atleast six characters";
+        _errorMessage = "Password must contain at least six characters";
       });
     } else {
       setState(() {
