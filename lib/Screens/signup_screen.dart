@@ -5,8 +5,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fyp/Screens/login_screen.dart';
-
+import 'package:fyp/Screens/menu_screen1.dart';
+import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
+import 'dart:convert';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -248,7 +250,8 @@ class _SignupFormState extends State<SignupForm> {
               style: bluestyle,
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  signup();
+                  // signup();
+                  Register();
                 }
               },
               child: const Text("Create Account"),
@@ -287,6 +290,44 @@ class _SignupFormState extends State<SignupForm> {
       ],
     );
   }
+
+ Future<void> Register() async {
+    final String apiUrl = 'http://192.168.100.81:3000/signup'; // Replace with your server URL
+
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': emailController.text.toString(),
+        'password': passwordController.text.toString(),
+        'displayName': nameController.text.toString(),
+        'Contact':mobileController.text.toString()
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      // User created successfully
+      final Map<String, dynamic> responseData = jsonDecode(response.body);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Created Succesfully ${responseData['userId']}')));
+      
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      print('User created successfully. User ID: ${responseData['userId']}');
+    } else if(response.statusCode == 400){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Already Exists.')));
+      }else {
+      // Error occurred
+      print('Error: ${response.statusCode}');
+      print('Body: ${response.body}');
+    }
+  }
+
+
+
 
   Future<void> signup() async {
     try {
