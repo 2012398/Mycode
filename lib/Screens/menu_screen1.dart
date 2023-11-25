@@ -8,6 +8,7 @@ import 'package:fyp/menu_screen_navigate/nipple_pacifiers_screen.dart';
 import 'package:fyp/menu_screen_navigate/nutri_and_supl_screen.dart';
 import 'package:fyp/menu_screen_navigate/skin_care_screen.dart';
 import 'package:fyp/menu_screen_navigate/toys_screen.dart';
+import 'package:fyp/menu_screen_navigate/upload_products.dart';
 import 'package:fyp/menu_screen_navigate/wet_wipes_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -29,7 +30,8 @@ class _MenuScreen1State extends State<MenuScreen1> {
     Data(image: "assets/images/Toys.jpg", text: "Toys"),
     Data(image: "assets/images/Feeders.jpg", text: "Feeding bottles"),
     Data(image: "assets/images/Bath.jpg", text: "Bath accessories"),
-    Data(image: "assets/images/Nipples.jpg", text: "Nipple & Pacifiers")
+    Data(image: "assets/images/Nipples.jpg", text: "Nipple & Pacifiers"),
+    Data(image: "assets/images/Nipples.jpg", text: "Upload Products")
   ];
 
   void navigateToPage(int index) {
@@ -65,6 +67,10 @@ class _MenuScreen1State extends State<MenuScreen1> {
       case 7:
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => Nipple_Pacifier()));
+        break;
+      case 8:
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Upload_product()));
         break;
     }
   }
