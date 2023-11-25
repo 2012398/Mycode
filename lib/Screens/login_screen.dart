@@ -8,6 +8,7 @@ import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:fyp/Screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -306,44 +307,21 @@ class _FormFieldsState extends State<FormFields> {
       });
     }
   }
-
-  Future<void> login() async {
+    Future<void> login() async {
     try {
-      // Check if the user exists in Fire store with the provided email
-      QuerySnapshot users = await FirebaseFirestore.instance
-          .collection('users')
-          .where('email', isEqualTo: emailController.text)
-          .get();
-
-      if (users.docs.isNotEmpty) {
-        // User with the provided email exists in Fire store
-        await _auth.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
-        );
-
-        // After successful login, navigate to the menu screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const MenuScreen1(),
-          ),
-        );
-      } else {
-        // User with the provided email does not exist in Fire store
-
-        setState(() {
-          _errorMessage = "Please Register your account";
-        });
-      }
-    } on FirebaseAuthException {
-      // Handle FirebaseAuthException, for e.g., if there's an issue with Firebase Authentication
-
-      setState(() {
-        _errorMessage = "Incorrect Email/Pass";
-      });
+      UserCredential authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.toString(),
+        password: passwordController.text.toString(),
+      );
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const MenuScreen1()));
+      print('Login successful. User: ${authResult.user}');
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
+      // Handle error, e.g., show a snackbar with an error message
     }
   }
+
+  
 }
 
 class ForgotPasswordForm extends StatefulWidget {

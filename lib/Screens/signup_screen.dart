@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_const_declarations
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
@@ -9,6 +9,7 @@ import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
+import '../db.dart' as db;
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -291,71 +292,47 @@ class _SignupFormState extends State<SignupForm> {
     );
   }
 
- Future<void> Register() async {
-    final String apiUrl = 'http://192.168.100.81:3000/signup'; // Replace with your server URL
-
+  Future<void> Register() async {
+    final String apiUrl = '${db.dblink}/signup'; // Replace with your server URL
+    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: emailController.text, password: passwordController.text);
+    String uid = userCredential.user!.uid;
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': emailController.text.toString(),
-        'password': passwordController.text.toString(),
+        // 'password': passwordController.text.toString(),
         'displayName': nameController.text.toString(),
-        'Contact':mobileController.text.toString()
+        'Contact': mobileController.text.toString(),
+        'uid': uid.toString(),
       }),
     );
 
     if (response.statusCode == 201) {
       // User created successfully
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Created Succesfully ${responseData['userId']}')));
-      
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('User Created Succesfully ${responseData['userId']}')));
+
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
-        );
+        context,
+        MaterialPageRoute(
+          builder: (context) => const LoginScreen(),
+        ),
+      );
+
       print('User created successfully. User ID: ${responseData['userId']}');
-    } else if(response.statusCode == 400){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('User Already Exists.')));
-      }else {
+    } else if (response.statusCode == 400) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('User Already Exists.')));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              'User Already Exists.${response.statusCode} / ${response.body}')));
       // Error occurred
       print('Error: ${response.statusCode}');
       print('Body: ${response.body}');
-    }
-  }
-
-
-
-
-  Future<void> signup() async {
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text);
-
-      String uid = userCredential.user!.uid;
-
-      // Store user data in Firestore
-      await FirebaseFirestore.instance.collection('users').doc(uid).set({
-        'name': nameController.text,
-        'email': emailController.text,
-        'mobile': mobileController.text,
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account created successfully!!'),
-        ),
-      );
-    } catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account already exists'),
-        ),
-      );
     }
   }
 
