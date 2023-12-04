@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../db.dart' as db;
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -11,6 +12,7 @@ class Toys extends StatefulWidget {
 }
 
 class _ToysState extends State<Toys> {
+  final String uid = FirebaseAuth.instance.currentUser!.uid;
   var data = {};
   Future<void> Getinvo(String category) async {
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
@@ -86,7 +88,9 @@ class _ToysState extends State<Toys> {
                                   size: 25,
                                   color: Colors.white,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  db.addToCart(uid, product);
+                                },
                               ),
                             ),
                           ],

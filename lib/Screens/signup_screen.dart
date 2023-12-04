@@ -292,17 +292,27 @@ class _SignupFormState extends State<SignupForm> {
     );
   }
 
+  Future authprofilesetting(
+      UserCredential cred, String name, String contact) async {
+    await cred.user?.updateDisplayName(name);
+    await cred.user?.updatePhoneNumber(contact as PhoneAuthCredential);
+    // await cred.user?.updatePhotoURL(
+    //     'https://firebasestorage.googleapis.com/v0/b/pc-builder-2c0a4.appspot.com/o/DisplayPicture%2Fdefaultimage.jpg?alt=media&token=af41bdaf-f5f4-4f0d-ad96-78734f8eb73a');
+  }
+
   Future<void> Register() async {
     final String apiUrl = '${db.dblink}/signup'; // Replace with your server URL
     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: emailController.text, password: passwordController.text);
     String uid = userCredential.user!.uid;
+    authprofilesetting(
+        userCredential, nameController.text.toString(), mobileController.text);
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'email': emailController.text.toString(),
-        // 'password': passwordController.text.toString(),
+        'password': passwordController.text.toString(),
         'displayName': nameController.text.toString(),
         'Contact': mobileController.text.toString(),
         'uid': uid.toString(),

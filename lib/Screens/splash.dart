@@ -1,5 +1,10 @@
+// ignore_for_file: use_build_context_synchronously, avoid_print
+
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,14 +20,57 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     // Timer to display on screen
     super.initState();
-    Timer(const Duration(seconds: 3), () {
-      // push navigator to display another screen on stack
+    navigateToHome();
+    // Timer(const Duration(seconds: 3), () {
+    //   // push navigator to display another screen on stack
+    //   Navigator.pushReplacement(
+    //       context,
+    //       MaterialPageRoute(
+    //         builder: (context) => const Onboarding_Screen1(),
+    //       ));
+    // });
+  }
+
+  void navigateToHome() async {
+    await Future.delayed(const Duration(seconds: 3), () {});
+
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        if (documentSnapshot.exists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MenuScreen1(),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Onboarding_Screen1(),
+            ),
+          );
+        }
+      } catch (error) {
+        print('Error fetching user document: $error');
+        // Handle the error, e.g., show an error message or navigate to an error screen.
+      }
+    } else {
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Onboarding_Screen1(),
-          ));
-    });
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Onboarding_Screen1(),
+        ),
+      );
+      // Handle the case when the user is not authenticated.
+      // You might want to navigate to a login screen or handle it differently.
+    }
   }
 
   @override

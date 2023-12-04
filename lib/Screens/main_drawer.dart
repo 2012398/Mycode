@@ -1,13 +1,17 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
     return Drawer(
       child: Column(
         children: [
@@ -30,19 +34,19 @@ class MainDrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Nabeel hussain",
+                            user.displayName!,
                             style: TextStyle(fontSize: 20, color: Colors.white),
                           ),
                           Padding(
                             padding: EdgeInsets.only(top: 5),
                             child: Text(
-                              "0332-3287112",
+                              user.email!,
                               style: TextStyle(color: Colors.white),
                             ),
                           )
@@ -177,11 +181,7 @@ class MainDrawer extends StatelessWidget {
             child: ListTile(
               leading: const Icon(Icons.logout_rounded),
               onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
-                    ));
+                logout(context);
               },
               title: Text(
                 "Logout",
@@ -190,6 +190,16 @@ class MainDrawer extends StatelessWidget {
             ),
           ))
         ],
+      ),
+    );
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Onboarding_Screen1(),
       ),
     );
   }

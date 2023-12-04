@@ -64,6 +64,78 @@ app.post("/uploadinvo", async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 });
+
+app.post("/add-to-cart:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { itemName, quantity, price, category } = req.body;
+
+  try {
+    const userCartRef = admin
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("cart");
+
+    // Check if the item with the same name already exists in the user's cart
+    const existingItem = await userCartRef
+      .where("itemName", "==", itemName)
+      .get();
+
+    if (existingItem.empty) {
+      // If the item doesn't exist, add it to the cart
+      await userCartRef.add({
+        itemName,
+        quantity,
+        price,
+        category,
+      });
+    } else {
+      // If the item already exists, update the quantity
+      const existingItemId = existingItem.docs[0].id;
+      const existingQuantity = existingItem.docs[0].data().quantity;
+
+      await userCartRef.doc(existingItemId).update({
+        quantity: existingQuantity + quantity,
+      });
+    }
+
+    res.status(201).json({ message: "Item added to cart successfully" });
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// app.post("/add-to-cart:userId", async (req, res) => {
+//   const { userId } = req.params;
+//   const { itemName, quantity, price, category } = req.body;
+
+//   try {
+//     console.log(userId);
+//     // Get a reference to the user's cart in the Firebase collection
+//     const userCartRef = admin
+//       .firestore()
+//       .collection("users")
+//       .doc(userId)
+//       .collection("cart");
+
+//     // Add the item to the user's cart
+//     await userCartRef.add({
+//       itemName,
+//       quantity,
+//       price,
+//       category,
+//     });
+
+//     res
+//       .status(201)
+//       .json({ succes: "Success", message: "Item added to cart successfully" });
+//   } catch (error) {
+//     console.error("Error adding item to cart:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
 // const Product = mongoose.model("inventory", InventorySchema);
 
 // app.get("/getAll", async (req, res) => {

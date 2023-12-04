@@ -38,23 +38,23 @@ class _MenuScreen1State extends State<MenuScreen1> {
     switch (index) {
       case 0:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Nutri()));
+            context, MaterialPageRoute(builder: (context) => const Nutri()));
         break;
       case 1:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Medicine()));
+            context, MaterialPageRoute(builder: (context) => const Medicine()));
         break;
       case 2:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Skin_care()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Skin_care()));
         break;
       case 3:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Wet_wipes()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Wet_wipes()));
         break;
       case 4:
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Toys()));
+            context, MaterialPageRoute(builder: (context) => const Toys()));
         break;
       case 5:
         Navigator.push(context,
@@ -62,15 +62,15 @@ class _MenuScreen1State extends State<MenuScreen1> {
         break;
       case 6:
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Bath_accesories()));
+            MaterialPageRoute(builder: (context) => const Bath_accesories()));
         break;
       case 7:
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Nipple_Pacifier()));
+            MaterialPageRoute(builder: (context) => const Nipple_Pacifier()));
         break;
       case 8:
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Upload_product()));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const Upload_product()));
         break;
     }
   }
