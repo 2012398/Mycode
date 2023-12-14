@@ -1,3 +1,6 @@
+// ignore_for_file: non_constant_identifier_names
+
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:fyp/db.dart' as db;
 import 'dart:convert';
@@ -25,5 +28,29 @@ Future<void> addToCart(String userId, final product) async {
   } else {
     print(
         'Failed to add item to cart. Error: ${response.statusCode}\n${response.body}');
+  }
+}
+
+Future<bool> ClearCart(String userId, BuildContext context) async {
+  final String apiUrl = '${db.dblink}/CartClear:$userId';
+
+  final response = await http.delete(
+    Uri.parse(apiUrl),
+    headers: {'Content-Type': 'application/json'},
+  );
+
+  if (response.statusCode == 200) {
+    // print('Item added to cart successfully');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Cart Cleared'),
+      ),
+    );
+    print('userid: $userId');
+    return true;
+  } else {
+    print(
+        'Failed to add item to cart. Error: ${response.statusCode}\n${response.body}');
+        return false;
   }
 }

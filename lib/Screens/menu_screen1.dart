@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/Cart.dart';
 import 'package:fyp/Screens/data.dart';
 import 'package:fyp/Screens/main_drawer.dart';
 import 'package:fyp/menu_screen_navigate/bath_accessories_screen.dart';
@@ -20,6 +21,7 @@ class MenuScreen1 extends StatefulWidget {
 }
 
 class _MenuScreen1State extends State<MenuScreen1> {
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   final List _photos = [
     Data(
         image: "assets/images/Nutrition.jpg",
@@ -78,19 +80,26 @@ class _MenuScreen1State extends State<MenuScreen1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _key,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),
-        actions: const [
+        actions: [
           Padding(
-            padding: EdgeInsets.all(10),
-            child: Icon(
-              Icons.shopping_cart_checkout_rounded,
+            padding: const EdgeInsets.all(10),
+            child: InkWell(
+              onTap: () {
+                _key.currentState!.openEndDrawer();
+              },
+              child: const Icon(
+                Icons.shopping_cart_checkout_rounded,
+              ),
             ),
           ),
         ],
       ),
       drawer: const MainDrawer(),
+      endDrawer: SafeArea(child: Cart()),
       body: Center(
         child: Column(
           children: [

@@ -151,11 +151,93 @@ app.post("/add-to-cart:userId", async (req, res) => {
 //     res.status(500).json({ message: error.message });
 //   }
 // });
+app.delete("/CartClear:uid", async (req, res) => {
+  try {
+    let userId = req.params.uid;
+    userId = userId.substring(1);
+    console.log(userId);
+    await deleteSubcollection(userId, "cart");
+    res.status(200).json({
+      success: true,
+      message: `Cart subcollection for user ${userId} deleted successfully.`,
+    });
+  } catch (error) {
+    console.error("Error deleting cart subcollection:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+const deleteSubcollection = async (parentId, subcollectionName) => {
+  const collectionRef = admin
+    .firestore()
+    .collection("users")
+    .doc(parentId)
+    .collection(subcollectionName);
+  const batchSize = 100; // Adjust the batch size based on your needs
+
+  const query = collectionRef.orderBy("__name__").limit(batchSize);
+
+  return new Promise((resolve, reject) => {
+    deleteQueryBatch(query, batchSize, resolve, reject);
+  });
+};
+
+// Function to delete a query batch
+const deleteQueryBatch = (query, batchSize, resolve, reject) => {
+  query
+    .get()
+    .then((snapshot) => {
+      if (snapshot.size === 0) {
+        return 0;
+      }
+
+      const batch = admin.firestore().batch();
+      snapshot.docs.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+
+      return batch.commit().then(() => snapshot.size);
+    })
+    .then((numDeleted) => {
+      if (numDeleted === 0) {
+        resolve();
+        return;
+      }
+
+      process.nextTick(() => {
+        deleteQueryBatch(query, batchSize, resolve, reject);
+      });
+    })
+    .catch(reject);
+};
+
+app.get("/CartItems:uid", async (req, res) => {
+  try {
+    let uid = req.params.uid;
+    uid = uid.substring(1);
+
+    console.log(uid);
+    const snapshot = await admin
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .collection("cart")
+      .get();
+    const data = snapshot.docs.map((doc) => doc.data());
+    console.log(data);
+    res
+      .status(200)
+      .json({ success: true, Products: data, message: "API GET Cart" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/inventory", async (req, res) => {
   try {
     const category = req.query.category || "all"; // Default to 'all' if not provided
     const snapshot = await inventoryCollection
-      .where("ProductCategory", "==", req.query.category)
+      .where("ProductCategory", "==", category)
       .get();
     const data = snapshot.docs.map((doc) => doc.data());
     console.log(data);
