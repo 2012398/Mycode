@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../Screens/Cart.dart';
 import '../db.dart' as db;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -12,6 +14,7 @@ class Feeding_bottle extends StatefulWidget {
 
 class _Feeding_bottleState extends State<Feeding_bottle> {
   var data = {};
+
   Future<void> Getinvo(String category) async {
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
     final response =
@@ -86,7 +89,9 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
                                   size: 25,
                                   color: Colors.white,
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  db.addToCart(uid, product);
+                                },
                               ),
                             ),
                           ],
