@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
+import 'package:fyp/Screens/privacy_policy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -36,23 +37,23 @@ class MainDrawer extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(left: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             user.displayName!,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 15,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 3),
+                            padding: const EdgeInsets.only(top: 3),
                             child: Text(
                               user.email!,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 10),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 10),
                             ),
                           )
                         ],
@@ -74,7 +75,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => MainDrawer(),
                   ));
             },
             title: Text(
@@ -88,7 +89,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => MainDrawer(),
                   ));
             },
             title: Text(
@@ -102,7 +103,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => MainDrawer(),
                   ));
             },
             title: Text(
@@ -130,7 +131,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => MainDrawer(),
                   ));
             },
             title: Text(
@@ -144,7 +145,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => const Privacypolicy(),
                   ));
             },
             title: Text(
@@ -158,7 +159,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => MainDrawer(),
                   ));
             },
             title: Text(
@@ -172,7 +173,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Onboarding_Screen1(),
+                    builder: (context) => MainDrawer(),
                   ));
             },
             title: Text(

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/educational_resources.dart';
+import 'package:fyp/Screens/privacy_policy.dart';
 import 'package:fyp/Screens/splash.dart';
 import 'Screens/firebase_options.dart';
 
@@ -21,7 +22,7 @@ class FypApp extends StatelessWidget {
       title: "Babybloom",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: SplashScreen(),
+      home: Privacypolicy(),
     );
   }
 }

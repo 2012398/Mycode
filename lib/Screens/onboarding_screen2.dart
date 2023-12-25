@@ -28,7 +28,7 @@ class Onboarding_Screen2 extends StatelessWidget {
             //   height: 1,
             // ),
             Text(
-              'In app consultation',
+              'Pediatrician Consultation',
               textAlign: TextAlign.center,
               style: GoogleFonts.rubik(
                   fontSize: 25,
