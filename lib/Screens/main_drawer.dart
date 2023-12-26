@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
+import 'package:fyp/Screens/pediatrician_consultation.dart';
 import 'package:fyp/Screens/privacy_policy.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -131,7 +132,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainDrawer(),
+                    builder: (context) => ConsultationScreen(),
                   ));
             },
             title: Text(
