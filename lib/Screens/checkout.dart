@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp/Screens/checkout.dart';
+import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fyp/db.dart' as db;
@@ -26,14 +26,18 @@ final user = FirebaseAuth.instance.currentUser!;
 final uid = FirebaseAuth.instance.currentUser!.uid;
 var formatter = NumberFormat('#,###');
 
-class Cart extends StatefulWidget {
-  const Cart({super.key});
+class Checkout extends StatefulWidget {
+  // Map<String, dynamic> receivedMap;
+  // double total;
+
+  // List items;
+  Checkout({super.key});
 
   @override
-  State<Cart> createState() => _CartState();
+  State<Checkout> createState() => _CheckoutState();
 }
 
-class _CartState extends State<Cart> {
+class _CheckoutState extends State<Checkout> {
   @override
   void initState() {
     super.initState();
@@ -76,7 +80,6 @@ class _CartState extends State<Cart> {
     });
   }
 
-  var items;
   var obj;
   @override
   Widget build(BuildContext context) {
@@ -90,7 +93,7 @@ class _CartState extends State<Cart> {
               height: MediaQuery.of(context).size.height * 0.05, //zawat
               child: Center(
                 child: Text(
-                  'My Cart',
+                  'Checkout',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
@@ -106,7 +109,6 @@ class _CartState extends State<Cart> {
                       padding: const EdgeInsets.symmetric(
                           vertical: 0.0, horizontal: 8.0),
                       itemBuilder: (context, index) {
-                        // items[index] = obj[index]['itemName'];
                         return ListTile(
                           title: Text(obj[index]['itemName']),
                           subtitle: Text(obj[index]['category']),
@@ -225,16 +227,9 @@ class _CartState extends State<Cart> {
                 RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ))),
-        label: Text('Checkout'),
+        label: Text('Place Order'),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Checkout(
-              
-              ),
-            ),
-          );
+          placeorder();
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(
@@ -252,6 +247,34 @@ class _CartState extends State<Cart> {
         ),
       ),
     );
+  }
+
+  Future<void> placeorder() async {
+    final String apiUrl = '${db.dblink}/placeorder/$uid';
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {'Content-Type': 'application/json'},
+    );
+    var msg = jsonDecode(response.body);
+    if (response.statusCode == 201) {
+      print(msg['message']);
+      print(msg['orderId']);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${msg['message']}, OrderId: ${msg['orderId']}'),
+        ),
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MenuScreen1(),
+        ),
+      );
+    } else {
+      print(
+          'Failed to add item to cart. Error: ${response.statusCode}\n${response.body}');
+    }
+    return jsonDecode(response.body);
   }
 
   Widget clearcart() {

@@ -64,6 +64,62 @@ app.post("/uploadinvo", async (req, res) => {
       .json({ error: "Internal Server Error", details: error.message });
   }
 });
+app.post("/placeorder/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    console.log(userId);
+    const userCartRef = admin
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .collection("cart");
+
+    const userOrderRef = admin
+      .firestore()
+
+      .collection("orders");
+
+    // Get all items from the user's cart
+    const cartItems = await userCartRef.get();
+    const items = [];
+    let total = 0;
+    // Move items from the cart to the order
+    cartItems.forEach((doc) => {
+      const { itemName, quantity, price, category } = doc.data();
+      const itemTotal = quantity * price; // Calculate total for each item
+      total += itemTotal; // Add to the overall total
+      items.push({ itemName, quantity, price, category, itemTotal });
+    });
+
+    if (items.length === 0) {
+      return res
+        .status(400)
+        .json({ error: "Cart is empty. Cannot place an order." });
+    }
+
+    // Create a new order document in the user's orders collection
+    const orderDoc = await userOrderRef.add({
+      items,
+      total,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    // Clear the user's cart by deleting all items
+    cartItems.forEach((doc) => {
+      userCartRef.doc(doc.id).delete();
+    });
+
+    res.status(201).json({
+      message: "Order placed successfully",
+      orderId: orderDoc.id,
+      total,
+    });
+  } catch (error) {
+    console.error("Error placing order:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.post("/add-to-cart:userId", async (req, res) => {
   const { userId } = req.params;
