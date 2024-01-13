@@ -4,6 +4,7 @@ import 'dart:convert';
 
 // import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/checkout.dart';
@@ -50,6 +51,7 @@ class _CartState extends State<Cart> {
 
   var data = {};
   var calc;
+
   Future<void> Getinvo(String uid) async {
     var url = Uri.parse("${db.dblink}/CartItems:$uid");
     final response =
@@ -78,6 +80,7 @@ class _CartState extends State<Cart> {
 
   var items;
   var obj;
+
   @override
   Widget build(BuildContext context) {
     obj = data['Products'];
@@ -86,12 +89,15 @@ class _CartState extends State<Cart> {
         child: Column(
           children: [
             Container(
-              color: Colors.blue,
-              height: MediaQuery.of(context).size.height * 0.05, //zawat
+              color: const Color(0xff374366),
+              height: MediaQuery.of(context).size.height * 0.08,
               child: Center(
                 child: Text(
                   'My Cart',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -120,7 +126,7 @@ class _CartState extends State<Cart> {
             ),
             Expanded(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.10, //zawat
+                height: MediaQuery.of(context).size.height * 0.10,
                 padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                 width: MediaQuery.of(context).size.width,
                 color: Color(0xfff4f4f4),
@@ -220,7 +226,9 @@ class _CartState extends State<Cart> {
       width: MediaQuery.of(context).size.width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
+            backgroundColor: MaterialStateProperty.all<Color>(
+              Color(0xff374366),
+            ),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -267,7 +275,9 @@ class _CartState extends State<Cart> {
             ))),
         label: Text(
           'Clear Cart',
-          style: TextStyle(color: Colors.lightBlue),
+          style: TextStyle(
+            color: Color(0xff374366),
+          ),
         ),
         onPressed: () async {
           result = await db.ClearCart(uid, context);
@@ -275,7 +285,7 @@ class _CartState extends State<Cart> {
         icon: Icon(
           Icons.remove_shopping_cart,
           size: 24,
-          color: Colors.lightBlue,
+          color: Color(0xff374366),
         ),
       ),
     );
