@@ -55,7 +55,7 @@ class _CartState extends State<Cart> {
   Future<void> Getinvo(String uid) async {
     var url = Uri.parse("${db.dblink}/CartItems:$uid");
     final response =
-        await http.get(url, headers: {"Content-Type": "application/json"});
+    await http.get(url, headers: {"Content-Type": "application/json"});
     if (response.statusCode == 200) {
       setState(() {
         data = json.decode(response.body);
@@ -90,7 +90,10 @@ class _CartState extends State<Cart> {
           children: [
             Container(
               color: const Color(0xff374366),
-              height: MediaQuery.of(context).size.height * 0.08,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.08,
               child: Center(
                 child: Text(
                   'My Cart',
@@ -103,32 +106,41 @@ class _CartState extends State<Cart> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.657, //zawat
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height * 0.657,
               child: (obj == null)
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                      itemCount: obj.length,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 8.0),
-                      itemBuilder: (context, index) {
-                        // items[index] = obj[index]['itemName'];
-                        return ListTile(
-                          title: Text(obj[index]['itemName']),
-                          subtitle: Text(obj[index]['category']),
-                          trailing: Text(formatter
-                              .format(
-                                  obj[index]['price'] * obj[index]['quantity'])
-                              .toString()),
-                        );
-                      },
-                    ),
+                itemCount: obj.length,
+                shrinkWrap: true,
+                padding: const EdgeInsets.symmetric(
+                    vertical: 0.0, horizontal: 8.0),
+                itemBuilder: (context, index) {
+                  // items[index] = obj[index]['itemName'];
+                  return ListTile(
+                    title: Text(obj[index]['itemName']),
+                    subtitle: Text(obj[index]['category']),
+                    trailing: Text(formatter
+                        .format(
+                        obj[index]['price'] * obj[index]['quantity'])
+                        .toString()),
+                  );
+                },
+              ),
             ),
             Expanded(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.10,
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.10,
                 padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
                 color: Color(0xfff4f4f4),
                 child: Column(
                   children: [
@@ -165,7 +177,10 @@ class _CartState extends State<Cart> {
                       height: 5,
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       height: 2,
                       color: Colors.black,
                     ),
@@ -173,7 +188,10 @@ class _CartState extends State<Cart> {
                       height: 1,
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
                       height: 2,
                       color: Colors.black,
                     ),
@@ -198,7 +216,7 @@ class _CartState extends State<Cart> {
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 25,
                     ),
                     Row(
                       children: [
@@ -223,7 +241,10 @@ class _CartState extends State<Cart> {
   Widget checkoutbtn() {
     return SizedBox(
       height: 40,
-      width: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
@@ -231,16 +252,14 @@ class _CartState extends State<Cart> {
             ),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ))),
+                  borderRadius: BorderRadius.circular(10.0),
+                ))),
         label: Text('Checkout'),
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => Checkout(
-              
-              ),
+              builder: (context) => Checkout(),
             ),
           );
           // Navigator.push(
@@ -265,14 +284,17 @@ class _CartState extends State<Cart> {
   Widget clearcart() {
     return SizedBox(
       height: 40,
-      width: MediaQuery.of(context).size.width * 0.4,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ))),
+                  borderRadius: BorderRadius.circular(10.0),
+                ))),
         label: Text(
           'Clear Cart',
           style: TextStyle(

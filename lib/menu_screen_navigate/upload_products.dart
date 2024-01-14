@@ -7,64 +7,103 @@ import 'package:http/http.dart' as http;
 import '../db.dart' as db;
 
 class Upload_product extends StatefulWidget {
-  const Upload_product({super.key});
+  const Upload_product({Key? key});
 
   @override
   State<Upload_product> createState() => _Upload_productState();
 }
 
 class _Upload_productState extends State<Upload_product> {
-  TextEditingController Productname = TextEditingController();
-  TextEditingController ProductPrice = TextEditingController();
-  TextEditingController ProductQuantity = TextEditingController();
-  TextEditingController ProductCategory = TextEditingController();
+  TextEditingController productName = TextEditingController();
+  TextEditingController productPrice = TextEditingController();
+  TextEditingController productQuantity = TextEditingController();
+  TextEditingController productCategory = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          SizedBox(
-            height: 60,
-          ),
-          Text("Upload Products"),
-          Text("Product Name"),
-          TextField(
-            controller: Productname,
-          ),
-          Text("Product Price"),
-          TextField(
-            controller: ProductPrice,
-          ),
-          Text("Product Quantity"),
-          TextField(
-            controller: ProductQuantity,
-          ),
-          Text("Product Category"),
-          TextField(
-            controller: ProductCategory,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              UploadInvo();
-            },
-            child: Text('Upload Item'),
-          )
-        ],
+      appBar: AppBar(
+        backgroundColor: Color(0xff374366),
+        title: Text('Upload Products'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Product Name',
+              style: TextStyle(fontSize: 18),
+            ),
+            TextField(
+              controller: productName,
+              decoration: InputDecoration(
+                hintText: 'Enter product name',
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Product Price',
+              style: TextStyle(fontSize: 18),
+            ),
+            TextField(
+              controller: productPrice,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Enter product price',
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Product Quantity',
+              style: TextStyle(fontSize: 18),
+            ),
+            TextField(
+              controller: productQuantity,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: 'Enter product quantity',
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Product Category',
+              style: TextStyle(fontSize: 18),
+            ),
+            TextField(
+              controller: productCategory,
+              decoration: InputDecoration(
+                hintText: 'Enter product category',
+              ),
+            ),
+            SizedBox(height: 24),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  uploadInvoice();
+                },
+                child: Text('Upload Item'),
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff374366)),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Future<void> UploadInvo() async {
+  Future<void> uploadInvoice() async {
     final String apiUrl = "${db.dblink}/uploadinvo";
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'ProductName': Productname.text.toString(),
-          'ProductPrice': int.tryParse(ProductPrice.text.toString()) ?? 0,
-          'ProductQuantity': int.tryParse(ProductQuantity.text.toString()) ?? 0,
-          'ProductCategory': ProductCategory.text.toString(),
+          'ProductName': productName.text.toString(),
+          'ProductPrice': int.tryParse(productPrice.text.toString()) ?? 0,
+          'ProductQuantity': int.tryParse(productQuantity.text.toString()) ?? 0,
+          'ProductCategory': productCategory.text.toString(),
         }),
       );
 

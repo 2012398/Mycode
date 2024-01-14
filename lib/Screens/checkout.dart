@@ -4,6 +4,7 @@ import 'dart:convert';
 
 // import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/menu_screen1.dart';
@@ -39,6 +40,9 @@ class Checkout extends StatefulWidget {
 
 class _CheckoutState extends State<Checkout> {
   @override
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+
   void initState() {
     super.initState();
     Getinvo(uid);
@@ -54,6 +58,7 @@ class _CheckoutState extends State<Checkout> {
 
   var data = {};
   var calc;
+
   Future<void> Getinvo(String uid) async {
     var url = Uri.parse("${db.dblink}/CartItems:$uid");
     final response =
@@ -81,6 +86,7 @@ class _CheckoutState extends State<Checkout> {
   }
 
   var obj;
+
   @override
   Widget build(BuildContext context) {
     obj = data['Products'];
@@ -89,40 +95,156 @@ class _CheckoutState extends State<Checkout> {
         child: Column(
           children: [
             Container(
-              color: Colors.blue,
-              height: MediaQuery.of(context).size.height * 0.05, //zawat
+              color: Color(0xff374366),
+              height: MediaQuery.of(context).size.height * 0.08,
               child: Center(
                 child: Text(
                   'Checkout',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.657, //zawat
-              child: (obj == null)
-                  ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      itemCount: obj.length,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 0.0, horizontal: 8.0),
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(obj[index]['itemName']),
-                          subtitle: Text(obj[index]['category']),
-                          trailing: Text(formatter
-                              .format(
-                                  obj[index]['price'] * obj[index]['quantity'])
-                              .toString()),
-                        );
-                      },
+              height: MediaQuery.of(context).size.height * 0.657,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: (obj == null)
+                        ? Center(child: CircularProgressIndicator())
+                        : ListView.builder(
+                            itemCount: obj.length,
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 0.0,
+                              horizontal: 8.0,
+                            ),
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text(obj[index]['itemName']),
+                                subtitle: Text(obj[index]['category']),
+                                trailing: Text(
+                                  formatter
+                                      .format(obj[index]['price'] *
+                                          obj[index]['quantity'])
+                                      .toString(),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                  SizedBox(height: 16),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                "Name:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                "Email:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                "Address:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: TextFormField(
+                            controller: addressController,
+                            maxLines: 2,
+                            decoration: InputDecoration(
+                              labelText: 'Delivery Address',
+                              hintText: 'Enter your delivery address',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your delivery address';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 5.0),
+                              child: Text(
+                                "Phone number: ",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: TextFormField(
+                            controller: phoneNumberController,
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              labelText: 'Phone Number',
+                              hintText: 'Enter your phone number',
+                              border: OutlineInputBorder(),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please enter your mobile number.";
+                              }
+                              if (!RegExp(r"^(03[0-9]{9})$").hasMatch(value)) {
+                                return "Phone number is invalid";
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.10, //zawat
+                height: MediaQuery.of(context).size.height * 0.10,
                 padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                 width: MediaQuery.of(context).size.width,
                 color: Color(0xfff4f4f4),
@@ -194,7 +316,7 @@ class _CheckoutState extends State<Checkout> {
                       ],
                     ),
                     SizedBox(
-                      height: 5,
+                      height: 25,
                     ),
                     Row(
                       children: [
@@ -222,7 +344,9 @@ class _CheckoutState extends State<Checkout> {
       width: MediaQuery.of(context).size.width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue),
+            backgroundColor: MaterialStateProperty.all<Color>(
+              Color(0xff374366),
+            ),
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
@@ -290,7 +414,9 @@ class _CheckoutState extends State<Checkout> {
             ))),
         label: Text(
           'Clear Cart',
-          style: TextStyle(color: Colors.lightBlue),
+          style: TextStyle(
+            color: Color(0xff374366),
+          ),
         ),
         onPressed: () async {
           result = await db.ClearCart(uid, context);
@@ -298,7 +424,7 @@ class _CheckoutState extends State<Checkout> {
         icon: Icon(
           Icons.remove_shopping_cart,
           size: 24,
-          color: Colors.lightBlue,
+          color: Color(0xff374366),
         ),
       ),
     );
