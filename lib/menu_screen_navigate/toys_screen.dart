@@ -43,7 +43,9 @@ class _ToysState extends State<Toys> {
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
+          child: (obj == null)
+              ? Center(child: CircularProgressIndicator())
+              :  GridView.builder(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 8.0,
