@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/Cart.dart';
-import 'package:fyp/Screens/checkout_details.dart';
 import 'package:fyp/Screens/admin_screen.dart';
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
