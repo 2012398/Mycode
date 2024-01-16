@@ -296,6 +296,7 @@ class _SignupFormState extends State<SignupForm> {
       UserCredential cred, String name, String contact) async {
     await cred.user?.updateDisplayName(name);
     await cred.user?.updatePhoneNumber(contact as PhoneAuthCredential);
+    // await cred.user?.updatePhoneNumber(phoneCredential)
     // await cred.user?.updatePhotoURL(
     //     'https://firebasestorage.googleapis.com/v0/b/pc-builder-2c0a4.appspot.com/o/DisplayPicture%2Fdefaultimage.jpg?alt=media&token=af41bdaf-f5f4-4f0d-ad96-78734f8eb73a');
   }

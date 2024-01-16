@@ -19,7 +19,7 @@ double totalPrice = 0;
 double sum = 0;
 double checker = 0;
 double total = 0;
-var dc = 0;
+var dc = 100;
 var cost = 0;
 List itemprices = [];
 var data;
@@ -40,7 +40,21 @@ class Checkout extends StatefulWidget {
 
 class _CheckoutState extends State<Checkout> {
   @override
-  final TextEditingController phoneNumberController = TextEditingController();
+  var phonenumber;
+  void initializeFlutterFire() {
+    User user = FirebaseAuth.instance.currentUser!;
+
+    if (user != null) {
+      // Do something with the user object
+      phonenumber = user.phoneNumber!;
+    } else {
+      // User is null, handle this case
+    }
+  }
+
+  // final user = FirebaseAuth.instance.currentUser!;
+  final TextEditingController phoneNumberController =
+      TextEditingController(text: '0${user.phoneNumber}');
   final TextEditingController addressController = TextEditingController();
 
   void initState() {
@@ -151,6 +165,16 @@ class _CheckoutState extends State<Checkout> {
                                 textAlign: TextAlign.start,
                               ),
                             ),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: Text(
+                                user.displayName!,
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(height: 10),
@@ -160,6 +184,16 @@ class _CheckoutState extends State<Checkout> {
                               padding: const EdgeInsets.only(left: 5.0),
                               child: Text(
                                 "Email:",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                              child: Text(
+                                user.email!,
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.start,
@@ -258,6 +292,12 @@ class _CheckoutState extends State<Checkout> {
                         textAlign: TextAlign.start,
                       ),
                       Spacer(),
+                      Text(
+                        formatter.format(total).toString(),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.start,
+                      ),
                     ]),
                     SizedBox(
                       height: 5,
@@ -308,7 +348,8 @@ class _CheckoutState extends State<Checkout> {
                         ),
                         Spacer(),
                         Text(
-                          formatter.format(total).toString(),
+                          // formatter.format(total).toString(),
+                          formatter.format(total + dc).toString(),
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.start,
@@ -353,7 +394,13 @@ class _CheckoutState extends State<Checkout> {
             ))),
         label: Text('Place Order'),
         onPressed: () {
-          placeorder();
+          var ojb = {
+            'Name': user.displayName!,
+            'contact': phoneNumberController.text,
+            'address': addressController.text,
+            'subtotal': (total + dc)
+          };
+          placeorder(ojb);
           // Navigator.push(
           //   context,
           //   MaterialPageRoute(
@@ -373,11 +420,12 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 
-  Future<void> placeorder() async {
+  Future<void> placeorder(var obj) async {
     final String apiUrl = '${db.dblink}/placeorder/$uid';
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(obj),
     );
     var msg = jsonDecode(response.body);
     if (response.statusCode == 201) {

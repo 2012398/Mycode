@@ -66,6 +66,7 @@ app.post("/uploadinvo", async (req, res) => {
 });
 app.post("/placeorder/:userId", async (req, res) => {
   const { userId } = req.params;
+  const { Name, contact, address, subtotal } = req.body;
 
   try {
     console.log(userId);
@@ -100,6 +101,10 @@ app.post("/placeorder/:userId", async (req, res) => {
 
     // Create a new order document in the user's orders collection
     const orderDoc = await userOrderRef.add({
+      Name,
+      address,
+      contact,
+      subtotal,
       items,
       total,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
