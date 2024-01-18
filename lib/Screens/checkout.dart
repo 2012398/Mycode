@@ -41,6 +41,7 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   @override
   var phonenumber;
+
   void initializeFlutterFire() {
     User user = FirebaseAuth.instance.currentUser!;
 
@@ -54,7 +55,7 @@ class _CheckoutState extends State<Checkout> {
 
   // final user = FirebaseAuth.instance.currentUser!;
   final TextEditingController phoneNumberController =
-      TextEditingController(text: '0${user.phoneNumber}');
+      TextEditingController(text: '${user.phoneNumber}');
   final TextEditingController addressController = TextEditingController();
 
   void initState() {
@@ -216,22 +217,24 @@ class _CheckoutState extends State<Checkout> {
                           ],
                         ),
                         SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TextFormField(
-                            controller: addressController,
-                            maxLines: 2,
-                            decoration: InputDecoration(
-                              labelText: 'Delivery Address',
-                              hintText: 'Enter your delivery address',
-                              border: OutlineInputBorder(),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: TextFormField(
+                              controller: addressController,
+                              maxLines: 2,
+                              decoration: InputDecoration(
+                                labelText: 'Delivery Address',
+                                hintText: 'Enter your delivery address',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your delivery address';
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your delivery address';
-                              }
-                              return null;
-                            },
                           ),
                         ),
                         SizedBox(height: 10),
@@ -249,25 +252,28 @@ class _CheckoutState extends State<Checkout> {
                           ],
                         ),
                         SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TextFormField(
-                            controller: phoneNumberController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                              hintText: 'Enter your phone number',
-                              border: OutlineInputBorder(),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: TextFormField(
+                              controller: phoneNumberController,
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                labelText: 'Phone Number',
+                                hintText: 'Enter your phone number',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter your mobile number.";
+                                }
+                                if (!RegExp(r"^(03[0-9]{9})$")
+                                    .hasMatch(value)) {
+                                  return "Phone number is invalid";
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your mobile number.";
-                              }
-                              if (!RegExp(r"^(03[0-9]{9})$").hasMatch(value)) {
-                                return "Phone number is invalid";
-                              }
-                              return null;
-                            },
                           ),
                         ),
                       ],
