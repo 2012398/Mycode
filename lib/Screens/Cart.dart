@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/checkout.dart';
+import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:fyp/db.dart' as db;
@@ -248,16 +249,6 @@ class _CartState extends State<Cart> {
               builder: (context) => Checkout(),
             ),
           );
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => checkoutscreen(
-          //       receivedMap: data,
-          //       total: total,
-          //       items: globals.items,
-          //     ),
-          //   ),
-          // );
         },
         icon: Icon(
           Icons.shopping_cart_checkout,
@@ -273,11 +264,13 @@ class _CartState extends State<Cart> {
       width: MediaQuery.of(context).size.width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
-            ))),
+            ),
+          ),
+        ),
         label: Text(
           'Clear Cart',
           style: TextStyle(
@@ -286,6 +279,14 @@ class _CartState extends State<Cart> {
         ),
         onPressed: () async {
           result = await db.ClearCart(uid, context);
+          if (result) {
+            // Navigate to a different page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => MenuScreen1()),
+            );
+          }
         },
         icon: Icon(
           Icons.remove_shopping_cart,

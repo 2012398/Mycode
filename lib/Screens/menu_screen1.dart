@@ -82,6 +82,11 @@ class _MenuScreen1State extends State<MenuScreen1> {
       key: _key,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        title: const Center(
+            child: Text(
+          "Babybloom",
+          style: TextStyle(fontWeight: FontWeight.w300),
+        )),
         backgroundColor: const Color(0xff374366),
         actions: [
           Padding(

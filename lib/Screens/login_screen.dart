@@ -8,7 +8,6 @@ import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:fyp/Screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -307,21 +306,22 @@ class _FormFieldsState extends State<FormFields> {
       });
     }
   }
-    Future<void> login() async {
+
+  Future<void> login() async {
     try {
-      UserCredential authResult = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential authResult =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
       );
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => const MenuScreen1()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const MenuScreen1()));
       print('Login successful. User: ${authResult.user}');
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
-      // Handle error, e.g., show a snackbar with an error message
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.toString())));
     }
   }
-
-  
 }
 
 class ForgotPasswordForm extends StatefulWidget {
@@ -429,7 +429,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           content: Text('Password reset link sent successfully.'),
         ),
       );
-      Navigator.of(context).pop(); // Close the bottom sheet
+      Navigator.of(context).pop();
     } catch (e) {
       setState(() {
         _errorMessage1 =

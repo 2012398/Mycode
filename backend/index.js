@@ -78,7 +78,6 @@ app.post("/placeorder/:userId", async (req, res) => {
 
     const userOrderRef = admin
       .firestore()
-
       .collection("orders");
 
     // Get all items from the user's cart
