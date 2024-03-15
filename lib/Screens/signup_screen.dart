@@ -259,6 +259,8 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
         ),
+
+
         Padding(
           padding: const EdgeInsets.only(bottom: 30),
           child: RichText(
@@ -328,7 +330,6 @@ class _SignupFormState extends State<SignupForm> {
           builder: (context) => const LoginScreen(),
         ),
       );
-
       print('User created successfully. User ID: ${responseData['userId']}');
     } else if (response.statusCode == 400) {
       ScaffoldMessenger.of(context)

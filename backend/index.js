@@ -42,6 +42,8 @@ app.post("/signup", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 app.post("/uploadinvo", async (req, res) => {
   try {
     console.log("Received uploadinvo request:", req.body);
@@ -166,51 +168,7 @@ app.post("/add-to-cart:userId", async (req, res) => {
   }
 });
 
-// app.post("/add-to-cart:userId", async (req, res) => {
-//   const { userId } = req.params;
-//   const { itemName, quantity, price, category } = req.body;
 
-//   try {
-//     console.log(userId);
-//     // Get a reference to the user's cart in the Firebase collection
-//     const userCartRef = admin
-//       .firestore()
-//       .collection("users")
-//       .doc(userId)
-//       .collection("cart");
-
-//     // Add the item to the user's cart
-//     await userCartRef.add({
-//       itemName,
-//       quantity,
-//       price,
-//       category,
-//     });
-
-//     res
-//       .status(201)
-//       .json({ succes: "Success", message: "Item added to cart successfully" });
-//   } catch (error) {
-//     console.error("Error adding item to cart:", error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-// const Product = mongoose.model("inventory", InventorySchema);
-
-// app.get("/getAll", async (req, res) => {
-//   try {
-//     const data = await Product.find();
-//     console.log("Products: ", data);
-//     res
-//       .status(200)
-//       .json({ success: true, Products: data, message: "API GET ALL" });
-//     // res.json(data);
-//   } catch (error) {
-//     console.error("Error fetching product by ID:", error);
-//     res.status(500).json({ message: error.message });
-//   }
-// });
 app.delete("/CartClear:uid", async (req, res) => {
   try {
     let userId = req.params.uid;
@@ -311,19 +269,7 @@ app.get("/inventory", async (req, res) => {
 });
 
 const inventoryCollection = admin.firestore().collection("inventory");
-// app.get("/inventory", async (req, res) => {
-//   try {
-//     const snapshot = await inventoryCollection.get();
-//     const data = snapshot.docs.map((doc) => doc.data());
-//     console.log(data);
-//     res
-//       .status(200)
-//       .json({ success: true, Products: data, message: "API GET ALL" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
