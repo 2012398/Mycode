@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../menu_screen_navigate/upload_products.dart';
+
 class AdminScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -59,12 +61,33 @@ class AdminScreen extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Text(
-            'Welcome to the Admin Dashboard!',
-            style: TextStyle(fontSize: 20),
-          ),
+        padding: const EdgeInsets.all(50),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff374366)),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Upload_product(),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    'Upload Products',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+            // Add more widgets or content as needed
+          ],
         ),
       ),
     );

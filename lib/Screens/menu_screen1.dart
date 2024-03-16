@@ -11,7 +11,6 @@ import 'package:fyp/menu_screen_navigate/nipple_pacifiers_screen.dart';
 import 'package:fyp/menu_screen_navigate/nutri_and_supl_screen.dart';
 import 'package:fyp/menu_screen_navigate/skin_care_screen.dart';
 import 'package:fyp/menu_screen_navigate/toys_screen.dart';
-import 'package:fyp/menu_screen_navigate/upload_products.dart';
 import 'package:fyp/menu_screen_navigate/wet_wipes_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -87,6 +86,11 @@ class _MenuScreen1State extends State<MenuScreen1> {
       key: _key,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        title: const Center(
+            child: Text(
+          "Babybloom",
+          style: TextStyle(fontWeight: FontWeight.w300),
+        )),
         backgroundColor: const Color(0xff374366),
         actions: [
           Padding(

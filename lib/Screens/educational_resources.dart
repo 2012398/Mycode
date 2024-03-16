@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class EducationalResources extends StatelessWidget {
   const EducationalResources({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +85,6 @@ class BlogCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigate to a different page when the card is tapped
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => destinationPage),
@@ -120,6 +120,7 @@ class BlogCard extends StatelessWidget {
 
 class FirstPage extends StatelessWidget {
   const FirstPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -537,6 +538,7 @@ class FirstPage extends StatelessWidget {
 
 class SecondPage extends StatelessWidget {
   const SecondPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -779,6 +781,7 @@ class SecondPage extends StatelessWidget {
 
 class ThirdPage extends StatelessWidget {
   const ThirdPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1168,6 +1171,7 @@ class ThirdPage extends StatelessWidget {
 
 class FourthPage extends StatelessWidget {
   const FourthPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1575,6 +1579,7 @@ class FourthPage extends StatelessWidget {
 
 class FifthPage extends StatelessWidget {
   const FifthPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1930,6 +1935,7 @@ class FifthPage extends StatelessWidget {
 
 class SixthPage extends StatelessWidget {
   const SixthPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -2572,6 +2578,7 @@ class SixthPage extends StatelessWidget {
 
 class SeventhPage extends StatelessWidget {
   const SeventhPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -3169,6 +3176,7 @@ class SeventhPage extends StatelessWidget {
 
 class EighthPage extends StatelessWidget {
   const EighthPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

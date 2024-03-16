@@ -259,6 +259,8 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
         ),
+
+
         Padding(
           padding: const EdgeInsets.only(bottom: 30),
           child: RichText(
@@ -296,9 +298,6 @@ class _SignupFormState extends State<SignupForm> {
       UserCredential cred, String name, String contact) async {
     await cred.user?.updateDisplayName(name);
     await cred.user?.updatePhoneNumber(contact as PhoneAuthCredential);
-    // await cred.user?.updatePhoneNumber(phoneCredential)
-    // await cred.user?.updatePhotoURL(
-    //     'https://firebasestorage.googleapis.com/v0/b/pc-builder-2c0a4.appspot.com/o/DisplayPicture%2Fdefaultimage.jpg?alt=media&token=af41bdaf-f5f4-4f0d-ad96-78734f8eb73a');
   }
 
   Future<void> Register() async {
@@ -322,10 +321,9 @@ class _SignupFormState extends State<SignupForm> {
     );
 
     if (response.statusCode == 201) {
-      // User created successfully
       final Map<String, dynamic> responseData = jsonDecode(response.body);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('User Created Succesfully ${responseData['userId']}')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(' ${responseData['message']}')));
 
       Navigator.pushReplacement(
         context,

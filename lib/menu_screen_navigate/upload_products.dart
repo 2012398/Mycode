@@ -188,7 +188,12 @@ class _Upload_productState extends State<Upload_product> {
                 onPressed: () {
                   uploadInvoice();
                 },
-                child: Text('Upload Item'),
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Upload Item',
+                      style: TextStyle(fontSize: 15),
+                    )),
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff374366)),
               ),

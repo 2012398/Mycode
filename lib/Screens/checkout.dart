@@ -41,20 +41,18 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   @override
   var phonenumber;
+
   void initializeFlutterFire() {
     User user = FirebaseAuth.instance.currentUser!;
 
     if (user != null) {
-      // Do something with the user object
       phonenumber = user.phoneNumber!;
-    } else {
-      // User is null, handle this case
-    }
+    } else {}
   }
 
   // final user = FirebaseAuth.instance.currentUser!;
   final TextEditingController phoneNumberController =
-      TextEditingController(text: '0${user.phoneNumber}');
+      TextEditingController(text: '${user.phoneNumber}');
   final TextEditingController addressController = TextEditingController();
 
   void initState() {
@@ -111,15 +109,29 @@ class _CheckoutState extends State<Checkout> {
             Container(
               color: Color(0xff374366),
               height: MediaQuery.of(context).size.height * 0.08,
-              child: Center(
-                child: Text(
-                  'Checkout',
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                  textAlign: TextAlign.center,
-                ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'Checkout',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
@@ -216,22 +228,24 @@ class _CheckoutState extends State<Checkout> {
                           ],
                         ),
                         SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TextFormField(
-                            controller: addressController,
-                            maxLines: 2,
-                            decoration: InputDecoration(
-                              labelText: 'Delivery Address',
-                              hintText: 'Enter your delivery address',
-                              border: OutlineInputBorder(),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: TextFormField(
+                              controller: addressController,
+                              maxLines: 2,
+                              decoration: InputDecoration(
+                                labelText: 'Delivery Address',
+                                hintText: 'Enter your delivery address',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your delivery address';
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your delivery address';
-                              }
-                              return null;
-                            },
                           ),
                         ),
                         SizedBox(height: 10),
@@ -249,25 +263,28 @@ class _CheckoutState extends State<Checkout> {
                           ],
                         ),
                         SizedBox(height: 5),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: TextFormField(
-                            controller: phoneNumberController,
-                            keyboardType: TextInputType.phone,
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                              hintText: 'Enter your phone number',
-                              border: OutlineInputBorder(),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: TextFormField(
+                              controller: phoneNumberController,
+                              keyboardType: TextInputType.phone,
+                              decoration: InputDecoration(
+                                labelText: 'Phone Number',
+                                hintText: 'Enter your phone number',
+                                border: OutlineInputBorder(),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return "Please enter your mobile number.";
+                                }
+                                if (!RegExp(r"^(03[0-9]{9})$")
+                                    .hasMatch(value)) {
+                                  return "Phone number is invalid";
+                                }
+                                return null;
+                              },
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter your mobile number.";
-                              }
-                              if (!RegExp(r"^(03[0-9]{9})$").hasMatch(value)) {
-                                return "Phone number is invalid";
-                              }
-                              return null;
-                            },
                           ),
                         ),
                       ],
@@ -401,16 +418,6 @@ class _CheckoutState extends State<Checkout> {
             'subtotal': (total + dc)
           };
           placeorder(ojb);
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => checkoutscreen(
-          //       receivedMap: data,
-          //       total: total,
-          //       items: globals.items,
-          //     ),
-          //   ),
-          // );
         },
         icon: Icon(
           Icons.shopping_cart_checkout,
@@ -458,11 +465,13 @@ class _CheckoutState extends State<Checkout> {
       width: MediaQuery.of(context).size.width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
-            ))),
+            ),
+          ),
+        ),
         label: Text(
           'Clear Cart',
           style: TextStyle(
@@ -471,6 +480,14 @@ class _CheckoutState extends State<Checkout> {
         ),
         onPressed: () async {
           result = await db.ClearCart(uid, context);
+          if (result) {
+            // Navigate to a different page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => MenuScreen1()),
+            );
+          }
         },
         icon: Icon(
           Icons.remove_shopping_cart,
