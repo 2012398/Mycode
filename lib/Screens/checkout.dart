@@ -428,9 +428,15 @@ class _CheckoutState extends State<Checkout> {
       body: jsonEncode(obj),
     );
     var msg = jsonDecode(response.body);
+
+    if (response.statusCode == 400) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(msg[{'error'}]),
+        ),
+      );
+    }
     if (response.statusCode == 201) {
-      print(msg['message']);
-      print(msg['orderId']);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('${msg['message']}, OrderId: ${msg['orderId']}'),
@@ -442,10 +448,7 @@ class _CheckoutState extends State<Checkout> {
           builder: (context) => MenuScreen1(),
         ),
       );
-    } else {
-      print(
-          'Failed to add item to cart. Error: ${response.statusCode}\n${response.body}');
-    }
+    } else {}
     return jsonDecode(response.body);
   }
 

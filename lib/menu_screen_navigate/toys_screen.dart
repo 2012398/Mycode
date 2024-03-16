@@ -15,6 +15,7 @@ class _ToysState extends State<Toys> {
   final String uid = FirebaseAuth.instance.currentUser!.uid;
   var data = {};
   Future<void> Getinvo(String category) async {
+    
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
     final response =
         await http.get(url, headers: {"Content-Type": "application/json"});

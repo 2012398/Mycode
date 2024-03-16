@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/Cart.dart';
 import 'package:fyp/Screens/data.dart';
+import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/main_drawer.dart';
 import 'package:fyp/menu_screen_navigate/bath_accessories_screen.dart';
 import 'package:fyp/menu_screen_navigate/feeding_bottles_screen.dart';
@@ -34,6 +36,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
     Data(image: "assets/images/Bath.jpg", text: "Bath accessories"),
     Data(image: "assets/images/Nipples.jpg", text: "Nipple & Pacifiers"),
     Data(image: "assets/images/Nipples.jpg", text: "Upload Products")
+
   ];
 
   void navigateToPage(int index) {
@@ -73,6 +76,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
       case 8:
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const Upload_product()));
+
         break;
     }
   }

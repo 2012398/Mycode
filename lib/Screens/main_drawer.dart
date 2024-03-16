@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/AddBaby.dart';
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
@@ -104,7 +105,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainDrawer(),
+                    builder: (context) => AddBaby(),
                   ));
             },
             title: Text(

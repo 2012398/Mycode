@@ -302,12 +302,13 @@ class _SignupFormState extends State<SignupForm> {
   }
 
   Future<void> Register() async {
-    final String apiUrl = '${db.dblink}/signup'; // Replace with your server URL
+    final String apiUrl = '${db.dblink}/signup';
     UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: emailController.text, password: passwordController.text);
     String uid = userCredential.user!.uid;
     authprofilesetting(
         userCredential, nameController.text.toString(), mobileController.text);
+
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: {'Content-Type': 'application/json'},
@@ -332,40 +333,19 @@ class _SignupFormState extends State<SignupForm> {
           builder: (context) => const LoginScreen(),
         ),
       );
-
-      print('User created successfully. User ID: ${responseData['userId']}');
     } else if (response.statusCode == 400) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('User Already Exists.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('User Already Exists.'),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
               'User Already Exists.${response.statusCode} / ${response.body}')));
       // Error occurred
-      print('Error: ${response.statusCode}');
-      print('Body: ${response.body}');
+    
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    emailController.addListener(_printLatestValue);
-    passwordController.addListener(_printLatestValue);
-    mobileController.addListener(_printLatestValue);
-    nameController.addListener(_printLatestValue);
-  }
-
-  void _printLatestValue() {
-    final email = emailController.text;
-    final pass = passwordController.text;
-    final numb = mobileController.text;
-    final name = nameController.text;
-
-    print('Email field: $email (${email.characters.length})');
-    print('Password field: $pass (${pass.characters.length})');
-    print('Mobile field: $numb (${numb.characters.length})');
-    print('Name field: $name (${name.characters.length})');
   }
 
   void validateName(String val) {

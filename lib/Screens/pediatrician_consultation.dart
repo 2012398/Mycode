@@ -1,4 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/checkout.dart';
+import '../db.dart' as db;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ConsultationScreen extends StatefulWidget {
   @override
@@ -60,6 +66,51 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
         ),
       ),
     );
+  }
+}
+
+Future<void> bookAppointment(
+  String userId,
+  String selectedDate,
+  String selectedTime,
+) async {
+  BuildContext context = BuildContext as BuildContext;
+  final String apiUrl = '${db.dblink}/bookAppointment';
+  print("api url: $apiUrl");
+
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'doctorname': 'ProductName',
+      'selectedDate': selectedDate.toString(),
+      'selectedTime': selectedTime.toString(),
+      'PatientName': userId.toString()
+    }),
+  );
+  final Map<String, dynamic> responseData = jsonDecode(response.body);
+
+  if (response.statusCode == 200) {
+    // User created successfully
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(' ${responseData['message']}'),
+      ),
+    );
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => MenuScreen1(),
+    //     ));
+  } else if (response.statusCode == 400) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(' ${responseData['message']}'),
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('${responseData['error']}')));
   }
 }
 
@@ -183,7 +234,11 @@ class _DoctorCardState extends State<DoctorCard> {
               style:
                   ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () {
+                bookAppointment(
+                    uid, selectedDate.toString(), selectedTime.toString());
                 // TODO: Implement consultation request submission
+                print(
+                    "${selectedDate.toString()}/// ${selectedTime.toString()}}");
               },
               child: Text('Book Appointment'),
             ),
