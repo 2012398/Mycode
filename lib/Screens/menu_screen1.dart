@@ -12,6 +12,7 @@ import 'package:fyp/menu_screen_navigate/nutri_and_supl_screen.dart';
 import 'package:fyp/menu_screen_navigate/skin_care_screen.dart';
 import 'package:fyp/menu_screen_navigate/toys_screen.dart';
 import 'package:fyp/menu_screen_navigate/wet_wipes_screen.dart';
+import 'package:fyp/menu_screen_navigate/upload_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class MenuScreen1 extends StatefulWidget {
@@ -35,7 +36,6 @@ class _MenuScreen1State extends State<MenuScreen1> {
     Data(image: "assets/images/Bath.jpg", text: "Bath accessories"),
     Data(image: "assets/images/Nipples.jpg", text: "Nipple & Pacifiers"),
     Data(image: "assets/images/Nipples.jpg", text: "Upload Products")
-
   ];
 
   void navigateToPage(int index) {

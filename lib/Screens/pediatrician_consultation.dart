@@ -1,10 +1,12 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/checkout.dart';
 import '../db.dart' as db;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+var responsefromapi;
 
 class ConsultationScreen extends StatefulWidget {
   @override
@@ -30,7 +32,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff374366),
-        title: Text('Pediatrician Consultation'),
+        title: const Text('Pediatrician Consultation'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -69,13 +71,12 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
   }
 }
 
-Future<void> bookAppointment(
+Future<String> bookAppointment(
   String userId,
   String selectedDate,
   String selectedTime,
 ) async {
-  BuildContext context = BuildContext as BuildContext;
-  final String apiUrl = '${db.dblink}/bookAppointment';
+  const String apiUrl = '${db.dblink}/bookAppointment';
   print("api url: $apiUrl");
 
   final response = await http.post(
@@ -89,29 +90,29 @@ Future<void> bookAppointment(
     }),
   );
   final Map<String, dynamic> responseData = jsonDecode(response.body);
+  print(responseData['message']);
+// setState(() {
 
-  if (response.statusCode == 200) {
-    // User created successfully
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(' ${responseData['message']}'),
-      ),
-    );
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => MenuScreen1(),
-    //     ));
-  } else if (response.statusCode == 400) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(' ${responseData['message']}'),
-      ),
-    );
-  } else {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('${responseData['error']}')));
-  }
+  responsefromapi = responseData['message'];
+//   });
+  return responseData['message'];
+
+  // User created successfully
+  // ScaffoldMessenger.of(context).showSnackBar(
+  //   SnackBar(
+  //     content: Text(' ${responseData['message']}'),
+  //   ),
+  // );
+  // Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => MenuScreen1(),
+  //     ));
+  //   if (response.statusCode == 400) {
+  //   return responseData['message'];
+  // } else {
+  //   return responseData['error'];
+  // }
 }
 
 class Doctor {
@@ -234,8 +235,18 @@ class _DoctorCardState extends State<DoctorCard> {
               style:
                   ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
               onPressed: () {
-                bookAppointment(
-                    uid, selectedDate.toString(), selectedTime.toString());
+                setState(() {
+                  bookAppointment(
+                      uid, selectedDate.toString(), selectedTime.toString());
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      responsefromapi.toString(),
+                    ),
+                  ),
+                );
                 // TODO: Implement consultation request submission
                 print(
                     "${selectedDate.toString()}/// ${selectedTime.toString()}}");

@@ -86,18 +86,20 @@ app.post("/bookAppointment", async (req, res) => {
 
     const existingAppointments = await db
       .collection("appointments")
-      .where("doctorId", "==", doctorname)
+      .where("doctorname", "==", doctorname)
       .where("selectedDate", "==", selectedDate)
       .where("selectedTime", "==", selectedTime)
       .get();
 
     if (!existingAppointments.empty) {
-      return res
-        .status(400)
-        .send({message : "Appointment already booked for the selected date and time"});
+      return res.status(400).send({
+        message: "Appointment already booked for the selected date and time",
+      });
     }
     await db.collection("appointments").add(appointmentData);
-    return res.status(200).send("Appointment booked successfully.");
+    return res
+      .status(200)
+      .send({ message: "Appointment booked successfully." });
   } catch (error) {
     console.error("Error booking appointment:", error);
     return res.status(500).send("Internal Server Error");
