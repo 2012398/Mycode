@@ -28,7 +28,9 @@ class FypApp extends StatelessWidget {
     return MaterialApp(
         title: "Babybloom",
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
         home: SplashScreen());
   }
 }
