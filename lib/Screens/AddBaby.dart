@@ -97,8 +97,10 @@ class _AddBabyState extends State<AddBaby> {
       body: jsonEncode({
         'babyname': Name.text.toString(),
         'Bloodgroup': Bloodgroup.text.toString(),
+        'Age': Age.text.toString(),
         'Weight': Weight.text.toString(),
-        'Height': Height.text.toString()
+        'Height': Height.text.toString(),
+        'uid': userId.toString(),
       }),
     );
     final Map<String, dynamic> responseData = jsonDecode(response.body);
