@@ -74,11 +74,8 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
   }
 }
 
-Future<String> bookAppointment(
-  String userId,
-  String selectedDate,
-  String selectedTime,
-) async {
+Future<String> bookAppointment(String userId, String selectedDate,
+    String selectedTime, String doctorsname) async {
   const String apiUrl = '${db.dblink}/bookAppointment';
   print("api url: $apiUrl");
 
@@ -86,7 +83,7 @@ Future<String> bookAppointment(
     Uri.parse(apiUrl),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({
-      'doctorname': 'ProductName',
+      'doctorname': doctorsname.toString(),
       'selectedDate': selectedDate.toString(),
       'selectedTime': selectedTime.toString(),
       'PatientName': userId.toString()
@@ -232,7 +229,10 @@ class _DoctorCardState extends State<DoctorCard> {
                 onPressed: () async {
                   if (selectedDate != null && selectedTime != 'Select Time') {
                     String response = await bookAppointment(
-                        uid, selectedDate!.toString(), selectedTime.toString());
+                        uid,
+                        selectedDate!.toString(),
+                        selectedTime.toString(),
+                        widget.doctor.name);
                     // ignore: use_build_context_synchronously
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

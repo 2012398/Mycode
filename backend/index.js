@@ -164,20 +164,20 @@ app.post("/babyprofile:uid", async (req, res) => {
   const { babyname, Bloodgroup, Age, Weight, Height } = req.body;
   const { uid } = req.params;
   try {
-    const userCartRef = admin
+    const userBabyref = admin
       .firestore()
       .collection("users")
       .doc(uid)
       .collection("babies");
 
     // Check if the item with the same name already exists in the user's cart
-    const existingItem = await userCartRef
+    const existingBaby = await userBabyref
       .where("babyname", "==", babyname)
       .get();
 
-    if (existingItem.empty) {
+    if (existingBaby.empty) {
       // If the item doesn't exist, add it to the cart
-      await userCartRef.add({
+      await userBabyref.add({
         babyname,
         Bloodgroup,
         Age,
@@ -194,7 +194,7 @@ app.post("/babyprofile:uid", async (req, res) => {
       .status(200)
       .json({ message: "Baby Profile has been Added Successfully" });
   } catch (error) {
-    console.error("Caanot Add Baby:", error);
+    console.error("Cannot Add Baby:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
