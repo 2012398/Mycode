@@ -117,10 +117,8 @@ class _CartState extends State<Cart> {
                         return ListTile(
                           title: Text(obj[index]['itemName']),
                           subtitle: Text(obj[index]['category']),
-                          trailing: Text(formatter
-                              .format(
-                                  obj[index]['price'] * obj[index]['quantity'])
-                              .toString()),
+                          trailing: Text(
+                              '${formatter.format(obj[index]['price'] * obj[index]['quantity']).toString()} Rs'),
                         );
                       },
                     ),
@@ -142,7 +140,7 @@ class _CartState extends State<Cart> {
                       ),
                       Spacer(),
                       Text(
-                        formatter.format(total).toString(),
+                        '${formatter.format(total).toString()} Rs',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.start,
@@ -161,7 +159,7 @@ class _CartState extends State<Cart> {
                         ),
                         Spacer(),
                         Text(
-                          dc.toString(),
+                          '${dc.toString()} Rs',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.start,
@@ -198,7 +196,7 @@ class _CartState extends State<Cart> {
                         Spacer(),
                         Text(
                           // formatter.format(total).toString(),
-                          formatter.format(total + dc).toString(),
+                          '  ${formatter.format(total + dc).toString()} Rs',
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.start,

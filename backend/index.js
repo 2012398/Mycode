@@ -6,23 +6,23 @@ const uuid = require("uuid-v4");
 // const { initializeApp } = require("firebase/app");
 // const path = require("path");
 // const fs = require("fs");
-const {
-  getStorage,
-  ref,
-  getDownloadURL,
-  uploadBytesResumable,
-} = require("firebase/storage");
+// const {
+//   getStorage,
+//   ref,
+//   getDownloadURL,
+//   uploadBytesResumable,
+// } = require("firebase/storage");
 
 // const firebase = require("firebase/app");
-const firebaseConfig = {
-  apiKey: "AIzaSyDMPjh0btZKCe6WFQ3wEHr29iDcK5U9ij4",
-  authDomain: "babylogin-d368e.firebaseapp.com",
-  projectId: "babylogin-d368e",
-  storageBucket: "babylogin-d368e.appspot.com",
-  messagingSenderId: "609947077745",
-  appId: "1:609947077745:web:89fc6d51c9df98b9719fd0",
-  measurementId: "G-MS7K3J8SHG",
-};
+// const firebaseConfig = {
+//   apiKey: "AIzaSyDMPjh0btZKCe6WFQ3wEHr29iDcK5U9ij4",
+//   authDomain: "babylogin-d368e.firebaseapp.com",
+//   projectId: "babylogin-d368e",
+//   storageBucket: "babylogin-d368e.appspot.com",
+//   messagingSenderId: "609947077745",
+//   appId: "1:609947077745:web:89fc6d51c9df98b9719fd0",
+//   measurementId: "G-MS7K3J8SHG",
+// };
 const serviceAccount = require("../babylogin-d368e-b34070701543.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -35,43 +35,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 // const storage = getStorage();
-const bucket = admin.storage().bucket();
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-app.post("/uploadImage", upload.single("filename"), async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No file uploaded" });
-    }
-
-    const metadata = {
-      metadata: { firebaseStorageDownloadTokens: uuid() },
-      contentType: req.file.mimetype,
-    };
-
-    const blob = bucket.file(req.file.originalname);
-    const blobStream = blob.createWriteStream({
-      metadata: metadata,
-      gzip: true,
-    });
-
-    blobStream.on("error", (err) => {
-      console.error("Error uploading file:", err);
-      return res.status(500).json({ error: "Error uploading file" });
-    });
-
-    blobStream.on("finish", () => {
-      const image = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-      return res.status(200).json({ image });
-    });
-
-    blobStream.end(req.file.buffer);
-  } catch (e) {
-    console.error("Exception:", e);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 app.post("/bookAppointment", async (req, res) => {
   try {
@@ -103,60 +66,6 @@ app.post("/bookAppointment", async (req, res) => {
   } catch (error) {
     console.error("Error booking appointment:", error);
     return res.status(500).send("Internal Server Error");
-  }
-});
-
-//
-// const bucket = admin.storage().bucket();
-// const uploadPath = "../uploads";
-// app.post("/uploadImage", async (req, res) => {
-//   const file = req.body.file;
-//   console.log(req.file, req.body.file, req.body.image, req.files);
-//   console.log(file);
-
-//   const filePath = path.join(uploadPath, "file.name");
-//   const bucket = admin.storage().bucket();
-
-//   // Save the file to the upload folder
-//   fs.writeFileSync(filePath, file.data);
-
-//   // Upload the file to Firebase Storage
-//   await bucket.upload(filePath, {
-//     destination: file.name,
-//   });
-
-//   // Delete the file from the upload folder
-//   fs.unlinkSync(filePath);
-
-//   res.send({ message: "Image uploaded successfully" });
-// });
-// Signup endpoint
-app.post("/signup", async (req, res) => {
-  try {
-    const { email, displayName, Contact, uid } = req.body;
-
-    // Check if the user already exists
-    const existingUser = await db.collection("users").doc(uid).get();
-
-    if (existingUser.exists) {
-      return res.status(400).json({ error: "User already exists" });
-    } else {
-      await db.collection("users").doc(uid).set({
-        email,
-        displayName,
-        Contact,
-        uid,
-      });
-
-      return res
-        .status(201)
-        .json({ message: "User created successfully", userId: uid });
-    }
-
-    // Create user in Firestore with UID as the document ID
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -199,6 +108,35 @@ app.post("/babyprofile:uid", async (req, res) => {
   }
 });
 
+app.post("/signup", async (req, res) => {
+  try {
+    const { email, displayName, Contact, uid } = req.body;
+
+    // Check if the user already exists
+    const existingUser = await db.collection("users").doc(uid).get();
+
+    if (existingUser.exists) {
+      return res.status(400).json({ error: "User already exists" });
+    } else {
+      await db.collection("users").doc(uid).set({
+        email,
+        displayName,
+        Contact,
+        uid,
+      });
+
+      return res
+        .status(201)
+        .json({ message: "User created successfully", userId: uid });
+    }
+
+    // Create user in Firestore with UID as the document ID
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/uploadinvo", async (req, res) => {
   try {
     const { ProductName, ProductPrice, ProductQuantity, ProductCategory } =
@@ -233,6 +171,22 @@ app.post("/uploadinvo", async (req, res) => {
     res
       .status(500)
       .json({ error: "Internal Server Error", details: error.message });
+  }
+});
+app.get("/inventory", async (req, res) => {
+  try {
+    const category = req.query.category || "Toys";
+    const snapshot = await inventoryCollection
+      .where("ProductCategory", "==", category)
+      .get();
+    const data = snapshot.docs.map((doc) => doc.data());
+    // console.log(data);
+    res
+      .status(200)
+      .json({ success: true, Products: data, message: "API GET ALL" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 app.post("/placeorder/:userId", async (req, res) => {
@@ -417,24 +371,47 @@ app.get("/CartItems:uid", async (req, res) => {
   }
 });
 
-app.get("/inventory", async (req, res) => {
-  try {
-    const category = req.query.category || "Toys"; // Default to 'all' if not provided
-    const snapshot = await inventoryCollection
-      .where("ProductCategory", "==", category)
-      .get();
-    const data = snapshot.docs.map((doc) => doc.data());
-    // console.log(data);
-    res
-      .status(200)
-      .json({ success: true, Products: data, message: "API GET ALL" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
 const inventoryCollection = admin.firestore().collection("inventory");
+
+const bucket = admin.storage().bucket();
+console.log(bucket);
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+// app.post("/uploadImage", upload.single("filename"), async (req, res) => {
+//   try {
+//     if (!req.file) {
+//       return res.status(400).json({ error: "No file uploaded" });
+//     }
+
+//     const metadata = {
+//       metadata: { firebaseStorageDownloadTokens: uuid() },
+//       contentType: req.file.mimetype,
+//     };
+
+//     const blob = bucket.file(req.file.originalname);
+//     const blobStream = blob.createWriteStream({
+//       metadata: metadata,
+//       gzip: true,
+//     });
+
+//     blobStream.on("error", (err) => {
+//       console.error("Error uploading file:", err);
+//       return res.status(500).json({ error: "Error uploading file" });
+//     });
+
+//     blobStream.on("finish", () => {
+//       const image = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+//       return res.status(200).json({ image });
+//     });
+
+//     blobStream.end(req.file.buffer);
+//   } catch (e) {
+//     console.error("Exception:", e);
+//     return res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
