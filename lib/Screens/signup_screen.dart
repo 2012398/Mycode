@@ -259,8 +259,6 @@ class _SignupFormState extends State<SignupForm> {
             ),
           ),
         ),
-
-
         Padding(
           padding: const EdgeInsets.only(bottom: 30),
           child: RichText(
@@ -297,52 +295,57 @@ class _SignupFormState extends State<SignupForm> {
   Future authprofilesetting(
       UserCredential cred, String name, String contact) async {
     await cred.user?.updateDisplayName(name);
+    print(contact.toString());
     await cred.user?.updatePhoneNumber(contact as PhoneAuthCredential);
   }
 
   Future<void> Register() async {
-    final String apiUrl = '${db.dblink}/signup';
-    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: emailController.text, password: passwordController.text);
-    String uid = userCredential.user!.uid;
-    authprofilesetting(
-        userCredential, nameController.text.toString(), mobileController.text);
+    try {
+      final String apiUrl = '${db.dblink}/signup';
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
+      String uid = userCredential.user!.uid;
+      await authprofilesetting(userCredential, nameController.text.toString(),
+          mobileController.text);
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'email': emailController.text.toString(),
-        'password': passwordController.text.toString(),
-        'displayName': nameController.text.toString(),
-        'Contact': mobileController.text.toString(),
-        'uid': uid.toString(),
-      }),
-    );
-
-    if (response.statusCode == 201) {
-      final Map<String, dynamic> responseData = jsonDecode(response.body);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(' ${responseData['message']}')));
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': emailController.text.toString(),
+          'password': passwordController.text.toString(),
+          'displayName': nameController.text.toString(),
+          'Contact': mobileController.text.toString(),
+          'uid': uid.toString(),
+        }),
       );
-    } else if (response.statusCode == 400) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('User Already Exists.'),
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'User Already Exists.${response.statusCode} / ${response.body}')));
-      // Error occurred
-    
+
+      if (response.statusCode == 201) {
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(' ${responseData['message']}')));
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
+      } else if (response.statusCode == 400) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('User Already Exists.'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'User Already Exists.${response.statusCode} / ${response.body}')));
+        // Error occurred
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

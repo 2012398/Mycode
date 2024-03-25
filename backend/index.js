@@ -36,6 +36,20 @@ app.use(cors());
 app.use(express.json());
 // const storage = getStorage();
 
+app.get("/readData", async (req, res) => {
+  try {
+    const snapshot = await db.collection("users").get();
+    const data = [];
+    snapshot.forEach((doc) => {
+      data.push(doc.data());
+    });
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.post("/bookAppointment", async (req, res) => {
   try {
     const { doctorname, selectedDate, selectedTime, PatientName } = req.body;
@@ -411,7 +425,6 @@ const upload = multer({ storage: storage });
 //     return res.status(500).json({ error: "Internal Server Error" });
 //   }
 // });
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;

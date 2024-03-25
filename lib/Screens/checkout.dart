@@ -14,6 +14,7 @@ import 'package:fyp/db.dart' as db;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
+final formkey = GlobalKey<FormState>();
 bool result = false;
 double totalPrice = 0;
 double sum = 0;
@@ -26,6 +27,7 @@ var data;
 final user = FirebaseAuth.instance.currentUser!;
 final uid = FirebaseAuth.instance.currentUser!.uid;
 var formatter = NumberFormat('#,###');
+final TextEditingController phoneNumberController = TextEditingController();
 
 class Checkout extends StatefulWidget {
   // Map<String, dynamic> receivedMap;
@@ -41,23 +43,47 @@ class Checkout extends StatefulWidget {
 class _CheckoutState extends State<Checkout> {
   @override
   var phonenumber;
+  List<dynamic> _data = [];
+  bool _isLoading = true;
 
-  void initializeFlutterFire() {
-    User user = FirebaseAuth.instance.currentUser!;
-
-    if (user != null) {
-      phonenumber = user.phoneNumber!;
-    } else {}
+  Future<void> fetchData() async {
+    final response = await http.get(Uri.parse('${db.dblink}/readData'));
+    if (response.statusCode == 200) {
+      setState(() {
+        _data = json.decode(response.body);
+        _isLoading = false;
+        print(_data);
+        _data.forEach((element) {
+          if (user.displayName! == element['displayName']) {
+            setState(() {
+              phonenumber = element['Contact'];
+              phoneNumberController.text = phonenumber;
+              print(phonenumber);
+            });
+          }
+        });
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
   }
 
+  // void initializeFlutterFire() {
+  //   User user = FirebaseAuth.instance.currentUser!;
+
+  //   if (user != null) {
+  //     phonenumber = user.phoneNumber;
+  //   } else {}
+  // }
   // final user = FirebaseAuth.instance.currentUser!;
-  final TextEditingController phoneNumberController =
-      TextEditingController(text: '${user.phoneNumber}');
+
   final TextEditingController addressController = TextEditingController();
 
   void initState() {
     super.initState();
     Getinvo(uid);
+    fetchData();
+    // initializeFlutterFire();
     // calculator();
   }
 
@@ -425,6 +451,8 @@ class _CheckoutState extends State<Checkout> {
   }
 
   Future<void> placeorder(var obj) async {
+    final isValid = formkey.currentState!.validate();
+    if (!isValid) return;
     final String apiUrl = '${db.dblink}/placeorder/$uid';
     final response = await http.post(
       Uri.parse(apiUrl),
