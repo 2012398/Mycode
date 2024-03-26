@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../Screens/Cart.dart';
 import '../db.dart' as db;
 
 class Medicine extends StatefulWidget {
-  const Medicine({super.key});
+  const Medicine({Key? key});
 
   @override
   State<Medicine> createState() => _MedicineState();
@@ -31,7 +32,6 @@ class _MedicineState extends State<Medicine> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Getinvo("Medicine");
   }
@@ -62,16 +62,17 @@ class _MedicineState extends State<Medicine> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Center(
-                                child: Text(
-                                  product['ProductName'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                              Text(
+                                product['ProductName'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
+                                maxLines: 2, // Limiting to 2 lines
+                                overflow:
+                                    TextOverflow.ellipsis, // Handling overflow
                               ),
-                              const SizedBox(height: 90),
+                              SizedBox(height: 10), // Adding space
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -90,7 +91,9 @@ class _MedicineState extends State<Medicine> {
                                         size: 25,
                                         color: Colors.white,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        db.addToCart(uid, product);
+                                      },
                                     ),
                                   ),
                                 ],

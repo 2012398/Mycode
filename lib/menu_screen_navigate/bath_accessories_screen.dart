@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../Screens/Cart.dart';
 import '../db.dart' as db;
 
 class Bath_accesories extends StatefulWidget {
-  const Bath_accesories({super.key});
+  const Bath_accesories({Key? key});
 
   @override
   State<Bath_accesories> createState() => Bath_accesoriesState();
@@ -30,7 +31,6 @@ class Bath_accesoriesState extends State<Bath_accesories> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Getinvo("Bath accessories");
   }
@@ -61,16 +61,17 @@ class Bath_accesoriesState extends State<Bath_accesories> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Center(
-                                child: Text(
-                                  product['ProductName'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                              Text(
+                                product['ProductName'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
+                                maxLines: 2, // Limiting to 2 lines
+                                overflow:
+                                    TextOverflow.ellipsis, // Handling overflow
                               ),
-                              const SizedBox(height: 90),
+                              SizedBox(height: 10), // Adding space
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -89,7 +90,9 @@ class Bath_accesoriesState extends State<Bath_accesories> {
                                         size: 25,
                                         color: Colors.white,
                                       ),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        db.addToCart(uid, product);
+                                      },
                                     ),
                                   ),
                                 ],

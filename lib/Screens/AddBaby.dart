@@ -39,7 +39,7 @@ class _AddBabyState extends State<AddBaby> {
               'Baby\'s Name: ',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            TextField(controller: Name),
+            TextField(controller: Name, keyboardType: TextInputType.text),
             SizedBox(
               height: 10,
             ),
@@ -59,6 +59,7 @@ class _AddBabyState extends State<AddBaby> {
             ),
             TextField(
               controller: Age,
+              keyboardType: TextInputType.number,
             ),
             SizedBox(
               height: 10,
@@ -69,6 +70,7 @@ class _AddBabyState extends State<AddBaby> {
             ),
             TextField(
               controller: Height,
+              keyboardType: TextInputType.number,
             ),
             SizedBox(
               height: 10,

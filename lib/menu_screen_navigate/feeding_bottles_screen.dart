@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-
 import '../Screens/Cart.dart';
 import '../db.dart' as db;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class Feeding_bottle extends StatefulWidget {
-  const Feeding_bottle({super.key});
+  const Feeding_bottle({Key? key});
 
   @override
   State<Feeding_bottle> createState() => _Feeding_bottleState();
@@ -32,7 +31,6 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Getinvo("Feeding bottle");
   }
@@ -63,16 +61,17 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Center(
-                                child: Text(
-                                  product['ProductName'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                              Text(
+                                product['ProductName'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
                                 ),
+                                maxLines: 3, // Limiting to 2 lines
+                                overflow:
+                                    TextOverflow.ellipsis, // Handling overflow
                               ),
-                              const SizedBox(height: 70),
+                              SizedBox(height: 10), // Adding space
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

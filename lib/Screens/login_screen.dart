@@ -1,6 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, use_key_in_widget_constructors
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +6,7 @@ import 'package:fyp/Screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,16 +41,18 @@ class LoginScreen extends StatelessWidget {
                 "Hello, BabyBloomer!",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
-                    fontSize: 24, fontWeight: FontWeight.w500),
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(
+            Padding(
+              padding: const EdgeInsets.only(
                 left: 30,
                 right: 30,
               ),
               child: FormFields(),
-            )
+            ),
           ],
         ),
       ),
@@ -62,7 +61,7 @@ class LoginScreen extends StatelessWidget {
 }
 
 class FormFields extends StatefulWidget {
-  const FormFields({super.key});
+  const FormFields({Key? key}) : super(key: key);
 
   @override
   State<FormFields> createState() => _FormFieldsState();
@@ -73,9 +72,12 @@ class _FormFieldsState extends State<FormFields> {
   final _auth = FirebaseAuth.instance;
   String _errorMessage = "";
   final ButtonStyle bluestyle = ElevatedButton.styleFrom(
-    padding: (const EdgeInsets.fromLTRB(100, 20, 100, 20)),
-    textStyle:
-        GoogleFonts.rubik(fontSize: 18, fontWeight: FontWeight.w400, height: 0),
+    padding: const EdgeInsets.fromLTRB(100, 20, 100, 20),
+    textStyle: GoogleFonts.rubik(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+      height: 0,
+    ),
     backgroundColor: const Color(0xff374366),
     foregroundColor: Colors.white,
   );
@@ -104,7 +106,9 @@ class _FormFieldsState extends State<FormFields> {
                   hintText: "Email",
                   prefixIcon: Icon(Icons.email_outlined),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+                    borderRadius: BorderRadius.all(
+                      Radius.elliptical(40, 40),
+                    ),
                   ),
                 ),
                 validator: (value) {
@@ -133,10 +137,11 @@ class _FormFieldsState extends State<FormFields> {
                   prefixIcon: const Icon(Icons.password_outlined),
                   suffixIcon: IconButton(
                     icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.grey),
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
                     onPressed: () {
                       setState(() {
                         _isPasswordVisible = !_isPasswordVisible;
@@ -144,8 +149,10 @@ class _FormFieldsState extends State<FormFields> {
                     },
                   ),
                   border: const OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.all(Radius.elliptical(40, 40))),
+                    borderRadius: BorderRadius.all(
+                      Radius.elliptical(40, 40),
+                    ),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -171,11 +178,12 @@ class _FormFieldsState extends State<FormFields> {
                           TextSpan(
                             text: "Forgot password?",
                             style: GoogleFonts.rubik(
-                                color: const Color(0xff374366),
-                                fontWeight: FontWeight.w500),
+                              color: const Color(0xff374366),
+                              fontWeight: FontWeight.w500,
+                            ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                showForgotPassBottomSheet(context);
+                                showForgotPassDialog(context);
                               },
                           )
                         ],
@@ -195,7 +203,7 @@ class _FormFieldsState extends State<FormFields> {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
         Padding(
           padding: const EdgeInsets.only(
@@ -226,52 +234,24 @@ class _FormFieldsState extends State<FormFields> {
                 TextSpan(
                   text: "Sign Up",
                   style: GoogleFonts.rubik(
-                      color: const Color(0xff374366),
-                      fontWeight: FontWeight.w500),
+                    color: const Color(0xff374366),
+                    fontWeight: FontWeight.w500,
+                  ),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignupScreen()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignupScreen(),
+                        ),
+                      );
                     },
-                )
+                ),
               ],
             ),
           ),
-        )
+        ),
       ],
-    );
-  }
-
-  void showForgotPassBottomSheet(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true, // Make the bottom sheet full-screen
-      builder: (context) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Container(
-            height: MediaQuery.of(context).size.height *
-                0.3, // Adjust the height as needed
-            color: Colors.black.withOpacity(0.5), // Adjust opacity as needed
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.elliptical(40, 40),
-                  topLeft: Radius.elliptical(40, 40),
-                ),
-              ),
-              child: Center(
-                child: ForgotPasswordForm(),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -280,7 +260,8 @@ class _FormFieldsState extends State<FormFields> {
       setState(() {
         _errorMessage = "Email can not be empty";
       });
-    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$").hasMatch(val)) {
+    } else if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-      .]{2,4}$")
+        .hasMatch(val)) {
       setState(() {
         _errorMessage = "Invalid Email Address";
       });
@@ -324,9 +305,26 @@ class _FormFieldsState extends State<FormFields> {
   }
 }
 
+void showForgotPassDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.4,
+          padding: EdgeInsets.all(20.0),
+          child: ForgotPasswordForm(),
+        ),
+      );
+    },
+  );
+}
+
 class ForgotPasswordForm extends StatefulWidget {
   @override
-  // ignore: library_private_types_in_public_api
   _ForgotPasswordFormState createState() => _ForgotPasswordFormState();
 }
 
@@ -343,62 +341,65 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        Form(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: TextFormField(
-                  controller: emailController1,
-                  decoration: const InputDecoration(
-                    hintText: "Email",
-                    prefixIcon: Icon(Icons.email_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.elliptical(40, 40)),
+    return SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: Column(
+        children: [
+          Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
+                  child: TextFormField(
+                    controller: emailController1,
+                    decoration: const InputDecoration(
+                      hintText: "Email",
+                      prefixIcon: Icon(Icons.email_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.all(Radius.elliptical(40, 40)),
+                      ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter your email.";
+                      }
+                      if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$")
+                          .hasMatch(value)) {
+                        return "Email not in the correct format.";
+                      }
+                      return null;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Please enter your email.";
-                    }
-                    if (!RegExp(r"^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$")
-                        .hasMatch(value)) {
-                      return "Email not in the correct format.";
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              const SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  _errorMessage1,
-                  style: const TextStyle(color: Colors.red),
+                // const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    _errorMessage1,
+                    style: const TextStyle(color: Colors.red),
+                  ),
                 ),
-              ),
-              ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.elliptical(40, 40)),
-                child: ElevatedButton(
-                  style: button,
-                  onPressed: () {
-                    if (validateEmail(emailController1.text)) {
-                      sendResetLink(emailController1.text);
-                    }
-                  },
-                  child: const Text("Send Reset Link"),
+                SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius:
+                      const BorderRadius.all(Radius.elliptical(10, 10)),
+                  child: ElevatedButton(
+                    style: button,
+                    onPressed: () {
+                      if (validateEmail(emailController1.text)) {
+                        sendResetLink(emailController1.text);
+                      }
+                    },
+                    child: const Text("Send Reset Link"),
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              )
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
