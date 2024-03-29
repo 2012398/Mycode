@@ -155,11 +155,20 @@ class _DoctorCardState extends State<DoctorCard> {
 
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
+        context: context,
+        initialDate: selectedDate ?? DateTime.now(),
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: Color(0xff374366),
+              ),
+            ),
+            child: child ?? Container(),
+          );
+        });
 
     if (picked != null) {
       setState(() {
