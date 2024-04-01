@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
+import 'package:fyp/Screens/baby_profile.dart';
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
@@ -77,6 +78,20 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
+                    builder: (context) => Baby_profile(),
+                  ));
+            },
+            title: Text(
+              "Baby Profile",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.local_hospital_rounded),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) => MainDrawer(),
                   ));
             },
@@ -96,20 +111,6 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Medical Records",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.baby_changing_station_outlined),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddBaby(),
-                  ));
-            },
-            title: Text(
-              "Add Baby",
               style: GoogleFonts.rubik(),
             ),
           ),
