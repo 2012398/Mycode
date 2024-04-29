@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, must_be_immutable
 
 import 'dart:async';
 import 'dart:convert';
@@ -10,28 +10,29 @@ import 'package:fyp/db.dart' as db;
 import 'package:fyp/Screens/ChatAPI.dart';
 import 'package:http/http.dart' as http;
 
-class ChatScreen extends StatefulWidget {
-  final String doctor;
-  final String doctorname;
-  const ChatScreen({super.key, required this.doctor, required this.doctorname});
+class Doctorchat extends StatefulWidget {
+  var doctor;
+
+  Doctorchat({super.key, required this.doctor});
 
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _DoctorchatState createState() => _DoctorchatState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _DoctorchatState extends State<Doctorchat> {
   final user = FirebaseAuth.instance.currentUser!;
   List<dynamic> messages = [];
   @override
   void initState() {
     super.initState();
-    // print(widget.doctor);
+    print(widget.doctor);
+    // print('${uid}_${widget.doctor}');
     // Fetch messages initially
     fetchMessages();
     // Fetch messages periodically
-    // Timer.periodic(const Duration(seconds: 3), (timer) {
-    //   fetchMessages();
-    // });
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      fetchMessages();
+    });
   }
 
   @override
@@ -45,7 +46,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> fetchMessages() async {
     try {
-      final newMessages = await ChatAPI.getMessages('${widget.doctor}_$uid');
+      // print('${uid}_${widget.doctor}');
+      final newMessages =
+          await ChatAPI.getMessages('${uid}_${widget.doctor['uid']}');
       setState(() {
         messages = newMessages;
       });
@@ -64,10 +67,10 @@ class _ChatScreenState extends State<ChatScreen> {
         itemCount: messages.length,
         itemBuilder: (context, index) {
           final message = messages[index];
-          if (message['SenderId'].toString() == widget.doctor) {
+          if (message['SenderId'].toString() == widget.doctor['uid']) {
             return ListTile(
               subtitle: Text(message['content']),
-              title: Text(widget.doctorname),
+              title: Text(widget.doctor['displayName']),
             );
           } else {
             return ListTile(
@@ -113,19 +116,18 @@ class _ChatScreenState extends State<ChatScreen> {
     String url =
         '${db.dblink}/send-message'; // Replace this with your API endpoint
     var body = {
-      'DoctorId': widget.doctor.toString(),
-      'PatientId': uid.toString(),
+      'DoctorId': uid.toString(),
+      'PatientId': widget.doctor['uid'].toString(),
       'content': newMessage.text,
       'SenderId': uid.toString(),
     };
-    // print(body);
 
     try {
       var response = await http.post(Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(body));
       if (response.statusCode == 200) {
-        print('Message sent successfully');
+        print('Message sent successfully2');
         // Handle success response here
       } else {
         print('Failed to send message. Error: ${response.statusCode}');

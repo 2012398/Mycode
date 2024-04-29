@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/chatscreen.dart';
 import 'package:fyp/Screens/login_screen.dart';
 
@@ -57,6 +58,17 @@ class DoctorScreen extends StatelessWidget {
               onTap: () {
                 // Handle appointment navigation
                 Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('All Chats'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AllChats(),
+                    ));
               },
             ),
             ListTile(

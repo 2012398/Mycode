@@ -37,6 +37,53 @@ app.use(cors());
 app.use(express.json());
 // const storage = getStorage();
 
+// get patient with my chat
+app.post("/userDetails", async (req, res) => {
+  const userIds = req.body.userIds; // Assuming userIds is an array of user IDs
+
+  try {
+    const userDetails = [];
+    for (const userId of userIds) {
+      const userDoc = await db.collection("users").doc(userId).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        userDetails.push(userData);
+      }
+    }
+
+    res.json(userDetails);
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    res.status(500).json({ error: "Error fetching user details" });
+  }
+});
+// get patient with my chat ended
+
+//fetch all doctor chats
+app.get("/chatRoomIds/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const userRef = db.collection("users").doc(userId);
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      throw new Error("User not found");
+    }
+
+    const userData = userDoc.data();
+    const chatRoomIds = userData["chatRoomId"] || []; // Get the chatRoomId array or an empty array if it doesn't exist
+    // const chatRoomPatient = userData["user"] || []; // Get the chatRoomId array or an empty array if it doesn't exist
+    // console.log(chatRoomIds);
+    return res.json(chatRoomIds);
+  } catch (error) {
+    console.error("Error fetching chatRoomIds:", error);
+    return res.status(500).json({ error: "Error fetching chatRoomIds" });
+  }
+});
+
+//fetching complete
+
 // get all doctors
 app.get("/get-doctors", (req, res) => {
   async function fetchDoctors() {

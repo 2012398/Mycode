@@ -2,11 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
-<<<<<<< HEAD
 import 'package:fyp/Screens/allchats.dart';
-=======
 import 'package:fyp/Screens/baby_profile.dart';
->>>>>>> 5460dc38f3113e14594796ded5ac5f62c0042064
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
