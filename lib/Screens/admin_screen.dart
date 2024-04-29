@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/login_screen.dart';
 
 import '../menu_screen_navigate/upload_products.dart';
 
@@ -39,7 +41,7 @@ class AdminScreen extends StatelessWidget {
               leading: Icon(Icons.home),
               title: Text('Home'),
               onTap: () {
-                // Handle home navigation
+                // Handle home `naviga`tion
                 Navigator.pop(context);
               },
             ),
@@ -54,7 +56,7 @@ class AdminScreen extends StatelessWidget {
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: () {
-                Navigator.pop(context);
+               logout(context);
               },
             ),
           ],
@@ -70,7 +72,7 @@ class AdminScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff374366)),
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Upload_product(),
@@ -89,6 +91,14 @@ class AdminScreen extends StatelessWidget {
             // Add more widgets or content as needed
           ],
         ),
+      ),
+    );
+  }  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
       ),
     );
   }

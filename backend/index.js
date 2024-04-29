@@ -27,6 +27,7 @@ const serviceAccount = require("../babylogin-d368e-b34070701543.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: "gs://babylogin-d368e.appspot.com",
+  databaseURL: "https://default.firebaseio.com",
 });
 
 const db = admin.firestore();
@@ -35,6 +36,108 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 // const storage = getStorage();
+
+// get all doctors
+app.get("/get-doctors", (req, res) => {
+  async function fetchDoctors() {
+    const querySnapshot = await db
+      .collection("users")
+      .where("role", "==", "doctor")
+      .get();
+    const doctors = [];
+    querySnapshot.forEach((doc) => {
+      doctors.push(doc.data());
+    });
+    return doctors;
+  }
+
+  fetchDoctors()
+    .then((doctors) => {
+      // console.log(doctors);
+      return res.status(200).json(doctors);
+    })
+    .catch((error) => {
+      return res.status(400).json(error);
+      //  console.log(error);
+    });
+});
+// doctors api ended
+
+// chat api start
+async function updateUserField(userId, fieldName, fieldValue, messageid) {
+  const userRef = db.collection("users").doc(userId);
+  await userRef.update({
+    [fieldName]: admin.firestore.FieldValue.arrayUnion({
+      [fieldName]: fieldValue,
+      user: messageid,
+    }),
+  });
+}
+app.post("/send-message", async (req, res) => {
+  const { DoctorId, PatientId, content, SenderId } = req.body;
+  console.log(DoctorId, PatientId, content, SenderId);
+
+  const chatRoomId = DoctorId + "_" + PatientId;
+  // Push message to the appropriate collection in Firestore
+  //
+  console.log(chatRoomId);
+  //
+  const messagesRef = db.collection(`chats/${chatRoomId}/messages`);
+  const timestamp = admin.firestore.Timestamp.now();
+  messagesRef
+    .add({
+      DoctorId,
+      PatientId,
+      timestamp,
+      SenderId,
+      content,
+    })
+    .then(() => {
+      res.status(200).send("Message sent successfully");
+      updateUserField(DoctorId, "chatRoomId", chatRoomId, PatientId)
+        .then(() => {
+          console.log("User field updated successfully.");
+        })
+        .catch((error) => {
+          console.error("Error updating user field:", error);
+        });
+
+      updateUserField(PatientId, "chatRoomId", chatRoomId, DoctorId)
+        .then(() => {
+          console.log("User field updated successfully.");
+        })
+        .catch((error) => {
+          console.error("Error updating user field:", error);
+        });
+    })
+    .catch((error) => {
+      console.error("Error sending message:", error);
+      res.status(500).send("Error sending message");
+    });
+});
+
+// Route to get messages
+app.get("/get-messages/:chatRoomId", (req, res) => {
+  const chatRoomId = req.params.chatRoomId;
+  // console.log(chatRoomId);
+  // Retrieve messages from the collection in Firestore
+  const messagesRef = db.collection(`chats/${chatRoomId}/messages`);
+  messagesRef
+    .get()
+    .then((snapshot) => {
+      const messages = [];
+      snapshot.forEach((doc) => {
+        messages.push(doc.data());
+      });
+      res.status(200).json(messages);
+    })
+    .catch((error) => {
+      console.error("Error getting messages:", error);
+      res.status(500).send("Error getting messages");
+    });
+});
+
+// chat api end
 
 app.get("/readData", async (req, res) => {
   try {
@@ -140,7 +243,7 @@ app.post("/signup", async (req, res) => {
       });
 
       return res
-        .status(201)
+        .status(200)
         .json({ message: "User created successfully", userId: uid });
     }
 
@@ -388,7 +491,7 @@ app.get("/CartItems:uid", async (req, res) => {
 const inventoryCollection = admin.firestore().collection("inventory");
 
 const bucket = admin.storage().bucket();
-console.log(bucket);
+// console.log(bucket);
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 

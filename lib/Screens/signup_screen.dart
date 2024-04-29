@@ -306,9 +306,7 @@ class _SignupFormState extends State<SignupForm> {
           await _auth.createUserWithEmailAndPassword(
               email: emailController.text, password: passwordController.text);
       String uid = userCredential.user!.uid;
-      await authprofilesetting(userCredential, nameController.text.toString(),
-          mobileController.text);
-
+      print("userCredential: $userCredential");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: {'Content-Type': 'application/json'},
@@ -321,7 +319,9 @@ class _SignupFormState extends State<SignupForm> {
         }),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
+        await authprofilesetting(userCredential, nameController.text.toString(),
+            mobileController.text);
         final Map<String, dynamic> responseData = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(' ${responseData['message']}')));

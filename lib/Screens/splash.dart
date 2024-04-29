@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/admin_screen.dart';
+import 'package:fyp/Screens/doctor_screen.dart';
 import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,14 +23,6 @@ class _SplashScreenState extends State<SplashScreen> {
     // Timer to display on screen
     super.initState();
     navigateToHome();
-    // Timer(const Duration(seconds: 3), () {
-    //   // push navigator to display another screen on stack
-    //   Navigator.pushReplacement(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => const Onboarding_Screen1(),
-    //       ));
-    // });
   }
 
   void navigateToHome() async {
@@ -43,12 +37,28 @@ class _SplashScreenState extends State<SplashScreen> {
             .get();
 
         if (documentSnapshot.exists) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MenuScreen1(),
-            ),
-          );
+          if (documentSnapshot.get('role') == 'user') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MenuScreen1(),
+              ),
+            );
+          } else if (documentSnapshot.get('role') == 'doctor') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const DoctorScreen(),
+              ),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AdminScreen(),
+              ),
+            );
+          }
         } else {
           Navigator.pushReplacement(
             context,

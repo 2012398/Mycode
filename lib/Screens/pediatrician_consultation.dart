@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/chatscreen.dart';
 import 'package:fyp/Screens/checkout.dart';
 import 'package:intl/intl.dart';
 import '../db.dart' as db;
@@ -21,17 +22,36 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
   DateTime selectedDate = DateTime.now();
 
   // Sample list of doctors
-  List<Doctor> doctors = [
-    Doctor(name: 'Dr. Ali', experience: '10 years', rating: 4.5, reviews: 120),
-    Doctor(
-        name: 'Dr. Ahmed bux', experience: '8 years', rating: 4.2, reviews: 90),
-    Doctor(
-        name: 'Dr. Khalil', experience: '6 years', rating: 4.1, reviews: 1000),
-    // Add more doctors as needed
-  ];
+  List<Doctor> doctors = [];
+  var data = {};
+
+  Future<void> Getinvo() async {
+    var url = Uri.parse("${db.dblink}/get-doctors");
+    final response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
+    if (response.statusCode == 200) {
+      final List<dynamic> fetchedData = json.decode(response.body);
+      print(response.body);
+      setState(() {
+        doctors = fetchedData.map((data) => Doctor.fromJson(data)).toList();
+      });
+    } else {
+      print("Error22: ${response.statusCode}");
+      print("Response22: ${response.body}");
+      throw Exception("Failed to load data");
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Getinvo();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // List doctorUid = [];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),
@@ -98,25 +118,37 @@ Future<String> bookAppointment(String userId, String selectedDate,
 
 class Doctor {
   final String name;
-  final String experience;
-  final double rating;
-  final int reviews;
+  final String uid;
+  // final double rating;
+  // final int reviews;
 
-  Doctor(
-      {required this.name,
-      required this.experience,
-      required this.rating,
-      required this.reviews});
+  Doctor({
+    required this.name,
+    required this.uid,
+    // required this.rating,
+    // required this.reviews,
+  });
+
+  factory Doctor.fromJson(Map<String, dynamic> json) {
+    return Doctor(
+      name: json['displayName'] as String,
+      uid: json['uid'] as String,
+      // rating: json['rating'] as double,
+      // reviews: json['reviews'] as int,
+    );
+  }
 }
 
 class DoctorCard extends StatefulWidget {
   final Doctor doctor;
+  // final Doctor uid;
   final Function(DateTime selectedTime) onDateAndTimeSelected;
   final Function(DateTime selectedDate) onDateSelected;
 
   const DoctorCard({
     super.key,
     required this.doctor,
+    // required this.uid,
     required this.onDateAndTimeSelected,
     required this.onDateSelected,
   });
@@ -183,12 +215,12 @@ class _DoctorCardState extends State<DoctorCard> {
               widget.doctor.name,
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Text('Experience: ${widget.doctor.experience}'),
-            Row(
+            // Text('Experience: ${widget.doctor.experience}'),
+            const Row(
               children: [
-                const Icon(Icons.star, color: Colors.yellow),
-                Text(
-                    '${widget.doctor.rating} (${widget.doctor.reviews} reviews)'),
+                Icon(Icons.star, color: Colors.yellow),
+                // Text(
+                // '${widget.doctor.rating} (${widget.doctor.reviews} reviews)'),
               ],
             ),
             const SizedBox(height: 10),
@@ -248,6 +280,23 @@ class _DoctorCardState extends State<DoctorCard> {
                   }
                 },
                 child: const Text('Book Appointment'),
+              ),
+            ),
+            Builder(
+              builder: (context) => ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                          doctor: widget.doctor.uid,
+                          doctorname: widget.doctor.name),
+                    ),
+                  );
+                },
+                child: const Text('Chat'),
               ),
             ),
           ],

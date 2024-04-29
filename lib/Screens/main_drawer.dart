@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
+import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/educational_resources.dart';
 import 'package:fyp/Screens/login_screen.dart';
 import 'package:fyp/Screens/onboarding_screen1.dart';
@@ -124,6 +125,20 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Educational Resources",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.note_alt_sharp),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AllChats(),
+                  ));
+            },
+            title: Text(
+              "All Chats",
               style: GoogleFonts.rubik(),
             ),
           ),

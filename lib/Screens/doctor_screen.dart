@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/chatscreen.dart';
+import 'package:fyp/Screens/login_screen.dart';
 
 class DoctorScreen extends StatelessWidget {
   const DoctorScreen({super.key});
@@ -36,14 +39,18 @@ class DoctorScreen extends StatelessWidget {
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.chat),
-              title: const Text('Chats'),
-              onTap: () {
-                // Handle chat navigation
-                Navigator.pop(context);
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(Icons.chat),
+            //   title: const Text('Chats'),
+            //   onTap: () {
+            //     // Handle chat navigation
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => ChatScreen()),
+            //     );
+            //     // Navigator.pop(context);
+            //   },
+            // ),
             ListTile(
               leading: const Icon(Icons.calendar_today),
               title: const Text('Appointments'),
@@ -65,7 +72,7 @@ class DoctorScreen extends StatelessWidget {
               title: const Text('Logout'),
               onTap: () {
                 // Handle logout
-                Navigator.pop(context);
+                logout(context);
               },
             ),
           ],
@@ -112,6 +119,16 @@ class DoctorScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
       ),
     );
   }
