@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../Screens/Cart.dart';
 import '../db.dart' as db;
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Skin_care extends StatefulWidget {
-  const Skin_care({super.key});
+  const Skin_care({Key? key});
 
   @override
   State<Skin_care> createState() => _Skin_careState();
@@ -12,6 +13,7 @@ class Skin_care extends StatefulWidget {
 
 class _Skin_careState extends State<Skin_care> {
   var data = {};
+
   Future<void> Getinvo(String category) async {
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
     final response =
@@ -29,7 +31,6 @@ class _Skin_careState extends State<Skin_care> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Getinvo("Skin Care");
   }
@@ -44,62 +45,67 @@ class _Skin_careState extends State<Skin_care> {
           child: (obj == null)
               ? Center(child: CircularProgressIndicator())
               : GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
-            ),
-            itemCount: obj.length,
-            itemBuilder: (context, index) {
-              final product = obj[index];
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(30),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Center(
-                          child: Text(
-                            product['ProductName'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 8.0,
+                    mainAxisSpacing: 8.0,
+                  ),
+                  itemCount: obj.length,
+                  itemBuilder: (context, index) {
+                    final product = obj[index];
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                product['ProductName'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                                maxLines: 2, // Limiting to 2 lines
+                                overflow:
+                                    TextOverflow.ellipsis, // Handling overflow
+                              ),
+                              SizedBox(height: 10), // Adding space
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Rs ${product['ProductPrice']}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 30),
+                                  CircleAvatar(
+                                    backgroundColor: const Color(0xff374366),
+                                    radius: 20.0,
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.add_shopping_cart_rounded,
+                                        size: 25,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        db.addToCart(uid, product);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: 90),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Rs ${product['ProductPrice']}',
-                              style: const TextStyle(
-                                  fontSize: 20, color: Colors.red),
-                            ),
-                            const SizedBox(width: 30),
-                            CircleAvatar(
-                              backgroundColor: const Color(0xff374366),
-                              radius: 20.0,
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.add_shopping_cart_rounded,
-                                  size: 25,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () {},
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ),
     );

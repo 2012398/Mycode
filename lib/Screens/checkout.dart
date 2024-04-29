@@ -34,24 +34,22 @@ class Checkout extends StatefulWidget {
   // double total;
 
   // List items;
-  Checkout({super.key});
+  const Checkout({super.key});
 
   @override
   State<Checkout> createState() => _CheckoutState();
 }
 
 class _CheckoutState extends State<Checkout> {
-  @override
   var phonenumber;
+  final TextEditingController addressController = TextEditingController();
   List<dynamic> _data = [];
-  bool _isLoading = true;
 
   Future<void> fetchData() async {
     final response = await http.get(Uri.parse('${db.dblink}/readData'));
     if (response.statusCode == 200) {
       setState(() {
         _data = json.decode(response.body);
-        _isLoading = false;
         print(_data);
         _data.forEach((element) {
           if (user.displayName! == element['displayName']) {
@@ -68,17 +66,7 @@ class _CheckoutState extends State<Checkout> {
     }
   }
 
-  // void initializeFlutterFire() {
-  //   User user = FirebaseAuth.instance.currentUser!;
-
-  //   if (user != null) {
-  //     phonenumber = user.phoneNumber;
-  //   } else {}
-  // }
-  // final user = FirebaseAuth.instance.currentUser!;
-
-  final TextEditingController addressController = TextEditingController();
-
+  @override
   void initState() {
     super.initState();
     Getinvo(uid);
@@ -297,16 +285,6 @@ class _CheckoutState extends State<Checkout> {
                                 hintText: 'Enter your phone number',
                                 border: OutlineInputBorder(),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please enter your mobile number.";
-                                }
-                                if (!RegExp(r"^(03[0-9]{9})$")
-                                    .hasMatch(value)) {
-                                  return "Phone number is invalid";
-                                }
-                                return null;
-                              },
                             ),
                           ),
                         ),
@@ -425,22 +403,68 @@ class _CheckoutState extends State<Checkout> {
       width: MediaQuery.of(context).size.width * 0.4,
       child: ElevatedButton.icon(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              Color(0xff374366),
-            ),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
+          backgroundColor: MaterialStateProperty.all<Color>(
+            Color(0xff374366),
+          ),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
-            ))),
+            ),
+          ),
+        ),
         label: Text('Place Order'),
         onPressed: () {
-          var ojb = {
-            'Name': user.displayName!,
-            'contact': phoneNumberController.text,
-            'address': addressController.text,
-            'subtotal': (total + dc)
-          };
-          placeorder(ojb);
+          // Check if the delivery address or phone number is empty
+          if (addressController.text.isEmpty ||
+              phoneNumberController.text.isEmpty) {
+            // Show an AlertDialog if the fields are empty
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Please enter your details.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else if (!RegExp(r"^(03[0-9]{9})$")
+              .hasMatch(phoneNumberController.text)) {
+            // Show an AlertDialog if the phone number format is incorrect
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Error'),
+                  content: Text('Phone number is invalid.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            // Proceed with placing the order if the fields are not empty and the phone number is valid
+            var orderData = {
+              'Name': user.displayName!,
+              'contact': phoneNumberController.text,
+              'address': addressController.text,
+              'subtotal': (total + dc)
+            };
+            placeOrder(orderData);
+          }
         },
         icon: Icon(
           Icons.shopping_cart_checkout,
@@ -450,38 +474,43 @@ class _CheckoutState extends State<Checkout> {
     );
   }
 
-  Future<void> placeorder(var obj) async {
-    final isValid = formkey.currentState!.validate();
-    if (!isValid) return;
-    final String apiUrl = '${db.dblink}/placeorder/$uid';
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(obj),
-    );
-    var msg = jsonDecode(response.body);
+  Future<void> placeOrder(Map<String, Object> orderData) async {
+    try {
+      final response = await http.post(
+        Uri.parse('${db.dblink}/placeorder/$uid'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(orderData),
+      );
 
-    if (response.statusCode == 400) {
+      if (response.statusCode == 201) {
+        final msg = jsonDecode(response.body);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${msg['message']}, OrderId: ${msg['orderId']}'),
+          ),
+        );
+
+        // Navigate to the menu screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MenuScreen1()),
+        );
+      } else {
+        final errorMsg = jsonDecode(response.body)['error'];
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to place order: $errorMsg'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error placing order: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(msg[{'error'}]),
+          content: Text('Error placing order. Please try again later.'),
         ),
       );
     }
-    if (response.statusCode == 201) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('${msg['message']}, OrderId: ${msg['orderId']}'),
-        ),
-      );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MenuScreen1(),
-        ),
-      );
-    } else {}
-    return jsonDecode(response.body);
   }
 
   Widget clearcart() {

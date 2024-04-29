@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Wet_wipes extends StatefulWidget {
-  const Wet_wipes({super.key});
+  const Wet_wipes({Key? key});
 
   @override
   State<Wet_wipes> createState() => _Wet_wipesState();
@@ -32,7 +32,6 @@ class _Wet_wipesState extends State<Wet_wipes> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Getinvo("Wet wipes");
   }
@@ -55,52 +54,50 @@ class _Wet_wipesState extends State<Wet_wipes> {
                   itemCount: obj.length,
                   itemBuilder: (context, index) {
                     final product = obj[index];
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            product['ProductName'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                            maxLines: 2, // Limiting to 2 lines
+                            overflow:
+                                TextOverflow.ellipsis, // Handling overflow
+                          ),
+                          const SizedBox(height: 10), // Adding space
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Center(
-                                child: Text(
-                                  product['ProductName'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
+                              Text(
+                                'Rs ${product['ProductPrice']}',
+                                style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red,
                                 ),
                               ),
-                              const SizedBox(height: 90),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Rs ${product['ProductPrice']}',
-                                    style: const TextStyle(
-                                        fontSize: 20, color: Colors.red),
+                              const SizedBox(width: 30),
+                              CircleAvatar(
+                                backgroundColor: const Color(0xff374366),
+                                radius: 20.0,
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.add_shopping_cart_rounded,
+                                    size: 25,
+                                    color: Colors.white,
                                   ),
-                                  const SizedBox(width: 30),
-                                  CircleAvatar(
-                                    backgroundColor: const Color(0xff374366),
-                                    radius: 20.0,
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.add_shopping_cart_rounded,
-                                        size: 25,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        db.addToCart(uid, product);
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                  onPressed: () {
+                                    db.addToCart(uid, product);
+                                  },
+                                ),
                               ),
                             ],
                           ),
-                        ),
+                        ],
                       ),
                     );
                   },
