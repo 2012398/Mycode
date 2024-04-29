@@ -130,20 +130,6 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.note_alt_sharp),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AllChats(),
-                  ));
-            },
-            title: Text(
-              "All Chats",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
             leading: const Icon(Icons.chat),
             onTap: () {
               Navigator.push(
