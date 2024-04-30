@@ -170,6 +170,7 @@ app.get("/get-messages/:chatRoomId", (req, res) => {
   // Retrieve messages from the collection in Firestore
   const messagesRef = db.collection(`chats/${chatRoomId}/messages`);
   messagesRef
+    .orderBy("timestamp")
     .get()
     .then((snapshot) => {
       const messages = [];
