@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_declarations
+// ignore_for_file: use_build_context_synchronously, prefer_const_declarations, unused_import
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';

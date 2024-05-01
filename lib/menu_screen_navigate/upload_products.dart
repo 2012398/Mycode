@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, unused_field
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
