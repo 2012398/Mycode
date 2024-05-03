@@ -75,6 +75,7 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
+                                  Image.network(product['imageurl']),
                                   Text(
                                     'Rs ${product['ProductPrice']}',
                                     style: const TextStyle(

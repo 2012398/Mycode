@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_declarations, unused_import
+// ignore_for_file: use_build_context_synchronously, prefer_const_declarations, unused_import, non_constant_identifier_names
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
@@ -312,7 +312,7 @@ class _SignupFormState extends State<SignupForm> {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': emailController.text.toString(),
-          'password': passwordController.text.toString(),
+          'role': 'user',
           'displayName': nameController.text.toString(),
           'Contact': mobileController.text.toString(),
           'uid': uid.toString(),

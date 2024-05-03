@@ -61,6 +61,7 @@ class _Skin_careState extends State<Skin_care> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Image.network(product['imageurl']),
                               Text(
                                 product['ProductName'],
                                 style: const TextStyle(

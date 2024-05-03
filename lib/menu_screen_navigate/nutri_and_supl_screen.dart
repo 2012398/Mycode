@@ -61,6 +61,7 @@ class _NutriState extends State<Nutri> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Image.network(product['imageurl']),
                               Text(
                                 product['ProductName'],
                                 style: const TextStyle(

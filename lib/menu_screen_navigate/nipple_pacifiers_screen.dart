@@ -61,6 +61,7 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Image.network(product['imageurl']),
                               Text(
                                 product['ProductName'],
                                 style: const TextStyle(

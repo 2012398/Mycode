@@ -62,6 +62,7 @@ class _MedicineState extends State<Medicine> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              Image.network(product['imageurl']),
                               Text(
                                 product['ProductName'],
                                 style: const TextStyle(

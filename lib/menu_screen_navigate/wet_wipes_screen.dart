@@ -59,6 +59,7 @@ class _Wet_wipesState extends State<Wet_wipes> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Image.network(product['imageurl']),
                           Text(
                             product['ProductName'],
                             style: const TextStyle(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fyp/menu_screen_navigate/upload_products.dart';
 import '../db.dart' as db;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:convert';
@@ -65,6 +66,7 @@ class _ToysState extends State<Toys> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Image.network(product['imageurl']),
                                 Text(
                                   product['ProductName'],
                                   style: const TextStyle(

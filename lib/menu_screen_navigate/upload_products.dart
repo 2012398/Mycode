@@ -6,6 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../db.dart' as db;
+import 'package:image_picker/image_picker.dart';
+
+var imageUrl;
 
 // ignore: camel_case_types
 class Upload_product extends StatefulWidget {
@@ -21,7 +24,56 @@ class _UploadProductState extends State<Upload_product> {
   TextEditingController productQuantity = TextEditingController();
   TextEditingController productCategory = TextEditingController();
 
-  File? _image;
+  File? _imageFile;
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      }
+    });
+  }
+
+  Future<void> _uploadImage() async {
+    if (_imageFile == null) {
+      // print('No image selected');
+      return;
+    }
+
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${db.dblink}/uploadImage'),
+      );
+      request.fields['filename'] = productName.text;
+      request.files
+          .add(await http.MultipartFile.fromPath('filename', _imageFile!.path));
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      var msg = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          imageUrl = msg['image'];
+        });
+
+        // Handle success
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content: Text('Error: ${response.statusCode} / ${response.body}'),
+        //   ),
+        // );
+      } else {
+        print('Failed to upload image. Status code: ${response.statusCode}');
+        // Handle failure
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      // Handle error
+    }
+  }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -40,6 +92,32 @@ class _UploadProductState extends State<Upload_product> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+// Image Uploading Start
+
+                _imageFile != null
+                    ? Image.file(
+                        _imageFile!,
+                        height: 200,
+                      )
+                    : Container(
+                        // height: 200,
+                        ),
+                SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () => _pickImage(ImageSource.camera),
+                      child: Text('Take a Picture'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _pickImage(ImageSource.gallery),
+                      child: Text('Choose from Gallery'),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                // Image Uploading end
                 const Text(
                   'Product Name',
                   style: TextStyle(fontSize: 18),
@@ -196,6 +274,7 @@ class _UploadProductState extends State<Upload_product> {
   }
 
   Future<void> uploadInvoice() async {
+    _uploadImage();
     final String apiUrl = "${db.dblink}/uploadinvo";
     try {
       final response = await http.post(
@@ -206,6 +285,7 @@ class _UploadProductState extends State<Upload_product> {
           'ProductPrice': int.tryParse(productPrice.text.toString()) ?? 0,
           'ProductQuantity': int.tryParse(productQuantity.text.toString()) ?? 0,
           'ProductCategory': productCategory.text.toString(),
+          'imageurl': imageUrl
         }),
       );
 
@@ -216,8 +296,11 @@ class _UploadProductState extends State<Upload_product> {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('User Already Exists.')));
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Error: ${response.statusCode} / ${response.body}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${response.statusCode} / ${response.body}'),
+          ),
+        );
         print('Error: ${response.statusCode}');
         print('Body: ${response.body}');
       }

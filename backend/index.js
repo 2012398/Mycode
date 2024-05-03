@@ -6,12 +6,12 @@ const uuid = require("uuid-v4");
 // const { initializeApp } = require("firebase/app");
 // const path = require("path");
 // const fs = require("fs");
-// const {
-//   getStorage,
-//   ref,
-//   getDownloadURL,
-//   uploadBytesResumable,
-// } = require("firebase/storage");
+const {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytesResumable,
+} = require("firebase/storage");
 
 // const firebase = require("firebase/app");
 // const firebaseConfig = {
@@ -36,7 +36,82 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 // const storage = getStorage();
+//upload video start
 
+const videoStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/videos"); // Destination directory for video uploads
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + "-" + file.originalname); // Unique filename for video uploads
+  },
+});
+const videoUpload = multer({ storage: videoStorage });
+
+app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    // You can add additional logic here to handle video uploads
+    // For example, you can store video metadata in a database, generate thumbnails, etc.
+
+    return res.status(200).json({ message: "Video uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading video:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// upload video end
+
+//upload image start
+const bucket = admin.storage().bucket();
+// console.log(bucket);
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+app.post("/uploadImage", upload.single("filename"), async (req, res) => {
+  const { filename } = req.body;
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const metadata = {
+      // metadata: { firebaseStorageDownloadTokens: uuid() },
+      contentType: "image/jpeg",
+    };
+    // console.log(metadata);
+
+    // const blob = bucket.file(req.file.originalname);
+    const blob = bucket.file("Inventory/" + filename);
+    const blobStream = blob.createWriteStream({
+      metadata: metadata,
+      gzip: true,
+    });
+
+    // console.log(blobStream);
+
+    blobStream.on("error", (err) => {
+      console.error("Error uploading file:", err);
+      return res.status(500).json({ error: "Error uploading file" });
+    });
+
+    blobStream.on("finish", () => {
+      const image = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+      return res.status(200).json({ image });
+    });
+
+    blobStream.end(req.file.buffer);
+  } catch (e) {
+    console.error("Exception:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+//upload image end
 // get patient with my chat
 app.post("/userDetails", async (req, res) => {
   const userIds = req.body.userIds; // Assuming userIds is an array of user IDs
@@ -275,7 +350,7 @@ app.post("/babyprofile:uid", async (req, res) => {
 
 app.post("/signup", async (req, res) => {
   try {
-    const { email, displayName, Contact, uid } = req.body;
+    const { email, displayName, Contact, uid, role } = req.body;
 
     // Check if the user already exists
     const existingUser = await db.collection("users").doc(uid).get();
@@ -286,6 +361,7 @@ app.post("/signup", async (req, res) => {
       await db.collection("users").doc(uid).set({
         email,
         displayName,
+        role,
         Contact,
         uid,
       });
@@ -304,8 +380,13 @@ app.post("/signup", async (req, res) => {
 
 app.post("/uploadinvo", async (req, res) => {
   try {
-    const { ProductName, ProductPrice, ProductQuantity, ProductCategory } =
-      req.body;
+    const {
+      ProductName,
+      ProductPrice,
+      ProductQuantity,
+      ProductCategory,
+      imageurl,
+    } = req.body;
     const userCartRef = admin.firestore().collection("inventory");
 
     const existingItem = await userCartRef
@@ -319,6 +400,7 @@ app.post("/uploadinvo", async (req, res) => {
         ProductPrice,
         ProductQuantity,
         ProductCategory,
+        imageurl,
       });
     } else {
       // If the item already exists, update the quantity
@@ -537,45 +619,6 @@ app.get("/CartItems:uid", async (req, res) => {
 });
 
 const inventoryCollection = admin.firestore().collection("inventory");
-
-const bucket = admin.storage().bucket();
-// console.log(bucket);
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-
-// app.post("/uploadImage", upload.single("filename"), async (req, res) => {
-//   try {
-//     if (!req.file) {
-//       return res.status(400).json({ error: "No file uploaded" });
-//     }
-
-//     const metadata = {
-//       metadata: { firebaseStorageDownloadTokens: uuid() },
-//       contentType: req.file.mimetype,
-//     };
-
-//     const blob = bucket.file(req.file.originalname);
-//     const blobStream = blob.createWriteStream({
-//       metadata: metadata,
-//       gzip: true,
-//     });
-
-//     blobStream.on("error", (err) => {
-//       console.error("Error uploading file:", err);
-//       return res.status(500).json({ error: "Error uploading file" });
-//     });
-
-//     blobStream.on("finish", () => {
-//       const image = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
-//       return res.status(200).json({ image });
-//     });
-
-//     blobStream.end(req.file.buffer);
-//   } catch (e) {
-//     console.error("Exception:", e);
-//     return res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
 
 // Start the server
 const PORT = process.env.PORT || 3000;
