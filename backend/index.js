@@ -387,14 +387,29 @@ app.post("/uploadinvo", async (req, res) => {
       ProductCategory,
       imageurl,
     } = req.body;
+
     const userCartRef = admin.firestore().collection("inventory");
 
-    const existingItem = await userCartRef
+    const existingItemQuery = await userCartRef
       .where("ProductName", "==", ProductName)
       .get();
 
-    if (existingItem.empty) {
-      // If the item doesn't exist, add it to the cart
+    if (!existingItemQuery.empty) {
+      // If product already exists, update the quantity and price
+      const existingItemDoc = existingItemQuery.docs[0];
+      const existingQuantity = existingItemDoc.data().ProductQuantity;
+      const existingPrice = existingItemDoc.data().ProductPrice;
+
+      await existingItemDoc.ref.update({
+        ProductQuantity: existingQuantity + ProductQuantity,
+        ProductPrice: ProductPrice, // Updating price to the average
+      });
+
+      return res
+        .status(201)
+        .json({ message: "Quantity and price updated successfully" });
+    } else {
+      // If product does not exist, add a new document
       await userCartRef.add({
         ProductName,
         ProductPrice,
@@ -402,24 +417,16 @@ app.post("/uploadinvo", async (req, res) => {
         ProductCategory,
         imageurl,
       });
-    } else {
-      // If the item already exists, update the quantity
-      const existingItemId = existingItem.docs[0].id;
-      const existingQuantity = existingItem.docs[0].data().quantity;
-
-      await userCartRef.doc(existingItemId).update({
-        quantity: existingQuantity + ProductQuantity,
-      });
+      return res.status(200).json({ message: "Item Added Successfully" });
     }
-
-    res.status(201).json({ message: "Item Added Successfully" });
   } catch (error) {
     console.error(error);
-    res
+    return res
       .status(500)
       .json({ error: "Internal Server Error", details: error.message });
   }
 });
+
 app.get("/inventory", async (req, res) => {
   try {
     const category = req.query.category || "Toys";
@@ -427,8 +434,8 @@ app.get("/inventory", async (req, res) => {
       .where("ProductCategory", "==", category)
       .get();
     const data = snapshot.docs.map((doc) => doc.data());
-    // console.log(data);
-    res
+
+    return res
       .status(200)
       .json({ success: true, Products: data, message: "API GET ALL" });
   } catch (error) {

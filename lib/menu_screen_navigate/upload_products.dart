@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import, unused_field
+// ignore_for_file: unused_import, unused_field, avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:io';
@@ -36,45 +36,6 @@ class _UploadProductState extends State<Upload_product> {
     });
   }
 
-  Future<void> _uploadImage() async {
-    if (_imageFile == null) {
-      // print('No image selected');
-      return;
-    }
-
-    try {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('${db.dblink}/uploadImage'),
-      );
-      request.fields['filename'] = productName.text;
-      request.files
-          .add(await http.MultipartFile.fromPath('filename', _imageFile!.path));
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-      var msg = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        setState(() {
-          imageUrl = msg['image'];
-        });
-
-        // Handle success
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text('Error: ${response.statusCode} / ${response.body}'),
-        //   ),
-        // );
-      } else {
-        print('Failed to upload image. Status code: ${response.statusCode}');
-        // Handle failure
-      }
-    } catch (e) {
-      print('Error uploading image: $e');
-      // Handle error
-    }
-  }
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -102,21 +63,21 @@ class _UploadProductState extends State<Upload_product> {
                     : Container(
                         // height: 200,
                         ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     ElevatedButton(
                       onPressed: () => _pickImage(ImageSource.camera),
-                      child: Text('Take a Picture'),
+                      child: const Text('Take a Picture'),
                     ),
                     ElevatedButton(
                       onPressed: () => _pickImage(ImageSource.gallery),
-                      child: Text('Choose from Gallery'),
+                      child: const Text('Choose from Gallery'),
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Image Uploading end
                 const Text(
                   'Product Name',
@@ -248,11 +209,13 @@ class _UploadProductState extends State<Upload_product> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        _uploadImage();
+
                         uploadInvoice();
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: const Color(0xff374366),
+                      foregroundColor: const Color(0xff374366),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 32, vertical: 16),
                     ),
@@ -273,9 +236,40 @@ class _UploadProductState extends State<Upload_product> {
     );
   }
 
+  Future<void> _uploadImage() async {
+    if (_imageFile == null) {
+      // print('No image selected');
+      return;
+    }
+
+    try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${db.dblink}/uploadImage'),
+      );
+      request.fields['filename'] = productName.text.toString();
+      request.files
+          .add(await http.MultipartFile.fromPath('filename', _imageFile!.path));
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      var msg = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        setState(() {
+          imageUrl = msg['image'];
+        });
+      } else {
+        print('Failed to upload image. Status code: ${response.statusCode}');
+        // Handle failure
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+      // Handle error
+    }
+  }
+
   Future<void> uploadInvoice() async {
-    _uploadImage();
-    final String apiUrl = "${db.dblink}/uploadinvo";
+    const String apiUrl = "${db.dblink}/uploadinvo";
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -285,16 +279,16 @@ class _UploadProductState extends State<Upload_product> {
           'ProductPrice': int.tryParse(productPrice.text.toString()) ?? 0,
           'ProductQuantity': int.tryParse(productQuantity.text.toString()) ?? 0,
           'ProductCategory': productCategory.text.toString(),
-          'imageurl': imageUrl
+          'imageurl': imageUrl.toString()
         }),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Item Added')));
-      } else if (response.statusCode == 400) {
+      } else if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('User Already Exists.')));
+            const SnackBar(content: Text('Item Updated Succesfully')));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
