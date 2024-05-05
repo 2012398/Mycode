@@ -34,7 +34,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
     Data(image: "assets/images/Skincare.jpg", text: "Skin care"),
     Data(image: "assets/images/Wipes.jpg", text: "Wet wipes"),
     Data(image: "assets/images/Toys.jpg", text: "Toys"),
-    Data(image: "assets/images/Feeders.jpg", text: "Feeding bottles"),
+    Data(image: "assets/images/Feeders.png", text: "Feeding bottles"),
     Data(image: "assets/images/Bath.jpg", text: "Bath accessories"),
     Data(image: "assets/images/Nipples.jpg", text: "Nipple & Pacifiers"),
     Data(image: "assets/images/Nipples.jpg", text: "Upload Products")
