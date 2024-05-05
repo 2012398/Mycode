@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously, unused_import
-
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
 import 'package:fyp/Screens/allchats.dart';
@@ -13,7 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({super.key});
+  const MainDrawer({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +65,6 @@ class MainDrawer extends StatelessWidget {
                 ),
               ],
             ),
-
-            // decoration: BoxDecoration(shape: BoxShape.circle),
           ),
           const SizedBox(
             height: 50,
@@ -185,6 +181,16 @@ class MainDrawer extends StatelessWidget {
               style: GoogleFonts.rubik(),
             ),
           ),
+          ListTile(
+            leading: const Icon(Icons.person_add),
+            onTap: () {
+              showBecomeDoctorDialog(context);
+            },
+            title: Text(
+              "Want to become a doctor?",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
           Expanded(
               child: Align(
             alignment: FractionalOffset.bottomLeft,
@@ -211,6 +217,33 @@ class MainDrawer extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       ),
+    );
+  }
+
+  void showBecomeDoctorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Do you want to become a doctor?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Implement action for Yes
+                Navigator.of(context).pop();
+              },
+              child: Text('Yes'),
+            ),
+            TextButton(
+              onPressed: () {
+                // Implement action for No
+                Navigator.of(context).pop();
+              },
+              child: Text('No'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -96,12 +96,6 @@ class _UploadProductState extends State<Upload_product> {
                       return 'Product name should not start with a space';
                     }
 
-                    // Define a regex pattern to match only text (letters) and spaces between words
-                    RegExp regex = RegExp(r'^[a-zA-Z]+(?: [a-zA-Z]+)*$');
-                    if (!regex.hasMatch(value)) {
-                      return 'Please enter a valid product name containing only letters';
-                    }
-
                     return null;
                   },
                   decoration: const InputDecoration(
