@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:fyp/Screens/Cart.dart';
 import 'package:fyp/db.dart' as db;
 import 'package:fyp/Screens/ChatAPI.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 class ChatScreen extends StatefulWidget {
   final String doctor;
@@ -20,6 +22,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  File? _video;
   final user = FirebaseAuth.instance.currentUser!;
   List<dynamic> messages = [];
   @override
@@ -79,34 +82,75 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       floatingActionButton: Container(
         padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-        child: TextField(
-          controller: newMessage,
-          onChanged: (value) {
-            newMessage.text = value;
-          },
-          decoration: InputDecoration(
-            contentPadding: EdgeInsetsDirectional.all(10),
-            hintText: "Type a message",
-            suffixIcon: GestureDetector(
-              onTap: () {
-                if (newMessage.text.isNotEmpty) {
-                  sendMessage();
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text('data')));
-                }
-              },
-              child: const Icon(
-                CupertinoIcons.arrow_right_circle_fill,
-                color: Colors.green,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Expanded(
+              child: TextField(
+                controller: newMessage,
+                onChanged: (value) {
+                  newMessage.text = value;
+                },
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsetsDirectional.all(10),
+                  hintText: "Type a message",
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      if (newMessage.text.isNotEmpty) {
+                        sendMessage();
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text('data')));
+                      }
+                    },
+                    child: const Icon(
+                      CupertinoIcons.arrow_right_circle_fill,
+                      color: Colors.green,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+            Padding(
+              child: GestureDetector(
+                onTap: () => _pickVideo,
+                child: Icon(
+                  Icons.add,
+                  color: Colors.green,
+                ),
+              ),
+              padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
             ),
-          ),
+          ],
         ),
       ),
     );
+  }
+
+  // Future<void> _uploadVideo() async {
+  //   var request = http.MultipartRequest('POST', Uri.parse('YOUR_API_ENDPOINT'));
+  //   request.files.add(await http.MultipartFile.fromPath('video', _video!.path));
+
+  //   var response = await request.send();
+  //   if (response.statusCode == 200) {
+  //     print('Video uploaded successfully');
+  //   } else {
+  //     print('Failed to upload video: ${response.reasonPhrase}');
+  //   }
+  // }
+
+  Future<void> _pickVideo() async {
+    final pickedFile =
+        await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _video = File(pickedFile.path);
+      });
+    }
   }
 
   Future<void> sendMessage() async {

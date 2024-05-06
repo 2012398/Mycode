@@ -76,7 +76,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
         break;
       case 8:
         Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const Upload_Product()));
+            MaterialPageRoute(builder: (context) => const Upload_product()));
 
         break;
     }
