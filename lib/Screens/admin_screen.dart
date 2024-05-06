@@ -56,7 +56,7 @@ class AdminScreen extends StatelessWidget {
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: () {
-               logout(context);
+                logout(context);
               },
             ),
           ],
@@ -75,7 +75,7 @@ class AdminScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Upload_product(),
+                      builder: (context) => Upload_Product(),
                     ),
                   );
                 },
@@ -93,7 +93,9 @@ class AdminScreen extends StatelessWidget {
         ),
       ),
     );
-  }  Future<void> logout(BuildContext context) async {
+  }
+
+  Future<void> logout(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushReplacement(
       context,

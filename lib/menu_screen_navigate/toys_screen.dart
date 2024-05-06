@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Toys extends StatefulWidget {
-  const Toys({super.key});
+  const Toys({Key? key}) : super(key: key);
 
   @override
   State<Toys> createState() => _ToysState();
@@ -41,6 +41,10 @@ class _ToysState extends State<Toys> {
   Widget build(BuildContext context) {
     var obj = data['Products'];
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Toys'),
+        backgroundColor: const Color(0xff374366),
+      ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(8.0),
@@ -48,7 +52,7 @@ class _ToysState extends State<Toys> {
               ? Center(child: CircularProgressIndicator())
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+                    crossAxisCount: 1,
                     crossAxisSpacing: 8.0,
                     mainAxisSpacing: 8.0,
                   ),
@@ -56,56 +60,84 @@ class _ToysState extends State<Toys> {
                   itemBuilder: (context, index) {
                     final product = obj[index];
                     return Padding(
-                      padding: const EdgeInsets.all(
-                          8.0), // Added padding to the grid items
+                      padding: const EdgeInsets.all(20.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(30),
                         child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Image.network(product['imageurl']),
-                                Text(
-                                  product['ProductName'],
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                          child: SizedBox(
+                            height: 300, // Adjusted card height
+                            child: Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FutureBuilder<String?>(
+                                    future: _getImage(product['imageurl']),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<String?> snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.done) {
+                                        if (snapshot.hasError) {
+                                          return Placeholder();
+                                        } else {
+                                          return Center(
+                                            child: Image.network(
+                                              snapshot.data ??
+                                                  'https://via.placeholder.com/150',
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                return Placeholder();
+                                              },
+                                              width: 300,
+                                              height: 150,
+                                            ),
+                                          );
+                                        }
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    },
                                   ),
-                                  maxLines: 2, // Added to limit text to 2 lines
-                                  overflow: TextOverflow
-                                      .ellipsis, // Added to handle long text
-                                ),
-                                SizedBox(height: 10), // Added for spacing
-                                Text(
-                                  'Rs ${product['ProductPrice']}',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                SizedBox(height: 10), // Added for spacing
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: const Color(0xff374366),
-                                      radius: 20.0,
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.add_shopping_cart_rounded,
-                                          size: 25,
-                                          color: Colors.white,
-                                        ),
-                                        onPressed: () {
-                                          db.addToCart(uid, product);
-                                        },
-                                      ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    product['ProductName'] ?? 'Product Name',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
                                     ),
-                                  ],
-                                ),
-                              ],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Rs ${product['ProductPrice'] ?? '0.0'}',
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      CircleAvatar(
+                                        backgroundColor:
+                                            const Color(0xff374366),
+                                        radius: 20.0,
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.add_shopping_cart_rounded,
+                                            size: 25,
+                                            color: Colors.white,
+                                          ),
+                                          onPressed: () {
+                                            db.addToCart(uid, product);
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -116,5 +148,15 @@ class _ToysState extends State<Toys> {
         ),
       ),
     );
+  }
+
+  Future<String?> _getImage(String? imageUrl) async {
+    if (imageUrl == null || imageUrl.isEmpty) return null;
+    final response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      return imageUrl;
+    } else {
+      throw Exception('Failed to load image');
+    }
   }
 }
