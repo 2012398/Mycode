@@ -38,15 +38,8 @@ app.use(express.json());
 // const storage = getStorage();
 //upload video start
 
-const videoStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/videos"); // Destination directory for video uploads
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + "-" + file.originalname); // Unique filename for video uploads
-  },
-});
+const videoStorage = multer.memoryStorage(); // Store files in memory before uploading to Firebase Storage
+
 const videoUpload = multer({ storage: videoStorage });
 
 app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
@@ -55,15 +48,37 @@ app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    // You can add additional logic here to handle video uploads
-    // For example, you can store video metadata in a database, generate thumbnails, etc.
+    // Upload file to Firebase Storage
+    const file = req.file;
+    const blob = bucket.file('Video/' + file.originalname);
 
-    return res.status(200).json({ message: "Video uploaded successfully" });
+    const blobStream = blob.createWriteStream({
+      metadata: {
+        contentType: "video/mp4",
+        metadata: {
+          firebaseStorageDownloadTokens: uuid(),
+        },
+      },
+      gzip: true,
+    });
+
+    blobStream.on("error", (err) => {
+      console.error("Error uploading video:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    });
+
+    blobStream.on("finish", () => {
+      const videoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/Video%2F${encodeURIComponent(file.originalname)}?alt=media&token=${blob.metadata.metadata.firebaseStorageDownloadTokens}`;
+      return res.status(200).json({ videoUrl });
+    });
+
+    blobStream.end(file.buffer);
   } catch (error) {
     console.error("Error uploading video:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 // upload video end
 
