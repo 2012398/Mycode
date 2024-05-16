@@ -22,7 +22,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  File? _video;
+  File? galleryFile; 
+final picker = ImagePicker(); 
+
   final user = FirebaseAuth.instance.currentUser!;
   List<dynamic> messages = [];
   @override
@@ -61,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat'),
+        title: Text('Chat by patient'),
       ),
       body: ListView.builder(
         itemCount: messages.length,
@@ -99,7 +101,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   suffixIcon: GestureDetector(
                     onTap: () {
                       if (newMessage.text.isNotEmpty) {
-                        sendMessage();
+                        sendMessage( newMessage.text);
                         ScaffoldMessenger.of(context)
                             .showSnackBar(SnackBar(content: Text('data')));
                       }
@@ -117,11 +119,13 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             Padding(
               child: GestureDetector(
-                onTap: () => _pickVideo,
-                child: Icon(
-                  Icons.add,
+                child: const Icon(
+                  CupertinoIcons.camera,
                   color: Colors.green,
                 ),
+                onTap:() {
+                  _showPicker(context: context); 
+                }, 
               ),
               padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
             ),
@@ -143,23 +147,15 @@ class _ChatScreenState extends State<ChatScreen> {
   //   }
   // }
 
-  Future<void> _pickVideo() async {
-    final pickedFile =
-        await ImagePicker().pickVideo(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _video = File(pickedFile.path);
-      });
-    }
-  }
+  
 
-  Future<void> sendMessage() async {
+  Future<void> sendMessage(var message) async {
     String url =
         '${db.dblink}/send-message'; // Replace this with your API endpoint
     var body = {
       'DoctorId': widget.doctor.toString(),
       'PatientId': uid.toString(),
-      'content': newMessage.text,
+      'content': message.toString(),
       'SenderId': uid.toString(),
     };
     // print(body);
@@ -178,6 +174,82 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       print('Exception during message sending: $e');
       // Handle exception here
+    }
+  }
+    void _showPicker({ 
+	required BuildContext context, 
+}) { 
+	showModalBottomSheet( 
+	context: context, 
+	builder: (BuildContext context) { 
+		return SafeArea( 
+		child: Wrap( 
+			children: <Widget>[ 
+			ListTile( 
+				leading: const Icon(Icons.photo_library), 
+				title: const Text('Gallery'), 
+				onTap: () { 
+				getVideo(ImageSource.gallery); 
+				Navigator.of(context).pop(); 
+				}, 
+			), 
+			ListTile( 
+				leading: const Icon(Icons.photo_camera), 
+				title: const Text('Camera'), 
+				onTap: () { 
+				getVideo(ImageSource.camera); 
+				Navigator.of(context).pop(); 
+				}, 
+			), 
+			], 
+		), 
+		); 
+	}, 
+	); 
+} Future getVideo( 
+	ImageSource img, 
+) async { 
+	final pickedFile = await picker.pickVideo( 
+		source: img, 
+		preferredCameraDevice: CameraDevice.rear, 
+		maxDuration: const Duration(seconds: 15)); 
+	XFile? xfilePick = pickedFile; 
+	setState( 
+	() { 
+		if (xfilePick != null) { 
+		galleryFile = File(pickedFile!.path); 
+    //uploading video directly
+    uploadVideo(galleryFile!);
+		} else { 
+		ScaffoldMessenger.of(context).showSnackBar(// is this context <<< 
+			const SnackBar(content: Text('Nothing is selected'))); 
+		} 
+	}, 
+	); 
+}  Future<void> uploadVideo(File videoFile) async {
+    // API endpoint URL
+    var apiUrl = Uri.parse('${db.dblink}/uploadVideo');
+
+    try {
+      // Send a POST request to the API endpoint with the video file
+      var request = http.MultipartRequest('POST', apiUrl)
+        ..files.add(await http.MultipartFile.fromPath('video', videoFile.path));
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        // Video uploaded successfully
+        var responseData = await response.stream.bytesToString();
+        var videoUrl = jsonDecode(responseData)['videoUrl'];
+        sendMessage(videoUrl);
+        print('Video uploaded successfully. URL: $videoUrl');
+      } else {
+        // Handle error response
+        print('Error uploading video. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('Error uploading video: $e');
     }
   }
 }
