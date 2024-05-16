@@ -34,9 +34,9 @@ final picker = ImagePicker();
     // Fetch messages initially
     fetchMessages();
     // Fetch messages periodically
-    // Timer.periodic(const Duration(seconds: 3), (timer) {
-    //   fetchMessages();
-    // });
+    Timer.periodic(const Duration(seconds: 3), (timer) {
+      fetchMessages();
+    });
   }
 
   @override
