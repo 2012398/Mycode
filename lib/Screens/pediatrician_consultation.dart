@@ -119,6 +119,7 @@ Future<String> bookAppointment(String userId, String selectedDate,
 class Doctor {
   final String name;
   final String uid;
+
   // final double rating;
   // final int reviews;
 
@@ -141,6 +142,7 @@ class Doctor {
 
 class DoctorCard extends StatefulWidget {
   final Doctor doctor;
+
   // final Doctor uid;
   final Function(DateTime selectedTime) onDateAndTimeSelected;
   final Function(DateTime selectedDate) onDateSelected;

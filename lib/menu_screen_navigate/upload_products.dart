@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../db.dart' as db;
-import 'package:image_picker/image_picker.dart';
 
 var imageUrl;
 
@@ -203,8 +202,13 @@ class _UploadProductState extends State<Upload_product> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _uploadImage();
-
+                        if (_imageFile != null) {
+                          _uploadImage();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Please select an image')));
+                        }
                         uploadInvoice();
                       }
                     },
@@ -263,6 +267,12 @@ class _UploadProductState extends State<Upload_product> {
   }
 
   Future<void> uploadInvoice() async {
+    if (imageUrl == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please upload an image')));
+      return;
+    }
+
     const String apiUrl = "${db.dblink}/uploadinvo";
     try {
       final response = await http.post(

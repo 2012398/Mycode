@@ -24,6 +24,7 @@ class _AllChatsState extends State<AllChats> {
   List<String> chatRoomIds = [];
   List<String> chatRoomPatient = [];
   List<Map<String, dynamic>> userDetails = [];
+
   Future<void> fetchChatRoomIds() async {
     final userId = user.uid; // Replace with the actual userId
     final apiUrl =
@@ -77,6 +78,7 @@ class _AllChatsState extends State<AllChats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xff374366),
         title: const Text('All Chats'),
       ),
       body: ListView.builder(

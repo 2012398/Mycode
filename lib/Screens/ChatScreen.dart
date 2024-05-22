@@ -1,39 +1,43 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fyp/Screens/Cart.dart';
-import 'package:fyp/db.dart' as db;
-import 'package:fyp/Screens/ChatAPI.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
+
+import '../db.dart'; // Make sure to replace this with your actual import paths
+import 'Cart.dart'; // Make sure to replace this with your actual import paths
+import 'ChatAPI.dart'; // Make sure to replace this with your actual import paths
 
 class ChatScreen extends StatefulWidget {
   final String doctor;
   final String doctorname;
-  const ChatScreen({super.key, required this.doctor, required this.doctorname});
+
+  const ChatScreen({Key? key, required this.doctor, required this.doctorname});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  File? galleryFile; 
-final picker = ImagePicker(); 
-
   final user = FirebaseAuth.instance.currentUser!;
   List<dynamic> messages = [];
+  final TextEditingController newMessage = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  bool isLoading = false;
+  VideoPlayerController? _videoPlayerController;
+  final picker = ImagePicker();
+
   @override
   void initState() {
     super.initState();
-    // print(widget.doctor);
-    // Fetch messages initially
     fetchMessages();
-    // Fetch messages periodically
+
     Timer.periodic(const Duration(seconds: 3), (timer) {
       fetchMessages();
     });
@@ -41,12 +45,14 @@ final picker = ImagePicker();
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _videoPlayerController?.dispose();
     newMessage.dispose();
     super.dispose();
   }
 
-  TextEditingController newMessage = TextEditingController();
+  bool _isURL(String text) {
+    return Uri.tryParse(text)?.hasScheme ?? false;
+  }
 
   Future<void> fetchMessages() async {
     try {
@@ -59,106 +65,22 @@ final picker = ImagePicker();
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chat by patient'),
-      ),
-      body: ListView.builder(
-        itemCount: messages.length,
-        itemBuilder: (context, index) {
-          final message = messages[index];
-          if (message['SenderId'].toString() == widget.doctor) {
-            return ListTile(
-              subtitle: Text(message['content']),
-              title: Text(widget.doctorname),
-            );
-          } else {
-            return ListTile(
-              subtitle: Text(message['content']),
-              title: Text(user.displayName!),
-            );
-          }
-        },
-      ),
-      floatingActionButton: Container(
-        padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: TextField(
-                controller: newMessage,
-                onChanged: (value) {
-                  newMessage.text = value;
-                },
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsetsDirectional.all(10),
-                  hintText: "Type a message",
-                  suffixIcon: GestureDetector(
-                    onTap: () {
-                      if (newMessage.text.isNotEmpty) {
-                        sendMessage( newMessage.text);
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(SnackBar(content: Text('data')));
-                      }
-                    },
-                    child: const Icon(
-                      CupertinoIcons.arrow_right_circle_fill,
-                      color: Colors.green,
-                    ),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              child: GestureDetector(
-                child: const Icon(
-                  CupertinoIcons.camera,
-                  color: Colors.green,
-                ),
-                onTap:() {
-                  _showPicker(context: context); 
-                }, 
-              ),
-              padding: EdgeInsets.fromLTRB(5, 10, 0, 0),
-            ),
-          ],
-        ),
-      ),
-    );
+  Future<void> _initializeVideoPlayer(String url) async {
+    _videoPlayerController = VideoPlayerController.network(url)
+      ..initialize().then((_) {
+        setState(() {});
+      });
   }
-
-  // Future<void> _uploadVideo() async {
-  //   var request = http.MultipartRequest('POST', Uri.parse('YOUR_API_ENDPOINT'));
-  //   request.files.add(await http.MultipartFile.fromPath('video', _video!.path));
-
-  //   var response = await request.send();
-  //   if (response.statusCode == 200) {
-  //     print('Video uploaded successfully');
-  //   } else {
-  //     print('Failed to upload video: ${response.reasonPhrase}');
-  //   }
-  // }
-
-  
 
   Future<void> sendMessage(var message) async {
     String url =
-        '${db.dblink}/send-message'; // Replace this with your API endpoint
+        '${dblink}/send-message'; // Replace this with your API endpoint
     var body = {
       'DoctorId': widget.doctor.toString(),
       'PatientId': uid.toString(),
       'content': message.toString(),
       'SenderId': uid.toString(),
     };
-    // print(body);
 
     try {
       var response = await http.post(Uri.parse(url),
@@ -166,69 +88,42 @@ final picker = ImagePicker();
           body: jsonEncode(body));
       if (response.statusCode == 200) {
         print('Message sent successfully');
-        // Handle success response here
       } else {
         print('Failed to send message. Error: ${response.statusCode}');
-        // Handle error response here
       }
     } catch (e) {
       print('Exception during message sending: $e');
-      // Handle exception here
     }
   }
-    void _showPicker({ 
-	required BuildContext context, 
-}) { 
-	showModalBottomSheet( 
-	context: context, 
-	builder: (BuildContext context) { 
-		return SafeArea( 
-		child: Wrap( 
-			children: <Widget>[ 
-			ListTile( 
-				leading: const Icon(Icons.photo_library), 
-				title: const Text('Gallery'), 
-				onTap: () { 
-				getVideo(ImageSource.gallery); 
-				Navigator.of(context).pop(); 
-				}, 
-			), 
-			ListTile( 
-				leading: const Icon(Icons.photo_camera), 
-				title: const Text('Camera'), 
-				onTap: () { 
-				getVideo(ImageSource.camera); 
-				Navigator.of(context).pop(); 
-				}, 
-			), 
-			], 
-		), 
-		); 
-	}, 
-	); 
-} Future getVideo( 
-	ImageSource img, 
-) async { 
-	final pickedFile = await picker.pickVideo( 
-		source: img, 
-		preferredCameraDevice: CameraDevice.rear, 
-		maxDuration: const Duration(seconds: 15)); 
-	XFile? xfilePick = pickedFile; 
-	setState( 
-	() { 
-		if (xfilePick != null) { 
-		galleryFile = File(pickedFile!.path); 
-    //uploading video directly
-    uploadVideo(galleryFile!);
-		} else { 
-		ScaffoldMessenger.of(context).showSnackBar(// is this context <<< 
-			const SnackBar(content: Text('Nothing is selected'))); 
-		} 
-	}, 
-	); 
-}  Future<void> uploadVideo(File videoFile) async {
+
+  // Function to select the camera and capture a video
+  Future<void> getVideo(
+    ImageSource img,
+    CameraDevice cameraDevice, // New parameter
+  ) async {
+    final pickedFile = await picker.pickVideo(
+      source: img,
+      preferredCameraDevice: cameraDevice, // Use the specified camera device
+      maxDuration: const Duration(seconds: 15),
+    );
+    XFile? xfilePick = pickedFile;
+    setState(() {
+      if (xfilePick != null) {
+        File file = File(pickedFile!.path);
+        // Uploading video directly
+        uploadVideo(file);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Nothing is selected')),
+        );
+      }
+    });
+  }
+
+  // Function to upload the video file
+  Future<void> uploadVideo(File videoFile) async {
     // API endpoint URL
-    var apiUrl = Uri.parse('${db.dblink}/uploadVideo');
+    var apiUrl = Uri.parse('${dblink}/uploadVideo');
 
     try {
       // Send a POST request to the API endpoint with the video file
@@ -251,5 +146,173 @@ final picker = ImagePicker();
       // Handle any exceptions
       print('Error uploading video: $e');
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color(0xff374366),
+        title: Text('Chat with ${widget.doctorname}'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: messages.length,
+              itemBuilder: (context, index) {
+                final message = messages[index];
+                bool isSentByUser = message['SenderId'] == uid;
+                return Align(
+                  alignment: isSentByUser
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    decoration: BoxDecoration(
+                      color: isSentByUser ? Colors.blue[200] : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isSentByUser ? 'You' : widget.doctorname,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        _isURL(message['content'])
+                            ? InkWell(
+                                onTap: () async {
+                                  if (await canLaunch(message['content'])) {
+                                    await launch(message['content']);
+                                  }
+                                },
+                                child: AspectRatio(
+                                  aspectRatio: 16 / 9,
+                                  child: _videoPlayerController != null
+                                      ? VideoPlayer(_videoPlayerController!)
+                                      : FutureBuilder(
+                                          future: _initializeVideoPlayer(
+                                              message['content']),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.done) {
+                                              return VideoPlayer(
+                                                  _videoPlayerController!);
+                                            } else {
+                                              return Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              );
+                                            }
+                                          },
+                                        ),
+                                ),
+                              )
+                            : Text(
+                                message['content'],
+                                style: TextStyle(
+                                  color: Colors.black,
+                                ),
+                              ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: newMessage,
+                    decoration: InputDecoration(
+                      hintText: 'Type a message',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    if (newMessage.text.isNotEmpty) {
+                      sendMessage(newMessage.text);
+                      newMessage.clear();
+                    }
+                  },
+                  child: const Icon(
+                    size: 40,
+                    CupertinoIcons.arrow_right_circle_fill,
+                    color: Color(0xff374366),
+                  ),
+                ),
+                SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () async {
+                    // Display dialog to choose camera
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Select Camera'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                GestureDetector(
+                                  child: Text('Front Camera'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    getVideo(
+                                        ImageSource.camera, CameraDevice.front);
+                                  },
+                                ),
+                                SizedBox(height: 20),
+                                GestureDetector(
+                                  child: Text('Rear Camera'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    getVideo(
+                                        ImageSource.camera, CameraDevice.rear);
+                                  },
+                                ),
+                                SizedBox(height: 20),
+                                GestureDetector(
+                                  child: Text('Select from Device'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    getVideo(
+                                        ImageSource.gallery, CameraDevice.rear);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Icon(
+                    size: 40,
+                    CupertinoIcons.camera,
+                    color: Color(0xff374366),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

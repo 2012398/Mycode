@@ -187,7 +187,7 @@ class MainDrawer extends StatelessWidget {
               showBecomeDoctorDialog(context);
             },
             title: Text(
-              "Want to become a doctor?",
+              "Switch to doctor?",
               style: GoogleFonts.rubik(),
             ),
           ),
