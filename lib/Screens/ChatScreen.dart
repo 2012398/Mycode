@@ -257,6 +257,19 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Color(0xff374366),
                   ),
                 ),
+                 GestureDetector(
+                  onTap: () {
+                    if (newMessage.text.isNotEmpty) {
+                      sendMessage(newMessage.text);
+                      newMessage.clear();
+                    }
+                  },
+                  child: const Icon(
+                    size: 40,
+  CupertinoIcons.add_circled_solid,
+                    color: Color(0xff374366),
+                  ),
+                ),
                 SizedBox(width: 8),
                 GestureDetector(
                   onTap: () async {

@@ -173,7 +173,35 @@ app.get("/chatRoomIds/:userId", async (req, res) => {
 });
 
 //fetching complete
+//get appointments
 
+app.get("/get-appointments/:doctorname", (req, res) => {
+  const doctorname = req.params.doctorname;
+  async function fetchAppointments() {
+    const querySnapshot = await db
+      .collection("appointments")
+      .where("doctorname", "==", doctorname)
+      .get();
+    const appointments = [];
+    querySnapshot.forEach((doc) => {
+      appointments.push(doc.data());
+    });
+    return appointments;
+  }
+
+  fetchAppointments()
+    .then((appointments) => {
+      // console.log(doctors);
+      return res.status(200).json(appointments);
+    })
+    .catch((error) => {
+      return res.status(400).json(error);
+      //  console.log(error);
+    });
+});
+
+
+//complete
 // get all doctors
 app.get("/get-doctors", (req, res) => {
   async function fetchDoctors() {

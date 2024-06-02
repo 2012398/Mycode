@@ -5,10 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/chatscreen.dart';
 import 'package:fyp/Screens/login_screen.dart';
-
+ final String user = FirebaseAuth.instance.currentUser!;
 class DoctorScreen extends StatelessWidget {
   const DoctorScreen({super.key});
-
+  var data = {};
+ @override
+  void initState() {
+    super.initState();
+    fetchAppointments();
+  }
+  
+   Future<void> fetchAppointments(String category) async {
+    var url = Uri.parse("${db.dblink}/get-appointments/:${user.displayname}");
+    final response =
+        await http.get(url, headers: {"Content-Type": "application/json"});
+    if (response.statusCode == 200) {
+      setState(() {
+        data = json.decode(response.body);
+      });
+    } else {
+      print("Error22: ${response.statusCode}");
+      print("Response22: ${response.body}");
+      throw Exception("Failed to load data");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,8 +144,8 @@ class DoctorScreen extends StatelessWidget {
                 itemCount: 10,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text('Baby name ${index + 1}'),
-                    subtitle: Text('Age: ${6 + index}'),
+                    title: Text('$data + 1}'),
+                    // subtitle: Text('Age: ${6 + index}'),
                     onTap: () {},
                   );
                 },
