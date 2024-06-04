@@ -163,8 +163,8 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text('${data[index]['createdAt']}}'),
-                    subtitle: Text('${data[index]['doctorname']}}'),
+                    subtitle: Text('${data[index]['selectedTime']}'),
+                    title: Text('${data[index]['doctorname']}'),
                     // subtitle: Text('Age: ${6 + index}'),
                     onTap: () {},
                   );

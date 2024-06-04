@@ -10,7 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
-import '../db.dart'; // Make sure to replace this with your actual import paths
+import '../db.dart'
+    as db; // Make sure to replace this with your actual import paths
 import 'Cart.dart'; // Make sure to replace this with your actual import paths
 import 'ChatAPI.dart'; // Make sure to replace this with your actual import paths
 
@@ -74,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> sendMessage(var message) async {
     String url =
-        '${dblink}/send-message'; // Replace this with your API endpoint
+        '${db.dblink}/send-message'; // Replace this with your API endpoint
     var body = {
       'DoctorId': widget.doctor.toString(),
       'PatientId': uid.toString(),
@@ -123,7 +124,7 @@ class _ChatScreenState extends State<ChatScreen> {
   // Function to upload the video file
   Future<void> uploadVideo(File videoFile) async {
     // API endpoint URL
-    var apiUrl = Uri.parse('${dblink}/uploadVideo');
+    var apiUrl = Uri.parse('${db.dblink}/uploadVideo');
 
     try {
       // Send a POST request to the API endpoint with the video file
@@ -257,16 +258,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Color(0xff374366),
                   ),
                 ),
-                 GestureDetector(
-                  onTap: () {
-                    if (newMessage.text.isNotEmpty) {
-                      sendMessage(newMessage.text);
-                      newMessage.clear();
-                    }
+                GestureDetector(
+                  onTap: () async {
+                    await fetchAppointments();
+                    _showBottomDrawer(context);
                   },
                   child: const Icon(
                     size: 40,
-  CupertinoIcons.add_circled_solid,
+                    CupertinoIcons.add_circled_solid,
                     color: Color(0xff374366),
                   ),
                 ),
@@ -326,6 +325,66 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  List<Map<String, dynamic>> data = [];
+  Future<void> fetchAppointments() async {
+    try {
+      var url = Uri.parse("${db.dblink}/get-baby/${user.displayName}");
+      final response =
+          await http.get(url, headers: {"Content-Type": "application/json"});
+      print(url.toString());
+      if (response.statusCode == 200) {
+        setState(() {
+          data = List<Map<String, dynamic>>.from(json.decode(response.body));
+          // print(response.body);
+        });
+      } else {
+        print("Error22: ${response.statusCode}");
+        print("Response22: ${response.body}");
+        throw Exception("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+      // Handle error here, show a dialog or set an error state.
+    }
+  }
+
+  void _showBottomDrawer(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              DrawerHeader(
+                child: Text('Childs'),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  // Ensure index is within bounds of data length
+                  return ListTile(
+                    title: Text(data[index]['babyname'].toString()),
+                    subtitle: Text(data[index]['Age'].toString()),
+                    onTap: () {
+                      // Do something
+                      Navigator.pop(context); // Close the drawer
+                    },
+                  );
+                },
+              ),
+              // Add more items as needed
+            ],
+          ),
+        );
+      },
     );
   }
 }

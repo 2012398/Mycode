@@ -202,6 +202,66 @@ app.get("/get-appointments/:doctorname", (req, res) => {
 
 
 //complete
+
+//get babies
+// app.get("/get-baby/:parent", (req, res) => {
+//   const parent = req.params.parent;
+//   console.log(parent);
+//   async function fetchParent() {
+//     const userRef = db.collection("users").where("displayName", "==", 'Zawat Masta');
+//     const querySnapshot = await userRef.get();
+    
+//     const parentt = [];
+//     querySnapshot.forEach(async (userDoc) => {
+//       // Accessing the subcollection "babies" for each user
+//       const babiesRef = userDoc.ref.collection("babies");
+//       const babiesSnapshot = await babiesRef.get();
+//       babiesSnapshot.forEach((babyDoc) => {
+//         parentt.push(babyDoc.data());
+//       });
+//     });
+//     return parentt;
+//   }
+
+//   fetchParent()
+//     .then((parentt) => {
+//       return res.status(200).json(parentt);
+//     })
+//     .catch((error) => {
+//       return res.status(400).json(error);
+//     });
+// });
+
+
+app.get("/get-baby/:parent", async (req, res) => {
+  try {
+    const parent = req.params.parent;
+    console.log(parent);
+
+    const userQuerySnapshot = await db.collection("users").where("displayName", "==", parent).get();
+
+    if (userQuerySnapshot.empty) {
+      return res.status(404).json({ error: "Parent not found" });
+    }
+
+    const parentt = [];
+
+    await Promise.all(userQuerySnapshot.docs.map(async (userDoc) => {
+      const babiesQuerySnapshot = await userDoc.ref.collection("babies").get();
+      babiesQuerySnapshot.forEach((babyDoc) => {
+        parentt.push(babyDoc.data());
+      });
+    }));
+
+    return res.status(200).json(parentt);
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+//complete
 // get all doctors
 app.get("/get-doctors", (req, res) => {
   async function fetchDoctors() {
