@@ -1,36 +1,55 @@
 // ignore_for_file: unused_import
 
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/chatscreen.dart';
+import 'package:fyp/db.dart' as db;
+import 'package:http/http.dart' as http;
 import 'package:fyp/Screens/login_screen.dart';
- final String user = FirebaseAuth.instance.currentUser!;
-class DoctorScreen extends StatelessWidget {
+
+class DoctorScreen extends StatefulWidget {
   const DoctorScreen({super.key});
-  var data = {};
- @override
+
+  @override
+  State<DoctorScreen> createState() => _DoctorScreenState();
+}
+
+class _DoctorScreenState extends State<DoctorScreen> {
+  final user = FirebaseAuth.instance.currentUser!;
+  @override
   void initState() {
     super.initState();
     fetchAppointments();
   }
-  
-   Future<void> fetchAppointments(String category) async {
-    var url = Uri.parse("${db.dblink}/get-appointments/:${user.displayname}");
-    final response =
-        await http.get(url, headers: {"Content-Type": "application/json"});
-    if (response.statusCode == 200) {
-      setState(() {
-        data = json.decode(response.body);
-      });
-    } else {
-      print("Error22: ${response.statusCode}");
-      print("Response22: ${response.body}");
-      throw Exception("Failed to load data");
+
+  List<Map<String, dynamic>> data = [];
+  Future<void> fetchAppointments() async {
+    try {
+      var url = Uri.parse("${db.dblink}/get-appointments/${user.displayName}");
+      final response =
+          await http.get(url, headers: {"Content-Type": "application/json"});
+
+      if (response.statusCode == 200) {
+        setState(() {
+          data = List<Map<String, dynamic>>.from(json.decode(response.body));
+          // print(response.body);
+        });
+      } else {
+        print("Error22: ${response.statusCode}");
+        print("Response22: ${response.body}");
+        throw Exception("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+      // Handle error here, show a dialog or set an error state.
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    var obj = data;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),
@@ -141,10 +160,11 @@ class DoctorScreen extends StatelessWidget {
             const SizedBox(height: 10),
             Expanded(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: data.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text('$data + 1}'),
+                    title: Text('${data[index]['createdAt']}}'),
+                    subtitle: Text('${data[index]['doctorname']}}'),
                     // subtitle: Text('Age: ${6 + index}'),
                     onTap: () {},
                   );
