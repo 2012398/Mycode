@@ -297,7 +297,8 @@ class _FormFieldsState extends State<FormFields> {
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
       );
-// navigateToHome();
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const MenuScreen1()));
       print('Login successful. User: ${authResult.user}');
     } catch (error) {
       ScaffoldMessenger.of(context)
