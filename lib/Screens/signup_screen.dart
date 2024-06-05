@@ -334,8 +334,8 @@ class _SignupFormState extends State<SignupForm> {
         );
       } else if (response.statusCode == 400) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('User Already Exists.'),
+          const SnackBar(
+            content: const Text('User Already Exists.'),
           ),
         );
       } else {

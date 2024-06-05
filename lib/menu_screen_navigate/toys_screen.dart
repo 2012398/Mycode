@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:fyp/menu_screen_navigate/upload_products.dart';
 import '../db.dart' as db;
@@ -49,7 +51,7 @@ class _ToysState extends State<Toys> {
         child: Container(
           padding: const EdgeInsets.all(8.0),
           child: (obj == null)
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,
@@ -78,7 +80,7 @@ class _ToysState extends State<Toys> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         if (snapshot.hasError) {
-                                          return Placeholder();
+                                          return const Placeholder();
                                         } else {
                                           return Center(
                                             child: Image.network(
@@ -86,7 +88,7 @@ class _ToysState extends State<Toys> {
                                                   'https://via.placeholder.com/150',
                                               errorBuilder:
                                                   (context, error, stackTrace) {
-                                                return Placeholder();
+                                                return const Placeholder();
                                               },
                                               width: 300,
                                               height: 150,
@@ -94,7 +96,7 @@ class _ToysState extends State<Toys> {
                                           );
                                         }
                                       } else {
-                                        return CircularProgressIndicator();
+                                        return const CircularProgressIndicator();
                                       }
                                     },
                                   ),

@@ -1,11 +1,13 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../Screens/Cart.dart';
 import '../db.dart' as db;
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore:
 class Nipple_Pacifier extends StatefulWidget {
   const Nipple_Pacifier({Key? key}) : super(key: key);
 
@@ -17,6 +19,7 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
   final String uid = FirebaseAuth.instance.currentUser!.uid;
   var data = {};
 
+  // ignore: non_constant_identifier_names
   Future<void> Getinvo(String category) async {
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
     final response =
@@ -50,7 +53,7 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
         child: Container(
           padding: const EdgeInsets.all(8.0),
           child: (obj == null)
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 1,
@@ -79,7 +82,7 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         if (snapshot.hasError) {
-                                          return Placeholder();
+                                          return const Placeholder();
                                         } else {
                                           return Center(
                                             child: Image.network(
@@ -87,7 +90,7 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
                                                   'https://via.placeholder.com/150',
                                               errorBuilder:
                                                   (context, error, stackTrace) {
-                                                return Placeholder();
+                                                return const Placeholder();
                                               },
                                               width: 300,
                                               height: 150,
@@ -95,7 +98,7 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
                                           );
                                         }
                                       } else {
-                                        return CircularProgressIndicator();
+                                        return const CircularProgressIndicator();
                                       }
                                     },
                                   ),

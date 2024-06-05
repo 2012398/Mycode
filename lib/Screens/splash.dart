@@ -37,13 +37,13 @@ class _SplashScreenState extends State<SplashScreen> {
             .get();
 
         if (documentSnapshot.exists) {
-        if (documentSnapshot.get('role') == 'user') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MenuScreen1(),
-            ),
-          );
+          if (documentSnapshot.get('role') == 'user') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MenuScreen1(),
+              ),
+            );
           } else if (documentSnapshot.get('role') == 'doctor') {
             Navigator.pushReplacement(
               context,

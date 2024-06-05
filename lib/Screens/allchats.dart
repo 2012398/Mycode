@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +52,7 @@ class _AllChatsState extends State<AllChats> {
   }
 
   Future<void> fetchUserDetails() async {
-    final apiUrl = '${db.dblink}/userDetails';
+    const apiUrl = '${db.dblink}/userDetails';
     final Map<String, dynamic> requestBody = {'userIds': chatRoomPatient};
 
     try {
@@ -78,7 +80,7 @@ class _AllChatsState extends State<AllChats> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff374366),
+        backgroundColor: const Color(0xff374366),
         title: const Text('All Chats'),
       ),
       body: ListView.builder(

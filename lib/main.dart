@@ -35,6 +35,6 @@ class FypApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const SplashScreen());
+        home: SplashScreen());
   }
 }

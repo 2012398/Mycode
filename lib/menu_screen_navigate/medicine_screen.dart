@@ -41,14 +41,14 @@ class _MedicineState extends State<Medicine> {
     var obj = data['Products'];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Medicine'),
+        title: const Text('Medicine'),
         backgroundColor: const Color(0xff374366),
       ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(8.0),
           child: (obj == null)
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
                   itemCount: obj.length,
                   itemBuilder: (context, index) {
@@ -72,7 +72,7 @@ class _MedicineState extends State<Medicine> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         if (snapshot.hasError) {
-                                          return Placeholder();
+                                          return const Placeholder();
                                         } else {
                                           return Center(
                                             child: Image.network(
@@ -80,7 +80,7 @@ class _MedicineState extends State<Medicine> {
                                                   'https://via.placeholder.com/150',
                                               errorBuilder:
                                                   (context, error, stackTrace) {
-                                                return Placeholder();
+                                                return const Placeholder();
                                               },
                                               width: 300,
                                               height: 150,
@@ -88,7 +88,7 @@ class _MedicineState extends State<Medicine> {
                                           );
                                         }
                                       } else {
-                                        return CircularProgressIndicator();
+                                        return const CircularProgressIndicator();
                                       }
                                     },
                                   ),

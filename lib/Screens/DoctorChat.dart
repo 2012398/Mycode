@@ -112,7 +112,7 @@ class _DoctorchatState extends State<Doctorchat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff374366),
+        backgroundColor: const Color(0xff374366),
         title: Text('Chat with ${widget.doctor['displayName']}'),
       ),
       body: Column(
@@ -129,8 +129,10 @@ class _DoctorchatState extends State<Doctorchat> {
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 14),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     decoration: BoxDecoration(
                       color: isSentByUser ? Colors.blue[200] : Colors.grey[300],
                       borderRadius: BorderRadius.circular(15),
@@ -142,12 +144,12 @@ class _DoctorchatState extends State<Doctorchat> {
                           message['SenderId'] == user.uid
                               ? user.displayName!
                               : widget.doctor['displayName'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         _isURL(message['content'])
                             ? InkWell(
                                 onTap: () async {
@@ -168,7 +170,7 @@ class _DoctorchatState extends State<Doctorchat> {
                                               return VideoPlayer(
                                                   _videoPlayerController!);
                                             } else {
-                                              return Center(
+                                              return const Center(
                                                 child:
                                                     CircularProgressIndicator(),
                                               );
@@ -179,7 +181,7 @@ class _DoctorchatState extends State<Doctorchat> {
                               )
                             : Text(
                                 message['content'],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                 ),
                               ),
@@ -205,7 +207,7 @@ class _DoctorchatState extends State<Doctorchat> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     if (newMessage.text.isNotEmpty) {

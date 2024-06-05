@@ -37,7 +37,6 @@ class _MenuScreen1State extends State<MenuScreen1> {
     Data(image: "assets/images/Feeders.png", text: "Feeding bottles"),
     Data(image: "assets/images/Bath.jpg", text: "Bath accessories"),
     Data(image: "assets/images/Nipples.jpg", text: "Nipple & Pacifiers"),
-    Data(image: "assets/images/Nipples.jpg", text: "Upload Products")
   ];
 
   void navigateToPage(int index) {
@@ -73,11 +72,6 @@ class _MenuScreen1State extends State<MenuScreen1> {
       case 7:
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const Nipple_Pacifier()));
-        break;
-      case 8:
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const Upload_product()));
-
         break;
     }
   }

@@ -4,6 +4,7 @@ import 'dart:convert';
 import '../db.dart' as db;
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore: camel_case_types
 class Bath_accesories extends StatefulWidget {
   const Bath_accesories({Key? key}) : super(key: key);
 
@@ -11,6 +12,7 @@ class Bath_accesories extends StatefulWidget {
   State<Bath_accesories> createState() => _Bath_accesoriesState();
 }
 
+// ignore: camel_case_types
 class _Bath_accesoriesState extends State<Bath_accesories> {
   final String uid = FirebaseAuth.instance.currentUser!.uid;
   var data = {};
@@ -21,6 +23,7 @@ class _Bath_accesoriesState extends State<Bath_accesories> {
     Getinvo("Bath accessories");
   }
 
+  // ignore: non_constant_identifier_names
   Future<void> Getinvo(String category) async {
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
     final response =
@@ -41,14 +44,14 @@ class _Bath_accesoriesState extends State<Bath_accesories> {
     var obj = data['Products'];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Bath Accessories'),
+        title: const Text('Bath Accessories'),
         backgroundColor: const Color(0xff374366),
       ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(8.0),
           child: (obj == null)
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
                   itemCount: obj.length,
                   itemBuilder: (context, index) {
@@ -72,7 +75,7 @@ class _Bath_accesoriesState extends State<Bath_accesories> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         if (snapshot.hasError) {
-                                          return Placeholder();
+                                          return const Placeholder();
                                         } else {
                                           return Center(
                                             child: Image.network(
@@ -80,7 +83,7 @@ class _Bath_accesoriesState extends State<Bath_accesories> {
                                                   'https://via.placeholder.com/150',
                                               errorBuilder:
                                                   (context, error, stackTrace) {
-                                                return Placeholder();
+                                                return const Placeholder();
                                               },
                                               width: 300,
                                               height: 150,
@@ -88,7 +91,7 @@ class _Bath_accesoriesState extends State<Bath_accesories> {
                                           );
                                         }
                                       } else {
-                                        return CircularProgressIndicator();
+                                        return const CircularProgressIndicator();
                                       }
                                     },
                                   ),

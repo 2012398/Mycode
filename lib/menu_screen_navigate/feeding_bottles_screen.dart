@@ -4,6 +4,7 @@ import 'dart:convert';
 import '../db.dart' as db;
 import 'package:firebase_auth/firebase_auth.dart';
 
+// ignore: camel_case_types
 class Feeding_bottle extends StatefulWidget {
   const Feeding_bottle({Key? key}) : super(key: key);
 
@@ -11,6 +12,7 @@ class Feeding_bottle extends StatefulWidget {
   State<Feeding_bottle> createState() => _Feeding_bottleState();
 }
 
+// ignore: camel_case_types
 class _Feeding_bottleState extends State<Feeding_bottle> {
   final String uid = FirebaseAuth.instance.currentUser!.uid;
   var data = {};
@@ -21,6 +23,7 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
     Getinvo("Feeding bottle");
   }
 
+  // ignore: non_constant_identifier_names
   Future<void> Getinvo(String category) async {
     var url = Uri.parse("${db.dblink}/inventory?category=$category");
     final response =
@@ -41,14 +44,14 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
     var obj = data['Products'];
     return Scaffold(
       appBar: AppBar(
-        title: Text('Feeding Bottles'),
+        title: const Text('Feeding Bottles'),
         backgroundColor: const Color(0xff374366),
       ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(8.0),
           child: (obj == null)
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : ListView.builder(
                   itemCount: obj.length,
                   itemBuilder: (context, index) {
@@ -72,7 +75,7 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
                                       if (snapshot.connectionState ==
                                           ConnectionState.done) {
                                         if (snapshot.hasError) {
-                                          return Placeholder();
+                                          return const Placeholder();
                                         } else {
                                           return Center(
                                             child: Image.network(
@@ -80,7 +83,7 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
                                                   'https://via.placeholder.com/150',
                                               errorBuilder:
                                                   (context, error, stackTrace) {
-                                                return Placeholder();
+                                                return const Placeholder();
                                               },
                                               width: 300,
                                               height: 150,

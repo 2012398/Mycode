@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,17 +9,19 @@ import 'package:fyp/Screens/login_screen.dart';
 import '../menu_screen_navigate/upload_products.dart';
 
 class AdminScreen extends StatelessWidget {
+  const AdminScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff374366),
-        title: Text('Admin Dashboard'),
+        backgroundColor: const Color(0xff374366),
+        title: const Text('Admin Dashboard'),
       ),
       drawer: Drawer(
         child: ListView(
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xff374366),
               ),
@@ -40,35 +44,27 @@ class AdminScreen extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
-              onTap: () {
-                // Handle home `naviga`tion
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
               onTap: () {
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              leading: Icon(CupertinoIcons.cart),
-              title: Text('Orders'),
+              leading: const Icon(CupertinoIcons.cart),
+              title: const Text('Orders'),
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ShowOrders(),
+                    builder: (context) => const ShowOrders(),
                   ),
                 );
               },
             ),
             ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text('Logout'),
+              leading: const Icon(Icons.exit_to_app),
+              title: const Text('Logout'),
               onTap: () {
                 logout(context);
               },
@@ -84,16 +80,16 @@ class AdminScreen extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff374366)),
+                    backgroundColor: const Color(0xff374366)),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Upload_product(),
+                      builder: (context) => const Upload_product(),
                     ),
                   );
                 },
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(20),
                   child: Text(
                     'Upload Products',
@@ -102,31 +98,30 @@ class AdminScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Center(
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff374366)),
+                    backgroundColor: const Color(0xff374366)),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ShowOrders(),
+                      builder: (context) => const ShowOrders(),
                     ),
                   );
                 },
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(20),
                   child: Text(
-                    'Show Orders',
+                    '   Show Orders   ',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
               ),
-            ),
-            // Add more widgets or content as needed
+            )
           ],
         ),
       ),

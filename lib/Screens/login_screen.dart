@@ -51,8 +51,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
+            const Padding(
+              padding: EdgeInsets.only(
                 left: 30,
                 right: 30,
               ),
@@ -354,7 +354,7 @@ void showForgotPassDialog(BuildContext context) {
         ),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.4,
-          padding: EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0),
           child: ForgotPasswordForm(),
         ),
       );
@@ -420,7 +420,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                     style: const TextStyle(color: Colors.red),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 ClipRRect(
                   borderRadius:
                       const BorderRadius.all(Radius.elliptical(10, 10)),

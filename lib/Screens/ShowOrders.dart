@@ -46,23 +46,61 @@ class _ShowOrdersState extends State<ShowOrders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        backgroundColor: const Color(0xff374366),
+        title: const Text('Orders'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : orders.isEmpty
-              ? Center(child: Text('No orders found'))
+              ? const Center(child: Text('No orders found'))
               : ListView.builder(
                   itemCount: orders.length,
                   itemBuilder: (context, index) {
                     final order = orders[index];
-                    // Customize how you display order data
-                    return ListTile(
-                      title: Text('Order by: ${order['data']['Name']}'),
-
-                      trailing: Text('Order ID: ${order['id']}'),
-                      subtitle: Text('Total: Rs ${order['data']['total']}'),
-                      // Add more details if needed
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
+                      child: Card(
+                        elevation: 4.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.shopping_bag,
+                            color: Color(0xff374366),
+                          ),
+                          title: Text(
+                            'Order by: ${order['data']['Name']}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 4.0),
+                              Text(
+                                'Total: Rs ${order['data']['total']}',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4.0),
+                              Text(
+                                'Order ID: ${order['id']}',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                          isThreeLine: true,
+                        ),
+                      ),
                     );
                   },
                 ),

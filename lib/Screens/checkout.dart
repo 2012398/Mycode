@@ -117,6 +117,11 @@ class _CheckoutState extends State<Checkout> {
   Widget build(BuildContext context) {
     obj = data['Products'];
     return SafeArea(
+        child: GestureDetector(
+      onTap: () {
+        // Unfocus any focused text field
+        FocusScope.of(context).unfocus();
+      },
       child: Drawer(
         child: Column(
           children: [
@@ -394,7 +399,7 @@ class _CheckoutState extends State<Checkout> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget checkoutbtn() {

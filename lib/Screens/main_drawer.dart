@@ -86,34 +86,6 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.local_hospital_rounded),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainDrawer(),
-                  ));
-            },
-            title: Text(
-              "My Doctors",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.medical_information),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainDrawer(),
-                  ));
-            },
-            title: Text(
-              "Medical Records",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
             leading: const Icon(Icons.note_alt_sharp),
             onTap: () {
               Navigator.push(
@@ -152,34 +124,6 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Privacy & Policy",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.help_rounded),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainDrawer(),
-                  ));
-            },
-            title: Text(
-              "Help Center",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const MainDrawer(),
-                  ));
-            },
-            title: Text(
-              "Settings",
               style: GoogleFonts.rubik(),
             ),
           ),

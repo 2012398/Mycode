@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, library_private_types_in_public_api
 
 import 'dart:async';
 import 'dart:convert';
@@ -155,7 +155,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff374366),
+        backgroundColor: const Color(0xff374366),
         title: Text('Chat with ${widget.doctorname}'),
       ),
       body: Column(
@@ -172,8 +172,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 14),
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 14),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
                     decoration: BoxDecoration(
                       color: isSentByUser ? Colors.blue[200] : Colors.grey[300],
                       borderRadius: BorderRadius.circular(15),
@@ -183,12 +185,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: [
                         Text(
                           isSentByUser ? 'You' : widget.doctorname,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         _isURL(message['content'])
                             ? InkWell(
                                 onTap: () async {
@@ -209,7 +211,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                               return VideoPlayer(
                                                   _videoPlayerController!);
                                             } else {
-                                              return Center(
+                                              return const Center(
                                                 child:
                                                     CircularProgressIndicator(),
                                               );
@@ -220,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               )
                             : Text(
                                 message['content'],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.black,
                                 ),
                               ),
@@ -246,7 +248,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     if (newMessage.text.isNotEmpty) {
@@ -279,30 +281,30 @@ class _ChatScreenState extends State<ChatScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Select Camera'),
+                          title: const Text('Select Camera'),
                           content: SingleChildScrollView(
                             child: ListBody(
                               children: <Widget>[
                                 GestureDetector(
-                                  child: Text('Front Camera'),
+                                  child: const Text('Front Camera'),
                                   onTap: () {
                                     Navigator.pop(context);
                                     getVideo(
                                         ImageSource.camera, CameraDevice.front);
                                   },
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 GestureDetector(
-                                  child: Text('Rear Camera'),
+                                  child: const Text('Rear Camera'),
                                   onTap: () {
                                     Navigator.pop(context);
                                     getVideo(
                                         ImageSource.camera, CameraDevice.rear);
                                   },
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 GestureDetector(
-                                  child: Text('Select from Device'),
+                                  child: const Text('Select from Device'),
                                   onTap: () {
                                     Navigator.pop(context);
                                     getVideo(
@@ -361,7 +363,7 @@ class _ChatScreenState extends State<ChatScreen> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: <Widget>[
-              DrawerHeader(
+              const DrawerHeader(
                 child: Text('Childs'),
                 decoration: BoxDecoration(
                   color: Colors.blue,

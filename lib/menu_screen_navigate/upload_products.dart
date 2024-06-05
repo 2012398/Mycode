@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../db.dart' as db;
 
+// ignore: prefer_typing_uninitialized_variables
 var imageUrl;
 
 // ignore: camel_case_types
@@ -67,10 +68,14 @@ class _UploadProductState extends State<Upload_product> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff374366)),
                       onPressed: () => _pickImage(ImageSource.camera),
                       child: const Text('Take a Picture'),
                     ),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff374366)),
                       onPressed: () => _pickImage(ImageSource.gallery),
                       child: const Text('Choose from Gallery'),
                     ),
@@ -213,7 +218,7 @@ class _UploadProductState extends State<Upload_product> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      foregroundColor: const Color(0xff374366),
+                      backgroundColor: const Color(0xff374366),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 32, vertical: 16),
                     ),
