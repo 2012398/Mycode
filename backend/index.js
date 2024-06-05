@@ -81,7 +81,34 @@ app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
 
 
 // upload video end
+//fetch orders
+app.get("/orders", async (req, res) => {
+  try {
+    const ordersRef = admin.firestore().collection("orders");
+    const snapshot = await ordersRef.get();
 
+    if (snapshot.empty) {
+      return res.status(404).json({ error: "No orders found" });
+    }
+
+    const orders = [];
+    snapshot.forEach((doc) => {
+      orders.push({
+        id: doc.id,
+        data: doc.data()
+      });
+    });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+
+//complete 
 //upload image start
 const bucket = admin.storage().bucket();
 // console.log(bucket);
@@ -546,6 +573,8 @@ app.get("/inventory", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+
 app.post("/placeorder/:userId", async (req, res) => {
   const { userId } = req.params;
   const { Name, contact, address, subtotal } = req.body;
