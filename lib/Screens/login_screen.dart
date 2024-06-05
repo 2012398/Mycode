@@ -1,8 +1,11 @@
 // ignore_for_file: unused_field
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fyp/Screens/admin_screen.dart';
+import 'package:fyp/Screens/doctor_screen.dart';
 import 'package:fyp/Screens/menu_screen1.dart';
 import 'package:fyp/Screens/signup_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -297,9 +300,43 @@ class _FormFieldsState extends State<FormFields> {
         email: emailController.text.toString(),
         password: passwordController.text.toString(),
       );
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const MenuScreen1()));
-      print('Login successful. User: ${authResult.user}');
+
+      User? user = authResult.user;
+
+      if (user != null) {
+        // Fetch additional user data, including role, from your database
+        DocumentSnapshot userData = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .get();
+
+        // Assuming 'role' is a field in the user's document
+        String? userRole = userData['role'];
+
+        // Check the user's role and navigate accordingly
+        if (userRole == 'doctor') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DoctorScreen()),
+          );
+        } else if (userRole == 'user') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MenuScreen1()),
+          );
+        } else {
+          // Handle other roles or cases
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AdminScreen(),
+            ),
+          );
+        }
+      } else {
+        // Handle sign-in failure
+        print('Login failed');
+      }
     } catch (error) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(error.toString())));

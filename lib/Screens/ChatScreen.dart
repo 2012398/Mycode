@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -269,7 +271,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     color: Color(0xff374366),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () async {
                     // Display dialog to choose camera

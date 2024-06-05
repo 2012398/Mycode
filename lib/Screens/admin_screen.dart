@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/ShowOrders.dart';
 import 'package:fyp/Screens/login_screen.dart';
 
 import '../menu_screen_navigate/upload_products.dart';
@@ -53,6 +55,18 @@ class AdminScreen extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: Icon(CupertinoIcons.cart),
+              title: Text('Orders'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShowOrders(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Logout'),
               onTap: () {
@@ -83,6 +97,30 @@ class AdminScreen extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   child: Text(
                     'Upload Products',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff374366)),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShowOrders(),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text(
+                    'Show Orders',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),

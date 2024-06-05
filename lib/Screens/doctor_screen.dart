@@ -1,4 +1,4 @@
-// ignore_for_file: unused_import
+// ignore_for_file: unused_import, avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,7 +33,9 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
       if (response.statusCode == 200) {
         setState(() {
-          data = List<Map<String, dynamic>>.from(json.decode(response.body));
+          data = List<Map<String, dynamic>>.from(
+            json.decode(response.body),
+          );
           // print(response.body);
         });
       } else {
@@ -49,7 +51,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var obj = data;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),

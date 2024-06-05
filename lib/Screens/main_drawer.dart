@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
 import 'package:fyp/Screens/allchats.dart';
@@ -11,7 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({Key? key});
+  const MainDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +77,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Baby_profile(),
+                    builder: (context) => const Baby_profile(),
                   ));
             },
             title: Text(
@@ -89,7 +91,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainDrawer(),
+                    builder: (context) => const MainDrawer(),
                   ));
             },
             title: Text(
@@ -103,7 +105,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainDrawer(),
+                    builder: (context) => const MainDrawer(),
                   ));
             },
             title: Text(
@@ -117,7 +119,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EducationalResources(),
+                    builder: (context) => const EducationalResources(),
                   ));
             },
             title: Text(
@@ -131,7 +133,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ConsultationScreen(),
+                    builder: (context) => const ConsultationScreen(),
                   ));
             },
             title: Text(
@@ -159,7 +161,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainDrawer(),
+                    builder: (context) => const MainDrawer(),
                   ));
             },
             title: Text(
@@ -173,7 +175,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MainDrawer(),
+                    builder: (context) => const MainDrawer(),
                   ));
             },
             title: Text(
@@ -225,21 +227,21 @@ class MainDrawer extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Do you want to become a doctor?"),
+          title: const Text("Do you want to become a doctor?"),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 // Implement action for Yes
                 Navigator.of(context).pop();
               },
-              child: Text('Yes'),
+              child: const Text('Yes'),
             ),
             TextButton(
               onPressed: () {
                 // Implement action for No
                 Navigator.of(context).pop();
               },
-              child: Text('No'),
+              child: const Text('No'),
             ),
           ],
         );
