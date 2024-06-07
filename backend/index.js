@@ -50,7 +50,7 @@ app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
 
     // Upload file to Firebase Storage
     const file = req.file;
-    const blob = bucket.file('Video/' + file.originalname);
+    const blob = bucket.file("Video/" + file.originalname);
 
     const blobStream = blob.createWriteStream({
       metadata: {
@@ -68,7 +68,11 @@ app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
     });
 
     blobStream.on("finish", () => {
-      const videoUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/Video%2F${encodeURIComponent(file.originalname)}?alt=media&token=${blob.metadata.metadata.firebaseStorageDownloadTokens}`;
+      const videoUrl = `https://firebasestorage.googleapis.com/v0/b/${
+        bucket.name
+      }/o/Video%2F${encodeURIComponent(file.originalname)}?alt=media&token=${
+        blob.metadata.metadata.firebaseStorageDownloadTokens
+      }`;
       return res.status(200).json({ videoUrl });
     });
 
@@ -78,7 +82,6 @@ app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 // upload video end
 //fetch orders
@@ -95,7 +98,7 @@ app.get("/orders", async (req, res) => {
     snapshot.forEach((doc) => {
       orders.push({
         id: doc.id,
-        data: doc.data()
+        data: doc.data(),
       });
     });
 
@@ -106,9 +109,7 @@ app.get("/orders", async (req, res) => {
   }
 });
 
-
-
-//complete 
+//complete
 //upload image start
 const bucket = admin.storage().bucket();
 // console.log(bucket);
@@ -227,7 +228,6 @@ app.get("/get-appointments/:doctorname", (req, res) => {
     });
 });
 
-
 //complete
 
 //get babies
@@ -237,7 +237,7 @@ app.get("/get-appointments/:doctorname", (req, res) => {
 //   async function fetchParent() {
 //     const userRef = db.collection("users").where("displayName", "==", 'Zawat Masta');
 //     const querySnapshot = await userRef.get();
-    
+
 //     const parentt = [];
 //     querySnapshot.forEach(async (userDoc) => {
 //       // Accessing the subcollection "babies" for each user
@@ -259,13 +259,15 @@ app.get("/get-appointments/:doctorname", (req, res) => {
 //     });
 // });
 
-
 app.get("/get-baby/:parent", async (req, res) => {
   try {
     const parent = req.params.parent;
     console.log(parent);
 
-    const userQuerySnapshot = await db.collection("users").where("displayName", "==", parent).get();
+    const userQuerySnapshot = await db
+      .collection("users")
+      .where("displayName", "==", parent)
+      .get();
 
     if (userQuerySnapshot.empty) {
       return res.status(404).json({ error: "Parent not found" });
@@ -273,12 +275,16 @@ app.get("/get-baby/:parent", async (req, res) => {
 
     const parentt = [];
 
-    await Promise.all(userQuerySnapshot.docs.map(async (userDoc) => {
-      const babiesQuerySnapshot = await userDoc.ref.collection("babies").get();
-      babiesQuerySnapshot.forEach((babyDoc) => {
-        parentt.push(babyDoc.data());
-      });
-    }));
+    await Promise.all(
+      userQuerySnapshot.docs.map(async (userDoc) => {
+        const babiesQuerySnapshot = await userDoc.ref
+          .collection("babies")
+          .get();
+        babiesQuerySnapshot.forEach((babyDoc) => {
+          parentt.push(babyDoc.data());
+        });
+      })
+    );
 
     return res.status(200).json(parentt);
   } catch (error) {
@@ -286,7 +292,6 @@ app.get("/get-baby/:parent", async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 //complete
 // get all doctors
@@ -573,7 +578,6 @@ app.get("/inventory", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 app.post("/placeorder/:userId", async (req, res) => {
   const { userId } = req.params;

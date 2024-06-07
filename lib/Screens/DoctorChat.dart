@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:fyp/db.dart' as db;
 import '../db.dart';
 import 'ChatAPI.dart';
 
@@ -18,6 +18,8 @@ class Doctorchat extends StatefulWidget {
   @override
   _DoctorchatState createState() => _DoctorchatState();
 }
+
+var PatientName;
 
 class _DoctorchatState extends State<Doctorchat> {
   final user = FirebaseAuth.instance.currentUser!;
@@ -110,6 +112,10 @@ class _DoctorchatState extends State<Doctorchat> {
 
   @override
   Widget build(BuildContext context) {
+    var patient = widget.doctor;
+    setState(() {
+      PatientName = patient;
+    });
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),
@@ -225,6 +231,73 @@ class _DoctorchatState extends State<Doctorchat> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {fetchAppointments(), _showBottomDrawer(context)},
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  List<Map<String, dynamic>> data = [];
+  Future<void> fetchAppointments() async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(PatientName['displayName'].toString())));
+      var url = Uri.parse(
+          "${db.dblink}/get-baby/${PatientName['displayName'].toString()}");
+      final response =
+          await http.get(url, headers: {"Content-Type": "application/json"});
+      print(url.toString());
+      if (response.statusCode == 200) {
+        setState(() {
+          data = List<Map<String, dynamic>>.from(json.decode(response.body));
+          print(response.body);
+        });
+      } else {
+        print("Error22: ${response.statusCode}");
+        print("Response22: ${response.body}");
+        throw Exception("Failed to load data");
+      }
+    } catch (e) {
+      print("Error: $e");
+      // Handle error here, show a dialog or set an error state.
+    }
+  }
+
+  void _showBottomDrawer(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Childs'),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  // Ensure index is within bounds of data length
+                  return ListTile(
+                    title: Text(data[index]['babyname'].toString()),
+                    subtitle: Text(data[index]['Age'].toString()),
+                    onTap: () {
+                      // Do something
+                      Navigator.pop(context); // Close the drawer
+                    },
+                  );
+                },
+              ),
+              // Add more items as needed
+            ],
+          ),
+        );
+      },
     );
   }
 }
