@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
@@ -231,14 +232,18 @@ class _DoctorchatState extends State<Doctorchat> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {fetchAppointments(), _showBottomDrawer(context)},
-        child: const Icon(Icons.add),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 50, left: 2),
+        child: FloatingActionButton(
+          onPressed: () => {fetchAppointments(), _showBottomDrawer(context)},
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
 
   List<Map<String, dynamic>> data = [];
+
   Future<void> fetchAppointments() async {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -280,12 +285,50 @@ class _DoctorchatState extends State<Doctorchat> {
               ),
               ListView.builder(
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   // Ensure index is within bounds of data length
                   return ListTile(
-                    title: Text(data[index]['babyname'].toString()),
-                    subtitle: Text(data[index]['Age'].toString()),
+                    title: Text(
+                      data[index]['babyname'].toString(),
+                      style: GoogleFonts.rubik(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDetailItem(
+                            label: 'Age',
+                            value: data[index]['Age'].toString(),
+                            icon: Icons.cake,
+                            color: Colors.blue,
+                          ),
+                          _buildDetailItem(
+                            label: 'Blood Group',
+                            value: data[index]['Bloodgroup'].toString(),
+                            icon: Icons.bloodtype,
+                            color: Colors.red,
+                          ),
+                          _buildDetailItem(
+                            label: 'Height',
+                            value: data[index]['Height'].toString(),
+                            icon: Icons.height,
+                            color: Colors.green,
+                          ),
+                          _buildDetailItem(
+                            label: 'Weight',
+                            value: data[index]['Weight'].toString(),
+                            icon: Icons.fitness_center,
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
+                    ),
                     onTap: () {
                       // Do something
                       Navigator.pop(context); // Close the drawer
@@ -300,4 +343,31 @@ class _DoctorchatState extends State<Doctorchat> {
       },
     );
   }
+}
+
+Widget _buildDetailItem({
+  required String label,
+  required String value,
+  required IconData icon,
+  required Color color,
+}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4.0),
+    child: Row(
+      children: [
+        Icon(
+          icon,
+          size: 24,
+          color: color,
+        ),
+        const SizedBox(width: 10),
+        Text(
+          '$label: $value',
+          style: GoogleFonts.rubik(
+            fontSize: 16,
+          ),
+        ),
+      ],
+    ),
+  );
 }

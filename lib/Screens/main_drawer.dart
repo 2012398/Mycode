@@ -77,7 +77,7 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const Baby_profile(),
+                    builder: (context) => const Baby_Profile(),
                   ));
             },
             title: Text(
@@ -124,16 +124,6 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Privacy & Policy",
-              style: GoogleFonts.rubik(),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_add),
-            onTap: () {
-              showBecomeDoctorDialog(context);
-            },
-            title: Text(
-              "Switch to doctor?",
               style: GoogleFonts.rubik(),
             ),
           ),
