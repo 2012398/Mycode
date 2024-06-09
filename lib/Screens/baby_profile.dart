@@ -1,20 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'AddBaby.dart';
 import 'package:fyp/db.dart' as db;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class Baby_profile extends StatefulWidget {
-  const Baby_profile({super.key});
+class Baby_Profile extends StatefulWidget {
+  const Baby_Profile({super.key});
 
   @override
-  State<Baby_profile> createState() => _Baby_profileState();
+  State<Baby_Profile> createState() => _BabyProfileState();
 }
 
-class _Baby_profileState extends State<Baby_profile> {
+class _BabyProfileState extends State<Baby_Profile> {
   final user = FirebaseAuth.instance.currentUser!;
 
   @override
@@ -24,17 +23,15 @@ class _Baby_profileState extends State<Baby_profile> {
   }
 
   List<Map<String, dynamic>> data = [];
+
   Future<void> fetchAppointments() async {
     try {
       var url = Uri.parse("${db.dblink}/get-baby/${user.displayName}");
       final response =
           await http.get(url, headers: {"Content-Type": "application/json"});
-      print(url.toString());
       if (response.statusCode == 200) {
         setState(() {
           data = List<Map<String, dynamic>>.from(json.decode(response.body));
-
-          // print(response.body);
         });
       } else {
         print("Error22: ${response.statusCode}");
@@ -43,7 +40,6 @@ class _Baby_profileState extends State<Baby_profile> {
       }
     } catch (e) {
       print("Error: $e");
-      // Handle error here, show a dialog or set an error state.
     }
   }
 
@@ -60,49 +56,68 @@ class _Baby_profileState extends State<Baby_profile> {
           children: [
             ListView.builder(
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: data.length,
               itemBuilder: (context, index) {
-                // Ensure index is within bounds of data length
-                return ListTile(
-                  title: Text(data[index]['babyname'].toString()),
-                  subtitle: Text(data[index]['Age'].toString()),
-                  onTap: () {
-                    // Do something
-                    Navigator.pop(context); // Close the drawer
-                  },
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 10.0),
+                  elevation: 4.0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ListTile(
+                      title: Text(
+                        data[index]['babyname'].toString(),
+                        style: GoogleFonts.rubik(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Container(
+                        height:
+                            100, // Set a fixed height for the scrollable area
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildDetailItem(
+                                label: 'Age',
+                                value: data[index]['Age'].toString(),
+                                icon: Icons.cake,
+                                color: Colors.blue,
+                              ),
+                              _buildDetailItem(
+                                label: 'Blood Group',
+                                value: data[index]['Bloodgroup'].toString(),
+                                icon: Icons.bloodtype,
+                                color: Colors.red,
+                              ),
+                              _buildDetailItem(
+                                label: 'Height',
+                                value: data[index]['Height'].toString(),
+                                icon: Icons.height,
+                                color: Colors.green,
+                              ),
+                              _buildDetailItem(
+                                label: 'Weight',
+                                value: data[index]['Weight'].toString(),
+                                icon: Icons.fitness_center,
+                                color: Colors.orange,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
                 );
               },
             ),
-            // _buildDetailItem(
-            //   label: 'Baby Name',
-            //   value: 'John Doe',
-            //   icon: Icons.child_care,
-            //   color: Colors.blue,
-            // ),
-            // _buildDetailItem(
-            //   label: 'Blood Group',
-            //   value: 'O+',
-            //   icon: Icons.opacity,
-            //   color: Colors.green,
-            // ),
-            // _buildDetailItem(
-            //   label: 'Age',
-            //   value: '6 months',
-            //   icon: Icons.calendar_today,
-            //   color: Colors.orange,
-            // ),
-            // _buildDetailItem(
-            //   label: 'Height',
-            //   value: '60 cm',
-            //   icon: Icons.height,
-            //   color: Colors.purple,
-            // ),
-            // _buildDetailItem(
-            //   label: 'Weight',
-            //   value: '7 kg',
-            //   icon: Icons.fitness_center,
-            //   color: Colors.red,
-            // ),
           ],
         ),
       ),
@@ -134,29 +149,20 @@ class _Baby_profileState extends State<Baby_profile> {
     required Color color,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         children: [
           Icon(
             icon,
-            size: 30,
+            size: 24,
             color: color,
           ),
           const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                value,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
+          Text(
+            '$label: $value',
+            style: GoogleFonts.rubik(
+              fontSize: 16,
+            ),
           ),
         ],
       ),

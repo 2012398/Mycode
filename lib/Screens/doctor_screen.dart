@@ -18,6 +18,7 @@ class DoctorScreen extends StatefulWidget {
 
 class _DoctorScreenState extends State<DoctorScreen> {
   final user = FirebaseAuth.instance.currentUser!;
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +26,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
   }
 
   List<Map<String, dynamic>> data = [];
+
   Future<void> fetchAppointments() async {
     try {
       var url = Uri.parse("${db.dblink}/get-appointments/${user.displayName}");
@@ -69,7 +71,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
-                    // Add doctor's profile picture here
                   ),
                   SizedBox(height: 10),
                   Text(
@@ -137,19 +138,19 @@ class _DoctorScreenState extends State<DoctorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff374366),
-              ),
-              onPressed: () {},
-              child: const Padding(
-                padding: EdgeInsets.all(20),
-                child: Text(
-                  'View Reports',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ),
+            // ElevatedButton(
+            //   style: ElevatedButton.styleFrom(
+            //     backgroundColor: const Color(0xff374366),
+            //   ),
+            //   onPressed: () {},
+            //   child: const Padding(
+            //     padding: EdgeInsets.all(20),
+            //     child: Text(
+            //       'View Reports',
+            //       style: TextStyle(fontSize: 20),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20),
             const Text(
               'Patients',
