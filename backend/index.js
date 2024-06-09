@@ -228,6 +228,31 @@ app.get("/get-appointments/:doctorname", (req, res) => {
     });
 });
 
+app.get("/get-appointmentsbyuser/:doctorname", (req, res) => {
+  const doctorname = req.params.doctorname;
+  async function fetchAppointments() {
+    const querySnapshot = await db
+      .collection("appointments")
+      .where("PatientName", "==", doctorname)
+      .get();
+    const appointments = [];
+    querySnapshot.forEach((doc) => {
+      appointments.push(doc.data());
+    });
+    return appointments;
+  }
+
+  fetchAppointments()
+    .then((appointments) => {
+      // console.log(doctors);
+      return res.status(200).json(appointments);
+    })
+    .catch((error) => {
+      return res.status(400).json(error);
+      //  console.log(error);
+    });
+});
+
 //complete
 
 //get babies

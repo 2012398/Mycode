@@ -106,7 +106,7 @@ Future<String> bookAppointment(String userId, String selectedDate,
       'doctorname': doctorsname.toString(),
       'selectedDate': selectedDate.toString(),
       'selectedTime': selectedTime.toString(),
-      'PatientName': userId.toString()
+      'PatientName': user.displayName.toString()
     }),
   );
   final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -115,7 +115,6 @@ Future<String> bookAppointment(String userId, String selectedDate,
   responsefromapi = responseData['message'];
   return responseData['message'];
 }
-
 
 class Doctor {
   final String name;

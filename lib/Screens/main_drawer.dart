@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
+import 'package:fyp/Screens/MyAppointments.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/baby_profile.dart';
 import 'package:fyp/Screens/educational_resources.dart';
@@ -83,6 +84,20 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Baby Profile",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyAppointments(),
+                  ));
+            },
+            title: Text(
+              "My Appointments",
               style: GoogleFonts.rubik(),
             ),
           ),
