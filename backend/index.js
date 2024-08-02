@@ -83,8 +83,62 @@ app.post("/uploadVideo", videoUpload.single("video"), async (req, res) => {
   }
 });
 
+app.post("/approve", async (req, res) => {
+  const { orderId, status } = req.body;
+  console.log(orderId);
+  console.log(status);
+  if (!orderId || !status) {
+    return res
+      .status(400)
+      .json({ error: "Missing orderId or status in request body" });
+  }
+
+  try {
+    const ordersRef = admin.firestore().collection("orders");
+    const snapshot = await ordersRef.where("OrderId", "==", orderId).get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    snapshot.forEach(async (doc) => {
+      await doc.ref.update({ Status: status });
+    });
+
+    res.status(200).json({ message: "Order status updated successfully" });
+  } catch (error) {
+    console.error("Error updating order status:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // upload video end
 //fetch orders
+app.get("/orders/:user", async (req, res) => {
+  const { user } = req.params;
+  try {
+    const ordersRef = admin.firestore().collection("orders");
+    const snapshot = await ordersRef.where("Name", "==", user).get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: "No orders found" });
+    }
+
+    const orders = [];
+    snapshot.forEach((doc) => {
+      orders.push({
+        id: doc.id,
+        data: doc.data(),
+      });
+    });
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.get("/orders", async (req, res) => {
   try {
     const ordersRef = admin.firestore().collection("orders");

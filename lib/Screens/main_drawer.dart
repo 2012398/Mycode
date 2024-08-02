@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
 import 'package:fyp/Screens/MyAppointments.dart';
+import 'package:fyp/Screens/Orders.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/baby_profile.dart';
 import 'package:fyp/Screens/educational_resources.dart';
@@ -93,6 +95,20 @@ class MainDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
+                    builder: (context) => const AllChats(),
+                  ));
+            },
+            title: Text(
+              "chats",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) => const MyAppointments(),
                   ));
             },
@@ -127,6 +143,20 @@ class MainDrawer extends StatelessWidget {
             },
             title: Text(
               "Pediatrician consultation",
+              style: GoogleFonts.rubik(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(CupertinoIcons.cart),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const Orders(),
+                  ));
+            },
+            title: Text(
+              "My Orders",
               style: GoogleFonts.rubik(),
             ),
           ),

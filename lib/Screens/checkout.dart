@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:fyp/db.dart' as db;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 final formkey = GlobalKey<FormState>();
 bool result = false;
@@ -23,6 +24,7 @@ double total = 0;
 var dc = 100;
 var cost = 0;
 List itemprices = [];
+var uuid = Uuid();
 var data;
 final user = FirebaseAuth.instance.currentUser!;
 final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -466,7 +468,9 @@ class _CheckoutState extends State<Checkout> {
               'Name': user.displayName!,
               'contact': phoneNumberController.text,
               'address': addressController.text,
-              'subtotal': (total + dc)
+              'subtotal': (total + dc),
+              'Status': 'Pending',
+              'OrderId': uuid.v4()
             };
             placeOrder(orderData);
           }
