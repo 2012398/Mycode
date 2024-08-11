@@ -207,20 +207,32 @@ class _ShowOrdersState extends State<ShowOrders> {
                                       approveOrder(
                                           order['data']['OrderId'], 'Approve');
                                     },
-                                    child: Container(
-                                        child: Text('Approve'),
-                                        decoration: BoxDecoration(
-                                            border: Border.all())),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(right:8.0),
+                                      child: Container(
+                                        padding: EdgeInsets.all(3),
+                                          child: Text('Approve', style: TextStyle(color:Colors.white),),
+                                          decoration: BoxDecoration(
+                                              color:Color(0xff374366),
+                                              border: Border.all(),
+                                              borderRadius: BorderRadius.circular(10.0))),
+                                    ),
                                   ),
                                   GestureDetector(
                                     onTap: () {
                                       approveOrder(
                                           order['data']['OrderId'], 'Reject');
                                     },
-                                    child: Container(
-                                        child: Text('Reject'),
-                                        decoration: BoxDecoration(
-                                            border: Border.all())),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left:8.0),
+                                      child: Container(
+                                          padding: EdgeInsets.all(3),
+                                          child: Text('Reject',style: TextStyle(color:Colors.white)),
+                                          decoration: BoxDecoration(
+                                              color:Color(0xff374366),
+                                              border: Border.all(),
+                                              borderRadius: BorderRadius.circular(10.0))),
+                                    ),
                                   ),
                                 ],
                               )

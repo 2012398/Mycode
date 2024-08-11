@@ -46,7 +46,7 @@ class _MyAppointmentsState extends State<MyAppointments> {
             // ),
             const SizedBox(height: 20),
             const Text(
-              'Patients',
+              'Appointments Booked:',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -59,7 +59,7 @@ class _MyAppointmentsState extends State<MyAppointments> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     subtitle: Text('${data[index]['selectedTime']}'),
-                    title: Text('${data[index]['doctorname']}'),
+                    title: Text('Dr.''${data[index]['doctorname']}'),
                     // subtitle: Text('Age: ${6 + index}'),
                     onTap: () {},
                   );
