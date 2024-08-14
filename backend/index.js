@@ -118,7 +118,10 @@ app.get("/orders/:user", async (req, res) => {
   const { user } = req.params;
   try {
     const ordersRef = admin.firestore().collection("orders");
-    const snapshot = await ordersRef.where("Name", "==", user).get();
+    const snapshot = await ordersRef
+      .where("Name", "==", user)
+      .orderBy("timestamp") // Order by the 'date' field
+      .get();
 
     if (snapshot.empty) {
       return res.status(404).json({ error: "No orders found" });
@@ -660,7 +663,7 @@ app.get("/inventory", async (req, res) => {
 
 app.post("/placeorder/:userId", async (req, res) => {
   const { userId } = req.params;
-  const { Name, contact, address, subtotal } = req.body;
+  const { Name, contact, address, subtotal, OrderId, Status } = req.body;
 
   try {
     console.log(userId);
@@ -678,10 +681,19 @@ app.post("/placeorder/:userId", async (req, res) => {
     let total = 0;
     // Move items from the cart to the order
     cartItems.forEach((doc) => {
-      const { itemName, quantity, price, category } = doc.data();
+      const { itemName, quantity, price, category, OrderId, Status } =
+        doc.data();
       const itemTotal = quantity * price; // Calculate total for each item
       total += itemTotal; // Add to the overall total
-      items.push({ itemName, quantity, price, category, itemTotal });
+      items.push({
+        itemName,
+        quantity,
+        price,
+        category,
+        itemTotal,
+        OrderId,
+        Status,
+      });
     });
 
     if (items.length === 0) {
