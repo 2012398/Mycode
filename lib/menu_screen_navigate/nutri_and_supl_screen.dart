@@ -129,6 +129,8 @@ class _NutriState extends State<Nutri> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Added to Cart!")));
                                           },
                                         ),
                                       ),

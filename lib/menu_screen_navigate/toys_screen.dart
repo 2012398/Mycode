@@ -133,6 +133,8 @@ class _ToysState extends State<Toys> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Added to Cart!")));
                                           },
                                         ),
                                       ),

@@ -128,7 +128,10 @@ class _Bath_accesoriesState extends State<Bath_accesories> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
-                                          },
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(content: Text("Added to Cart!")));
+
+                                            },
                                         ),
                                       ),
                                     ],
