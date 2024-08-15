@@ -660,13 +660,11 @@ app.get("/inventory", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 app.post("/placeorder/:userId", async (req, res) => {
   const { userId } = req.params;
-  const { Name, contact, address, subtotal, OrderId, Status } = req.body;
+  const { Name, contact, address, subtotal, OrderId, Status } = req.body; // Ensure Status is passed in request body
 
   try {
-    console.log(userId);
     const userCartRef = admin
       .firestore()
       .collection("users")
@@ -679,10 +677,16 @@ app.post("/placeorder/:userId", async (req, res) => {
     const cartItems = await userCartRef.get();
     const items = [];
     let total = 0;
+
     // Move items from the cart to the order
     cartItems.forEach((doc) => {
-      const { itemName, quantity, price, category, OrderId, Status } =
-        doc.data();
+      const {
+        itemName,
+        quantity,
+        price,
+        category,
+        Status: itemStatus,
+      } = doc.data();
       const itemTotal = quantity * price; // Calculate total for each item
       total += itemTotal; // Add to the overall total
       items.push({
@@ -691,8 +695,8 @@ app.post("/placeorder/:userId", async (req, res) => {
         price,
         category,
         itemTotal,
+        Status: itemStatus || Status, // Use itemStatus if defined, else fallback to Status from request body
         OrderId,
-        Status,
       });
     });
 
@@ -702,7 +706,7 @@ app.post("/placeorder/:userId", async (req, res) => {
         .json({ error: "Cart is empty. Cannot place an order." });
     }
 
-    // Create a new order document in the user's orders collection
+    // Create a new order document in the orders collection
     const orderDoc = await userOrderRef.add({
       Name,
       address,
@@ -710,6 +714,8 @@ app.post("/placeorder/:userId", async (req, res) => {
       subtotal,
       items,
       total,
+      OrderId,
+      Status, // Use the Status from the request body
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
 

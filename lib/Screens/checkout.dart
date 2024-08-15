@@ -472,6 +472,7 @@ class _CheckoutState extends State<Checkout> {
               'Status': 'Pending',
               'OrderId': uuid.v4()
             };
+            print(orderData);
             placeOrder(orderData);
           }
         },
