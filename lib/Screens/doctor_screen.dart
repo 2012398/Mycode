@@ -18,7 +18,7 @@ class DoctorScreen extends StatefulWidget {
 }
 
 class _DoctorScreenState extends State<DoctorScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -30,21 +30,22 @@ class _DoctorScreenState extends State<DoctorScreen> {
 
   Future<void> fetchAppointments() async {
     try {
-      var url = Uri.parse("${db.dblink}/get-appointments/${user.displayName}");
-      final response =
-          await http.get(url, headers: {"Content-Type": "application/json"});
+      if (user != null && user!.displayName != null) {
+        var url = Uri.parse("${db.dblink}/get-appointments/${user!.displayName}");
+        final response = await http.get(url, headers: {"Content-Type": "application/json"});
 
-      if (response.statusCode == 200) {
-        setState(() {
-          data = List<Map<String, dynamic>>.from(
-            json.decode(response.body),
-          );
-          // print(response.body);
-        });
-      } else {
-        print("Error22: ${response.statusCode}");
-        print("Response22: ${response.body}");
-        throw Exception("Failed to load data");
+        if (response.statusCode == 200) {
+          setState(() {
+            data = List<Map<String, dynamic>>.from(
+              json.decode(response.body),
+            );
+            // print(response.body);
+          });
+        } else {
+          print("Error22: ${response.statusCode}");
+          print("Response22: ${response.body}");
+          throw Exception("Failed to load data");
+        }
       }
     } catch (e) {
       print("Error: $e");
@@ -62,7 +63,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
       drawer: Drawer(
         child: ListView(
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xff374366),
               ),
@@ -72,10 +73,20 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.white,
+                    child: user?.photoURL != null
+                        ? ClipOval(
+                      child: Image.network(
+                        user!.photoURL!,
+                        fit: BoxFit.cover,
+                        width: 60,
+                        height: 60,
+                      ),
+                    )
+                        : Icon(Icons.person, size: 60, color: Colors.grey[700]),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Doctor Name',
+                    user?.displayName ?? 'Doctor Name',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -84,40 +95,28 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 ],
               ),
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.chat),
-            //   title: const Text('Chats'),
-            //   onTap: () {
-            //     // Handle chat navigation
-            //     Navigator.push(
-            //       context,
-            //       MaterialPageRoute(builder: (context) => ChatScreen()),
-            //     );
-            //     // Navigator.pop(context);
-            //   },
-            // ),
             ListTile(
               leading: const Icon(Icons.calendar_today),
               title: const Text('Appointments'),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ShowAppointments(),
-                    ));
-                // Handle appointment navigation
-                //Navigator.pop(context);
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ShowAppointments(),
+                  ),
+                );
               },
             ),
             ListTile(
-              leading: const Icon(Icons.calendar_today),
+              leading: const Icon(Icons.chat),
               title: const Text('All Chats'),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AllChats(),
-                    ));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AllChats(),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -125,19 +124,18 @@ class _DoctorScreenState extends State<DoctorScreen> {
               title: const Text('Patients'),
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) => const DoctorScreen(),
-                ));
-                // Handle patient navigation
-                //Navigator.pop(context);
+                  ),
+                );
               },
             ),
+
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Logout'),
               onTap: () {
-                // Handle logout
                 logout(context);
               },
             ),
@@ -149,19 +147,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // ElevatedButton(
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: const Color(0xff374366),
-            //   ),
-            //   onPressed: () {},
-            //   child: const Padding(
-            //     padding: EdgeInsets.all(20),
-            //     child: Text(
-            //       'View Reports',
-            //       style: TextStyle(fontSize: 20),
-            //     ),
-            //   ),
-            // ),
             const SizedBox(height: 20),
             const Text(
               'Appointments Booked By The Patients',
@@ -184,7 +169,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
                       ],
                     ),
                     title: Text('${data[index]['PatientName']}'),
-                    // subtitle: Text('Age: ${6 + index}'),
                     onTap: () {},
                   );
                 },
