@@ -1,4 +1,7 @@
+// ignore_for_file: no_logic_in_create_state
+
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/ChatScreen.dart';
 import 'package:intl/intl.dart';
 import '../db.dart' as db;
 import 'dart:convert';
@@ -36,6 +39,50 @@ class updatedAppointments extends StatefulWidget {
   @override
   _updatedAppointmentsState createState() => _updatedAppointmentsState();
 }
+
+class Doctor2 {
+  final String name;
+  final String uid;
+
+  // final double rating;
+  // final int reviews;
+
+  Doctor2({
+    required this.name,
+    required this.uid,
+    // required this.rating,
+    // required this.reviews,
+  });
+
+  factory Doctor2.fromJson(Map<String, dynamic> json) {
+    return Doctor2(
+      name: json['displayName'] as String,
+      uid: json['uid'] as String,
+      // rating: json['rating'] as double,
+      // reviews: json['reviews'] as int,
+    );
+  }
+}
+
+// class DoctorCard extends StatefulWidget {
+//   final Doctor doctor;
+
+//   // final Doctor uid;
+//   final Function(DateTime selectedTime) onDateAndTimeSelected;
+//   final Function(DateTime selectedDate) onDateSelected;
+
+//   const DoctorCard({
+//     super.key,
+//     required this.doctor,
+//     // required this.uid,
+//     required this.onDateAndTimeSelected,
+//     required this.onDateSelected,
+//   });
+
+//   @override
+//   // ignore: library_private_types_in_public_api
+//   _DoctorCardState createState() => _DoctorCardState();
+// }
 
 class _updatedAppointmentsState extends State<updatedAppointments> {
   Doctor? selectedDoctor;
@@ -144,6 +191,23 @@ class _updatedAppointmentsState extends State<updatedAppointments> {
                     },
                     child: const Text('Book Appointment'),
                   ),
+                  // Builder(
+                  //   builder: (context) => ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(
+                  //         backgroundColor: Colors.redAccent),
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => ChatScreen(
+                  //               doctor: widget.doctor.uid,
+                  //               doctorname: widget.doctor.name),
+                  //         ),
+                  //       );
+                  //     },
+                  //     child: const Text('Chat'),
+                  //   ),
+                  // ),
                 ],
               ],
             ],
