@@ -153,7 +153,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
             // ),
             const SizedBox(height: 20),
             const Text(
-              'Patients',
+              'Appointments Booked By The Patients',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -165,8 +165,14 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    subtitle: Text('${data[index]['selectedTime']}'),
-                    title: Text('${data[index]['doctorname']}'),
+                    subtitle: Row(
+                      children: [
+                        Text('${data[index]['selectedTime']}',),
+                        SizedBox(width: 10),
+                        Text('${data[index]['selectedDate']}',),
+                      ],
+                    ),
+                    title: Text('${data[index]['PatientName']}'),
                     // subtitle: Text('Age: ${6 + index}'),
                     onTap: () {},
                   );

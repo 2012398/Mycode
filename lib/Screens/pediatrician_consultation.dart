@@ -229,7 +229,9 @@ class _DoctorCardState extends State<DoctorCard> {
             // Text('Experience: ${widget.doctor.experience}'),
             const Row(
               children: [
-                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow), Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow)
                 // Text(
                 // '${widget.doctor.rating} (${widget.doctor.reviews} reviews)'),
               ],

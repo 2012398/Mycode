@@ -76,7 +76,7 @@ class MainDrawer extends StatelessWidget {
             height: 50,
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: const Icon(Icons.child_care),
             onTap: () {
               Navigator.push(
                   context,
@@ -90,7 +90,7 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.person),
+            leading: const Icon(Icons.chat),
             onTap: () {
               Navigator.push(
                   context,
@@ -100,7 +100,7 @@ class MainDrawer extends StatelessWidget {
                   ));
             },
             title: Text(
-              "chats",
+              "Chats",
               style: GoogleFonts.rubik(),
             ),
           ),
@@ -133,13 +133,13 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.chat),
+            leading: const Icon(Icons.medical_services),
             onTap: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
                     // builder: (context) => const ConsultationScreen(),
-                    builder: (context) => const updatedAppointments(),
+                    builder: (context) => const ConsultationScreen(),
                   ));
             },
             title: Text(

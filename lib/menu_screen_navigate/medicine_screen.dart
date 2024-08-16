@@ -125,6 +125,8 @@ class _MedicineState extends State<Medicine> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Added to Cart!")));
                                           },
                                         ),
                                       ),

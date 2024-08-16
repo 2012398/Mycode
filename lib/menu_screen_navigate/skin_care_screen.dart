@@ -127,6 +127,8 @@ class _Skin_careState extends State<Skin_care> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Added to Cart!")));
                                           },
                                         ),
                                       ),

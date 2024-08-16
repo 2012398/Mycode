@@ -156,7 +156,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),
-        title: Text('Chat with ${widget.doctorname}'),
+        title: Text('Chat with Dr. ${widget.doctorname}'),
       ),
       body: Column(
         children: [
@@ -352,6 +352,7 @@ class _ChatScreenState extends State<ChatScreen> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
+<<<<<<< HEAD
         return DraggableScrollableSheet(
           expand: false,
           builder: (BuildContext context, ScrollController scrollController) {
@@ -371,6 +372,36 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             );
           },
+=======
+        return Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              const DrawerHeader(
+                child: Text('Children'),
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: data.length,
+                itemBuilder: (context, index) {
+                  // Ensure index is within bounds of data length
+                  return ListTile(
+                    title: Text(data[index]['babyname'].toString()),
+                    subtitle: Text(data[index]['Age'].toString()),
+                    onTap: () {
+                      // Do something
+                      Navigator.pop(context); // Close the drawer
+                    },
+                  );
+                },
+              ),
+              // Add more items as needed
+            ],
+          ),
+>>>>>>> 39434c0b28deb623b88be26a654789eddee17772
         );
       },
     );

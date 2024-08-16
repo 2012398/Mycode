@@ -135,6 +135,8 @@ class _Nipple_PacifierState extends State<Nipple_Pacifier> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Added to Cart!")));
                                           },
                                         ),
                                       ),

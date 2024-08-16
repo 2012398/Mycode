@@ -128,7 +128,9 @@ class _Feeding_bottleState extends State<Feeding_bottle> {
                                           ),
                                           onPressed: () {
                                             db.addToCart(uid, product);
-                                          },
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text("Added to Cart!")));
+                                            },
                                         ),
                                       ),
                                     ],
