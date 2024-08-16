@@ -156,7 +156,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff374366),
-        title: Text('Chat with Dr. ${widget.doctorname}'),
+        title: Text('Chat with ${widget.doctorname}'),
       ),
       body: Column(
         children: [
