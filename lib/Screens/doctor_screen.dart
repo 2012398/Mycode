@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/chatscreen.dart';
+import 'package:fyp/Screens/ShowAppointments.dart';
 import 'package:fyp/db.dart' as db;
 import 'package:http/http.dart' as http;
 import 'package:fyp/Screens/login_screen.dart';
@@ -99,8 +100,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
               leading: const Icon(Icons.calendar_today),
               title: const Text('Appointments'),
               onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ShowAppointments(),
+                    ));
                 // Handle appointment navigation
-                Navigator.pop(context);
+                //Navigator.pop(context);
               },
             ),
             ListTile(
@@ -118,8 +124,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
               leading: const Icon(Icons.medical_services),
               title: const Text('Patients'),
               onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                    builder: (context) => const DoctorScreen(),
+                ));
                 // Handle patient navigation
-                Navigator.pop(context);
+                //Navigator.pop(context);
               },
             ),
             ListTile(
