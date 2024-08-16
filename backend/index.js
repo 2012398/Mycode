@@ -118,10 +118,9 @@ app.get("/orders/:user", async (req, res) => {
   const { user } = req.params;
   try {
     const ordersRef = admin.firestore().collection("orders");
-    const snapshot = await ordersRef
-      .where("Name", "==", user)
-      .orderBy("timestamp") // Order by the 'date' field
-      .get();
+
+    // Fetch without ordering in Firestore
+    const snapshot = await ordersRef.where("Name", "==", user).get();
 
     if (snapshot.empty) {
       return res.status(404).json({ error: "No orders found" });
@@ -133,6 +132,11 @@ app.get("/orders/:user", async (req, res) => {
         id: doc.id,
         data: doc.data(),
       });
+    });
+
+    // Client-side sorting by timestamp
+    orders.sort((a, b) => {
+      return b.data.timestamp - a.data.timestamp;
     });
 
     res.status(200).json({ orders });

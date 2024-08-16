@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/Cart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:fyp/db.dart' as db;
@@ -29,6 +32,7 @@ class _DoctorchatState extends State<Doctorchat> {
   final ScrollController _scrollController = ScrollController();
   bool isLoading = false;
   VideoPlayerController? _videoPlayerController;
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -85,14 +89,14 @@ class _DoctorchatState extends State<Doctorchat> {
       });
   }
 
-  Future<void> sendMessage() async {
+  Future<void> sendMessage(var message) async {
     String url =
-        '${dblink}/send-message'; // Replace this with your API endpoint
+        '${db.dblink}/send-message'; // Replace this with your API endpoint
     var body = {
-      'DoctorId': user.uid.toString(),
-      'PatientId': widget.doctor['uid'].toString(),
-      'content': newMessage.text,
-      'SenderId': user.uid.toString(),
+      'DoctorId': widget.doctor.toString(),
+      'PatientId': uid.toString(),
+      'content': message.toString(),
+      'SenderId': uid.toString(),
     };
 
     try {
@@ -101,13 +105,63 @@ class _DoctorchatState extends State<Doctorchat> {
           body: jsonEncode(body));
       if (response.statusCode == 200) {
         print('Message sent successfully');
-        fetchMessages();
-        newMessage.clear();
       } else {
         print('Failed to send message. Error: ${response.statusCode}');
       }
     } catch (e) {
       print('Exception during message sending: $e');
+    }
+  }
+
+  // Function to select the camera and capture a video
+  Future<void> getVideo(
+    ImageSource img,
+    CameraDevice cameraDevice, // New parameter
+  ) async {
+    final pickedFile = await picker.pickVideo(
+      source: img,
+      preferredCameraDevice: cameraDevice, // Use the specified camera device
+      maxDuration: const Duration(seconds: 15),
+    );
+    XFile? xfilePick = pickedFile;
+    setState(() {
+      if (xfilePick != null) {
+        File file = File(pickedFile!.path);
+        // Uploading video directly
+        uploadVideo(file);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Nothing is selected')),
+        );
+      }
+    });
+  }
+
+  // Function to upload the video file
+  Future<void> uploadVideo(File videoFile) async {
+    // API endpoint URL
+    var apiUrl = Uri.parse('${db.dblink}/uploadVideo');
+
+    try {
+      // Send a POST request to the API endpoint with the video file
+      var request = http.MultipartRequest('POST', apiUrl)
+        ..files.add(await http.MultipartFile.fromPath('video', videoFile.path));
+
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        // Video uploaded successfully
+        var responseData = await response.stream.bytesToString();
+        var videoUrl = jsonDecode(responseData)['videoUrl'];
+        sendMessage(videoUrl);
+        print('Video uploaded successfully. URL: $videoUrl');
+      } else {
+        // Handle error response
+        print('Error uploading video. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Handle any exceptions
+      print('Error uploading video: $e');
     }
   }
 
@@ -130,7 +184,7 @@ class _DoctorchatState extends State<Doctorchat> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                bool isSentByUser = message['SenderId'] == user.uid;
+                bool isSentByUser = message['SenderId'] == uid;
                 return Align(
                   alignment: isSentByUser
                       ? Alignment.centerRight
@@ -148,9 +202,7 @@ class _DoctorchatState extends State<Doctorchat> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          message['SenderId'] == user.uid
-                              ? user.displayName!
-                              : widget.doctor['displayName'],
+                          isSentByUser ? 'You' : widget.doctor.toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
@@ -165,7 +217,7 @@ class _DoctorchatState extends State<Doctorchat> {
                                   }
                                 },
                                 child: AspectRatio(
-                                  aspectRatio: 16 / 10,
+                                  aspectRatio: 16 / 9,
                                   child: _videoPlayerController != null
                                       ? VideoPlayer(_videoPlayerController!)
                                       : FutureBuilder(
@@ -218,12 +270,75 @@ class _DoctorchatState extends State<Doctorchat> {
                 GestureDetector(
                   onTap: () {
                     if (newMessage.text.isNotEmpty) {
-                      sendMessage();
+                      sendMessage(newMessage.text);
+                      newMessage.clear();
                     }
                   },
                   child: const Icon(
                     size: 40,
                     CupertinoIcons.arrow_right_circle_fill,
+                    color: Color(0xff374366),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    await fetchAppointments();
+                    _showBottomDrawer(context);
+                  },
+                  child: const Icon(
+                    size: 40,
+                    CupertinoIcons.add_circled_solid,
+                    color: Color(0xff374366),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () async {
+                    // Display dialog to choose camera
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Select Camera'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                GestureDetector(
+                                  child: const Text('Front Camera'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    getVideo(
+                                        ImageSource.camera, CameraDevice.front);
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                GestureDetector(
+                                  child: const Text('Rear Camera'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    getVideo(
+                                        ImageSource.camera, CameraDevice.rear);
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                GestureDetector(
+                                  child: const Text('Select from Device'),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    getVideo(
+                                        ImageSource.gallery, CameraDevice.rear);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: const Icon(
+                    size: 40,
+                    CupertinoIcons.camera,
                     color: Color(0xff374366),
                   ),
                 ),

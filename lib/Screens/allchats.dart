@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/ChatScreen.dart';
 import 'package:fyp/Screens/DoctorChat.dart';
 import 'package:fyp/db.dart' as db;
 import 'package:http/http.dart' as http;
@@ -95,7 +96,10 @@ class _AllChatsState extends State<AllChats> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Doctorchat(doctor: userDetails[index]),
+                  builder: (context) => ChatScreen(
+                    doctor: userDetails[index].toString(),
+                    doctorname: '${userDetails[index]['displayName']}',
+                  ),
                 ),
               );
               // Navigate to the chat room screen with the selected chat room ID
