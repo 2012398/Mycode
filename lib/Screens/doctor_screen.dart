@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fyp/Screens/AllChatDoctor.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/chatscreen.dart';
 import 'package:fyp/Screens/ShowAppointments.dart';
@@ -31,8 +32,10 @@ class _DoctorScreenState extends State<DoctorScreen> {
   Future<void> fetchAppointments() async {
     try {
       if (user != null && user!.displayName != null) {
-        var url = Uri.parse("${db.dblink}/get-appointments/${user!.displayName}");
-        final response = await http.get(url, headers: {"Content-Type": "application/json"});
+        var url =
+            Uri.parse("${db.dblink}/get-appointments/${user!.displayName}");
+        final response =
+            await http.get(url, headers: {"Content-Type": "application/json"});
 
         if (response.statusCode == 200) {
           setState(() {
@@ -75,13 +78,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
                     backgroundColor: Colors.white,
                     child: user?.photoURL != null
                         ? ClipOval(
-                      child: Image.network(
-                        user!.photoURL!,
-                        fit: BoxFit.cover,
-                        width: 60,
-                        height: 60,
-                      ),
-                    )
+                            child: Image.network(
+                              user!.photoURL!,
+                              fit: BoxFit.cover,
+                              width: 60,
+                              height: 60,
+                            ),
+                          )
                         : Icon(Icons.person, size: 60, color: Colors.grey[700]),
                   ),
                   SizedBox(height: 10),
@@ -114,7 +117,7 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const AllChats(),
+                    builder: (context) => const AllChatDoctor(),
                   ),
                 );
               },
@@ -131,7 +134,6 @@ class _DoctorScreenState extends State<DoctorScreen> {
                 );
               },
             ),
-
             ListTile(
               leading: const Icon(Icons.exit_to_app),
               title: const Text('Logout'),
@@ -163,9 +165,13 @@ class _DoctorScreenState extends State<DoctorScreen> {
                   return ListTile(
                     subtitle: Row(
                       children: [
-                        Text('${data[index]['selectedTime']}',),
+                        Text(
+                          '${data[index]['selectedTime']}',
+                        ),
                         SizedBox(width: 10),
-                        Text('${data[index]['selectedDate']}',),
+                        Text(
+                          '${data[index]['selectedDate']}',
+                        ),
                       ],
                     ),
                     title: Text('${data[index]['PatientName']}'),

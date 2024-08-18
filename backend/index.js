@@ -113,6 +113,77 @@ app.post("/approve", async (req, res) => {
 });
 
 // upload video end
+
+app.post("/AppointmentApprove", async (req, res) => {
+  const { AppointmentId, status } = req.body;
+  console.log(AppointmentId);
+  console.log(status);
+  if (!AppointmentId || !status) {
+    return res
+      .status(400)
+      .json({ error: "Missing AppointmentId or status in request body" });
+  }
+
+  try {
+    const ordersRef = admin.firestore().collection("appointments");
+    const snapshot = await ordersRef
+      .where("AppointmentId", "==", AppointmentId)
+      .get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: "Appointment not found" });
+    }
+
+    snapshot.forEach(async (doc) => {
+      await doc.ref.update({ Status: status });
+    });
+
+    res
+      .status(200)
+      .json({ message: "Appointment status updated successfully" });
+  } catch (error) {
+    console.error("Error updating Appointment status:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//fetch appointments
+app.get("/showappointments/:user", async (req, res) => {
+  const { user } = req.params;
+  try {
+    const appointmentsRef = admin.firestore().collection("appointments");
+    console.log(user);
+    // Fetch without ordering in Firestore
+    const snapshot = await appointmentsRef
+      .where("doctorname", "==", user)
+      .get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: "No Appointments found" });
+    }
+
+    const appointments = [];
+    snapshot.forEach((doc) => {
+      appointments.push({
+        id: doc.id,
+        data: doc.data(),
+      });
+    });
+
+    // Client-side sorting by timestamp
+    // orders.sort((a, b) => {
+    //   return b.data.timestamp - a.data.timestamp;
+    // });
+    console.log(appointments);
+
+    res.status(200).json({ appointments });
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+//appointments fetch complete
 //fetch orders
 app.get("/orders/:user", async (req, res) => {
   const { user } = req.params;

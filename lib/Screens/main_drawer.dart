@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fyp/Screens/AddBaby.dart';
 import 'package:fyp/Screens/MyAppointments.dart';
 import 'package:fyp/Screens/Orders.dart';
+import 'package:fyp/Screens/ShowAppointments.dart';
 import 'package:fyp/Screens/allchats.dart';
 import 'package:fyp/Screens/baby_profile.dart';
 import 'package:fyp/Screens/educational_resources.dart';
@@ -39,7 +40,7 @@ class MainDrawer extends StatelessWidget {
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          fit: BoxFit.contain,  
+                          fit: BoxFit.contain,
                           image: AssetImage("images/Nabeel.png"),
                         ),
                       ),
@@ -176,19 +177,20 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           Expanded(
-              child: Align(
-            alignment: FractionalOffset.bottomLeft,
-            child: ListTile(
-              leading: const Icon(Icons.logout_rounded),
-              onTap: () {
-                logout(context);
-              },
-              title: Text(
-                "Logout",
-                style: GoogleFonts.rubik(),
+            child: Align(
+              alignment: FractionalOffset.bottomLeft,
+              child: ListTile(
+                leading: const Icon(Icons.logout_rounded),
+                onTap: () {
+                  logout(context);
+                },
+                title: Text(
+                  "Logout",
+                  style: GoogleFonts.rubik(),
+                ),
               ),
             ),
-          ))
+          )
         ],
       ),
     );

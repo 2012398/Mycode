@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fyp/db.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,8 @@ class ShowAppointments extends StatefulWidget {
 }
 
 class _ShowAppointmentsState extends State<ShowAppointments> {
+  final user = FirebaseAuth.instance.currentUser!;
+
   List<dynamic> appointments = [];
   bool isLoading = false;
 
@@ -26,7 +29,8 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
       isLoading = true;
     });
 
-    final response = await http.get(Uri.parse('${db.dblink}/showappointments'));
+    final response = await http
+        .get(Uri.parse('${db.dblink}/showappointments/${user.displayName!}'));
 
     setState(() {
       isLoading = false;
@@ -52,217 +56,119 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : appointments.isEmpty
-          ? const Center(child: Text('No appointments found'))
-          : ListView.builder(
-        itemCount: appointments.length,
-        itemBuilder: (context, index) {
-          final appointment = appointments[index];
-          final List<dynamic> items = appointment['data']['items'];
-          final appointmentId = appointment['data']['AppointmentId'];
-          final status = appointment['data']['Status'] ?? 'Pending';
+              ? const Center(child: Text('No appointments found'))
+              : ListView.builder(
+                  itemCount: appointments.length,
+                  itemBuilder: (context, index) {
+                    final appointment = appointments[index];
+                    final appointmentId = appointment['data']['AppointmentId'];
+                    final status = appointment['data']['Status'];
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(
-                vertical: 8.0, horizontal: 16.0),
-            child: Card(
-              elevation: 4.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: ListTile(
-                leading: const Icon(
-                  Icons.shopping_bag,
-                  color: Color(0xff374366),
-                ),
-                title: Text(
-                  'Appointment by: ${appointment['data']['Name']}',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: status == 'Approved' ? Colors.green :
-                    (status == 'Rejected' ? Colors.red : Colors.blue),
-                    fontSize: 16.0,
-                  ),
-                ),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Total: Rs ${appointment['data']['subtotal']}',
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Appointment ID: ${appointment['id']}',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14.0,
-                      ),
-                    ),
-                    const SizedBox(height: 4.0),
-
-                    // Display each product
-                    for (var item in items)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 4.0),
-                          RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                              ),
-                              children: [
-                                const TextSpan(
-                                  text: 'Product Name: ',
-                                ),
-                                TextSpan(
-                                  text: '${item['itemName']}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                              ),
-                              children: [
-                                const TextSpan(
-                                  text: 'Category: ',
-                                ),
-                                TextSpan(
-                                  text: '${item['category']}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                              ),
-                              children: [
-                                const TextSpan(
-                                  text: 'Quantity: ',
-                                ),
-                                TextSpan(
-                                  text: '${item['quantity']}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                              ),
-                              children: [
-                                const TextSpan(
-                                  text: 'Price: ',
-                                ),
-                                TextSpan(
-                                  text: 'Rs ${item['price']}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    const SizedBox(height: 4.0),
-                    Text(
-                      'Address:  ${appointment['data']['address']}',
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            final newStatus = status == 'Approved' ? 'Reject' : 'Approved';
-                            approveAppointment(appointmentId, newStatus);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(right: 8.0),
-                            child: Container(
-                              padding: EdgeInsets.all(3),
-                              child: Text(
-                                status == 'Approved' ? 'Approved' : 'Approve',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff374366),
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                            ),
-                          ),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 16.0),
+                      child: Card(
+                        elevation: 4.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            final newStatus = status == 'Rejected' ? 'Approve' : 'Rejected';
-                            approveAppointment(appointmentId, newStatus);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 8.0),
-                            child: Container(
-                              padding: EdgeInsets.all(3),
-                              child: Text(
-                                status == 'Rejected' ? 'Rejected' : 'Reject',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              decoration: BoxDecoration(
-                                color: Color(0xff374366),
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.shopping_bag,
+                            color: Color(0xff374366),
+                          ),
+                          title: Text(
+                            'Appointment by: ${appointment['data']['PatientName']}',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: status == 'Approved'
+                                  ? Colors.green
+                                  : (status == 'Rejected'
+                                      ? Colors.red
+                                      : Colors.blue),
+                              fontSize: 16.0,
                             ),
                           ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 4.0),
+                              Text(
+                                'Total: Rs ${appointment['data']['selectedTime']}',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 4.0),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      approveAppointment(
+                                          appointment['data']['AppointmentId'],
+                                          'Approved');
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Text(
+                                          'Approve',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff374366),
+                                          border: Border.all(),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      approveAppointment(
+                                          appointment['data']['AppointmentId'],
+                                          'Rejected');
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(3),
+                                        child: Text(
+                                          'Reject',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff374366),
+                                          border: Border.all(),
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          isThreeLine: true,
                         ),
-                      ],
-                    )
-                  ],
+                      ),
+                    );
+                  },
                 ),
-                isThreeLine: true,
-              ),
-            ),
-          );
-        },
-      ),
     );
   }
 
   Future<void> approveAppointment(String appointmentId, String status) async {
     try {
       final response = await http.post(
-        Uri.parse('${db.dblink}/approve'),
+        Uri.parse('${db.dblink}/AppointmentApprove'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'appointmentId': appointmentId, 'status': status}),
+        body: jsonEncode({'AppointmentId': appointmentId, 'status': status}),
       );
 
       if (response.statusCode == 200) {
