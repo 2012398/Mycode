@@ -94,9 +94,9 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                             children: [
                               const SizedBox(height: 4.0),
                               Text(
-                                'Total: Rs ${appointment['data']['selectedTime']}',
+                                'Time slot: ${appointment['data']['selectedTime']}',
                                 style: const TextStyle(
-                                  color: Colors.green,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -105,47 +105,42 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      approveAppointment(
-                                          appointment['data']['AppointmentId'],
-                                          'Approved');
+                                      final newStatus = status == 'Approved' ? 'Reject' : 'Approved';
+                                      approveAppointment(appointmentId, newStatus);
                                     },
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
+                                      padding: EdgeInsets.only(right: 8.0),
                                       child: Container(
-                                        padding: const EdgeInsets.all(3),
+                                        padding: EdgeInsets.all(3),
                                         child: Text(
-                                          'Approve',
+                                          status == 'Approved' ? 'Approved' : 'Approve',
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         decoration: BoxDecoration(
                                           color: Color(0xff374366),
                                           border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      approveAppointment(
-                                          appointment['data']['AppointmentId'],
-                                          'Rejected');
+                                      final newStatus = status == 'Rejected' ? 'Approve' : 'Rejected';
+                                      approveAppointment(appointmentId, newStatus);
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
+                                      padding: EdgeInsets.only(left: 8.0),
                                       child: Container(
-                                        padding: const EdgeInsets.all(3),
+                                        padding: EdgeInsets.all(3),
                                         child: Text(
-                                          'Reject',
+                                          status == 'Rejected' ? 'Rejected' : 'Reject',
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         decoration: BoxDecoration(
                                           color: Color(0xff374366),
                                           border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                       ),
                                     ),

@@ -20,6 +20,7 @@ class ConsultationScreen extends StatefulWidget {
 class _ConsultationScreenState extends State<ConsultationScreen> {
   String selectedTime = 'Select Time';
   DateTime selectedDate = DateTime.now();
+  //
 
   // Sample list of doctors
   List<Doctor> doctors = [];
@@ -64,7 +65,7 @@ class _ConsultationScreenState extends State<ConsultationScreen> {
           children: [
             const Text(
               'Select Doctor:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,),
             ),
             const SizedBox(height: 10),
             // Display list of doctors
@@ -250,6 +251,7 @@ class _DoctorCardState extends State<DoctorCard> {
                       selectedDate != null
                           ? DateFormat('yyyy-MM-dd').format(selectedDate!)
                           : 'Select Date',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
@@ -261,7 +263,7 @@ class _DoctorCardState extends State<DoctorCard> {
                     onPressed: () {
                       _showTimePicker();
                     },
-                    child: Text(selectedTime),
+                    child: Text(selectedTime, style: TextStyle(color: Colors.white)),
                   ),
                 ),
               ],
