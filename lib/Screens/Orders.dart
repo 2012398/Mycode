@@ -13,7 +13,6 @@ class Orders extends StatefulWidget {
 
 class _OrdersState extends State<Orders> {
   final user = FirebaseAuth.instance.currentUser!;
-
   List<dynamic> orders = [];
   bool isLoading = false;
 
@@ -29,7 +28,7 @@ class _OrdersState extends State<Orders> {
     });
 
     final response =
-        await http.get(Uri.parse('${db.dblink}/orders/${user.displayName!}'));
+    await http.get(Uri.parse('${db.dblink}/orders/${user.displayName!}'));
 
     setState(() {
       isLoading = false;
@@ -41,7 +40,6 @@ class _OrdersState extends State<Orders> {
         orders = responseData['orders'];
       });
     } else {
-      // Handle errors
       print('Failed to load orders: ${response.statusCode}');
     }
   }
@@ -56,158 +54,182 @@ class _OrdersState extends State<Orders> {
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : orders.isEmpty
-                ? const Center(child: Text('No orders found'))
-                : ListView.builder(
-                    itemCount: orders.length,
-                    itemBuilder: (context, index) {
-                      final order = orders[index];
-                      final List<dynamic> items = order['data']['items'];
+            ? const Center(child: Text('No orders found'))
+            : ListView.builder(
+          itemCount: orders.length,
+          itemBuilder: (context, index) {
+            final order = orders[index];
+            final List<dynamic> items = order['data']['items'];
+            final status = order['data']['Status'] ?? 'Pending';
 
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 16.0),
-                        child: Card(
-                          elevation: 4.0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
+            return Padding(
+              padding: const EdgeInsets.symmetric(
+                  vertical: 8.0, horizontal: 16.0),
+              child: Card(
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ListTile(
+                  leading: const Icon(
+                    Icons.shopping_bag,
+                    color: Color(0xff374366),
+                  ),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Order by: ${order['data']['Name']}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      if (status != 'Approve') // Show status only if it's not pending
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          decoration: BoxDecoration(
+                            color: status == 'Approved'
+                                ? Colors.green
+                                : Colors.red,
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
-                          child: ListTile(
-                            leading: const Icon(
-                              Icons.shopping_bag,
-                              color: Color(0xff374366),
+                          child: Text(
+                            status,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            title: Text(
-                              'Order by: ${order['data']['Name']}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  'Total: Rs ${order['data']['subtotal']}',
-                                  style: const TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  'Order ID: ${order['id']}',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                const SizedBox(height: 4.0),
-
-                                // Display each product
-                                for (var item in items)
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 4.0),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0,
-                                          ),
-                                          children: [
-                                            const TextSpan(
-                                              text: 'Product Name: ',
-                                            ),
-                                            TextSpan(
-                                              text: '${item['itemName']}',
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0,
-                                          ),
-                                          children: [
-                                            const TextSpan(
-                                              text: 'Category: ',
-                                            ),
-                                            TextSpan(
-                                              text: '${item['category']}',
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0,
-                                          ),
-                                          children: [
-                                            const TextSpan(
-                                              text: 'Quantity: ',
-                                            ),
-                                            TextSpan(
-                                              text: '${item['quantity']}',
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14.0,
-                                          ),
-                                          children: [
-                                            const TextSpan(
-                                              text: 'Price: ',
-                                            ),
-                                            TextSpan(
-                                              text: 'Rs ${item['price']}',
-                                              style: TextStyle(
-                                                color: Colors.grey[600],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                const SizedBox(height: 4.0),
-                                Text(
-                                  'Address:  ${order['data']['address']}',
-                                  style: const TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            isThreeLine: true,
                           ),
                         ),
-                      );
-                    },
-                  ));
+                    ],
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 4.0),
+                      Text(
+                        'Total: Rs ${order['data']['subtotal']}',
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        'Order ID: ${order['id']}',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      const SizedBox(height: 4.0),
+
+                      // Display each product
+                      for (var item in items)
+                        Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4.0),
+                            RichText(
+                              text: TextSpan(
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                ),
+                                children: [
+                                  const TextSpan(
+                                    text: 'Product Name: ',
+                                  ),
+                                  TextSpan(
+                                    text: '${item['itemName']}',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                ),
+                                children: [
+                                  const TextSpan(
+                                    text: 'Category: ',
+                                  ),
+                                  TextSpan(
+                                    text: '${item['category']}',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                ),
+                                children: [
+                                  const TextSpan(
+                                    text: 'Quantity: ',
+                                  ),
+                                  TextSpan(
+                                    text: '${item['quantity']}',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RichText(
+                              text: TextSpan(
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.0,
+                                ),
+                                children: [
+                                  const TextSpan(
+                                    text: 'Price: ',
+                                  ),
+                                  TextSpan(
+                                    text: 'Rs ${item['price']}',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        'Address:  ${order['data']['address']}',
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  isThreeLine: true,
+                ),
+              ),
+            );
+          },
+        ));
   }
 }

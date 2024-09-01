@@ -42,7 +42,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
         appointments = responseData['appointments'];
       });
     } else {
-      print('Failed to load orders: ${response.statusCode}');
+      print('Failed to load appointments: ${response.statusCode}');
     }
   }
 
@@ -187,7 +187,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
       print('Error updating appointment: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating order. Please try again later.'),
+          content: Text('Error updating appointment. Please try again later.'),
         ),
       );
     }
