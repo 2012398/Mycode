@@ -127,7 +127,7 @@ app.post("/AppointmentApprove", async (req, res) => {
   try {
     const ordersRef = admin.firestore().collection("appointments");
     const snapshot = await ordersRef
-      .where("AppointmentId", "==", AppointmentId)
+      .where("appointmentId", "==", AppointmentId)
       .get();
 
     if (snapshot.empty) {
@@ -570,13 +570,21 @@ app.get("/readData", async (req, res) => {
 
 app.post("/bookAppointment", async (req, res) => {
   try {
-    const { doctorname, selectedDate, selectedTime, PatientName } = req.body;
+    const {
+      doctorname,
+      selectedDate,
+      selectedTime,
+      PatientName,
+      appointmentId,
+    } = req.body;
     const appointmentData = {
       doctorname,
       selectedDate,
       selectedTime,
       PatientName,
+      appointmentId,
       createdAt: admin.firestore.Timestamp.now(),
+      Status: "Pending",
     };
 
     const existingAppointments = await db
