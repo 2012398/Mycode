@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../db.dart' as db;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 
 // ignore: prefer_typing_uninitialized_variables
 var responsefromapi;
@@ -18,6 +19,8 @@ class ConsultationScreen extends StatefulWidget {
 }
 
 class _ConsultationScreenState extends State<ConsultationScreen> {
+  var uuid = Uuid();
+
   String selectedTime = 'Select Time';
   DateTime selectedDate = DateTime.now();
 
@@ -98,7 +101,7 @@ Future<String> bookAppointment(String userId, String selectedDate,
     String selectedTime, String doctorsname) async {
   const String apiUrl = '${db.dblink}/bookAppointment';
   print("api url: $apiUrl");
-
+  String randomId = uuid.v4();
   final response = await http.post(
     Uri.parse(apiUrl),
     headers: {'Content-Type': 'application/json'},
@@ -106,7 +109,8 @@ Future<String> bookAppointment(String userId, String selectedDate,
       'doctorname': doctorsname.toString(),
       'selectedDate': selectedDate.toString(),
       'selectedTime': selectedTime.toString(),
-      'PatientName': user.displayName.toString()
+      'PatientName': user.displayName.toString(),
+      'appointmentId': randomId
     }),
   );
   final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -229,8 +233,10 @@ class _DoctorCardState extends State<DoctorCard> {
             // Text('Experience: ${widget.doctor.experience}'),
             const Row(
               children: [
-                Icon(Icons.star, color: Colors.yellow), Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
                 Icon(Icons.star, color: Colors.yellow)
                 // Text(
                 // '${widget.doctor.rating} (${widget.doctor.reviews} reviews)'),

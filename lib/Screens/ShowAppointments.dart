@@ -106,7 +106,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                                   GestureDetector(
                                     onTap: () {
                                       approveAppointment(
-                                          appointment['data']['AppointmentId'],
+                                          appointment['data']['appointmentId'],
                                           'Approved');
                                     },
                                     child: Padding(
@@ -114,38 +114,40 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                                           const EdgeInsets.only(right: 8.0),
                                       child: Container(
                                         padding: const EdgeInsets.all(3),
-                                        child: Text(
-                                          'Approve',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
                                         decoration: BoxDecoration(
-                                          color: Color(0xff374366),
+                                          color: const Color(0xff374366),
                                           border: Border.all(),
                                           borderRadius:
                                               BorderRadius.circular(10.0),
+                                        ),
+                                        child: const Text(
+                                          'Approve',
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     ),
                                   ),
                                   GestureDetector(
                                     onTap: () {
+                                      print(
+                                          appointment['data']['appointmentId']);
                                       approveAppointment(
-                                          appointment['data']['AppointmentId'],
+                                          appointment['data']['appointmentId'],
                                           'Rejected');
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: Container(
                                         padding: const EdgeInsets.all(3),
-                                        child: Text(
-                                          'Reject',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
                                         decoration: BoxDecoration(
-                                          color: Color(0xff374366),
+                                          color: const Color(0xff374366),
                                           border: Border.all(),
                                           borderRadius:
                                               BorderRadius.circular(10.0),
+                                        ),
+                                        child: const Text(
+                                          'Reject',
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ),
                                     ),

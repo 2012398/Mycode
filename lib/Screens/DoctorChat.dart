@@ -39,8 +39,9 @@ class _DoctorChatState extends State<DoctorChat> {
   @override
   void initState() {
     super.initState();
+    fetchMessages();
 
-    Timer.periodic(const Duration(seconds: 15), (timer) {
+    Timer.periodic(const Duration(seconds: 12), (timer) {
       fetchMessages();
     });
   }

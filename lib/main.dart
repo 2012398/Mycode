@@ -30,6 +30,7 @@ class FypApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
         title: "Babybloom",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
