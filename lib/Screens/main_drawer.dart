@@ -41,7 +41,7 @@ class MainDrawer extends StatelessWidget {
                         shape: BoxShape.circle,
                         image: DecorationImage(
                           fit: BoxFit.contain,
-                          image: AssetImage("images/Nabeel.png"),
+                          image: AssetImage("assets/images/Zain.png"),
                         ),
                       ),
                     ),

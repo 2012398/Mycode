@@ -97,6 +97,7 @@ class _MenuScreen1State extends State<MenuScreen1> {
               },
               child: const Icon(
                 Icons.shopping_cart_checkout_rounded,
+                color:Colors.black,
               ),
             ),
           ),

@@ -42,7 +42,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
         appointments = responseData['appointments'];
       });
     } else {
-      print('Failed to load orders: ${response.statusCode}');
+      print('Failed to load appointments: ${response.statusCode}');
     }
   }
 
@@ -94,9 +94,9 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                             children: [
                               const SizedBox(height: 4.0),
                               Text(
-                                'Total: Rs ${appointment['data']['selectedTime']}',
+                                'Time slot: ${appointment['data']['selectedTime']}',
                                 style: const TextStyle(
-                                  color: Colors.green,
+                                  color: Colors.black,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -110,15 +110,13 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                                           'Approved');
                                     },
                                     child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
+                                      padding: EdgeInsets.only(right: 8.0),
                                       child: Container(
                                         padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(
                                           color: const Color(0xff374366),
                                           border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                         child: const Text(
                                           'Approve',
@@ -136,14 +134,13 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                                           'Rejected');
                                     },
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
+                                      padding: EdgeInsets.only(left: 8.0),
                                       child: Container(
                                         padding: const EdgeInsets.all(3),
                                         decoration: BoxDecoration(
                                           color: const Color(0xff374366),
                                           border: Border.all(),
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
+                                          borderRadius: BorderRadius.circular(10.0),
                                         ),
                                         child: const Text(
                                           'Reject',
@@ -194,7 +191,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
       print('Error updating appointment: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error updating order. Please try again later.'),
+          content: Text('Error updating appointment. Please try again later.'),
         ),
       );
     }

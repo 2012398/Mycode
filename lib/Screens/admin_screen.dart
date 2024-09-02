@@ -34,7 +34,7 @@ class AdminScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   Text(
-                    'Admin Name',
+                    'Admin',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
