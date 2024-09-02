@@ -56,105 +56,109 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : appointments.isEmpty
-              ? const Center(child: Text('No appointments found'))
-              : ListView.builder(
-                  itemCount: appointments.length,
-                  itemBuilder: (context, index) {
-                    final appointment = appointments[index];
-                    final appointmentId = appointment['data']['AppointmentId'];
-                    final status = appointment['data']['Status'];
+          ? const Center(child: Text('No appointments found'))
+          : ListView.builder(
+        itemCount: appointments.length,
+        itemBuilder: (context, index) {
+          final appointment = appointments[index];
+          final appointmentId = appointment['data']['AppointmentId'];
+          final status = appointment['data']['Status'];
 
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 16.0),
-                      child: Card(
-                        elevation: 4.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.shopping_bag,
-                            color: Color(0xff374366),
-                          ),
-                          title: Text(
-                            'Appointment by: ${appointment['data']['PatientName']}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: status == 'Approved'
-                                  ? Colors.green
-                                  : (status == 'Rejected'
-                                      ? Colors.red
-                                      : Colors.blue),
-                              fontSize: 16.0,
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+                vertical: 8.0, horizontal: 16.0),
+            child: Card(
+              elevation: 4.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: ListTile(
+                leading: const Icon(
+                  Icons.shopping_bag,
+                  color: Color(0xff374366),
+                ),
+                title: Text(
+                  'Appointment by: ${appointment['data']['PatientName']}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: status == 'Approved'
+                        ? Colors.green
+                        : (status == 'Rejected'
+                        ? Colors.red
+                        : Colors.blue),
+                    fontSize: 16.0,
+                  ),
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 4.0),
+                    Text(
+                      'Time slot: ${appointment['data']['selectedTime']}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            approveAppointment(
+                                appointment['data']['appointmentId'],
+                                'Approved');
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 8.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff374366),
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: const Text(
+                                'Approve',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 4.0),
-                              Text(
-                                'Time slot: ${appointment['data']['selectedTime']}',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 4.0),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      final newStatus = status == 'Approved' ? 'Reject' : 'Approved';
-                                      approveAppointment(appointmentId, newStatus);
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 8.0),
-                                      child: Container(
-                                        padding: EdgeInsets.all(3),
-                                        child: Text(
-                                          status == 'Approved' ? 'Approved' : 'Approve',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xff374366),
-                                          border: Border.all(),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final newStatus = status == 'Rejected' ? 'Approve' : 'Rejected';
-                                      approveAppointment(appointmentId, newStatus);
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Container(
-                                        padding: EdgeInsets.all(3),
-                                        child: Text(
-                                          status == 'Rejected' ? 'Rejected' : 'Reject',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        decoration: BoxDecoration(
-                                          color: Color(0xff374366),
-                                          border: Border.all(),
-                                          borderRadius: BorderRadius.circular(10.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          isThreeLine: true,
                         ),
-                      ),
-                    );
-                  },
+                        GestureDetector(
+                          onTap: () {
+                           print(
+                                appointment['data']['appointmentId'],);
+                            approveAppointment(
+                                appointment['data']['appointmentId'],
+                                'Rejected');
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff374366),
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: const Text(
+                                'Reject',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
+                isThreeLine: true,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 

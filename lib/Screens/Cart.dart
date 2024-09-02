@@ -239,7 +239,7 @@ class _CartState extends State<Cart> {
                 RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
             ))),
-        label: Text('Checkout'),
+        label: Text('Checkout', style: TextStyle(color:Colors.white,)),
         onPressed: () {
           Navigator.push(
             context,
@@ -251,6 +251,7 @@ class _CartState extends State<Cart> {
         icon: Icon(
           Icons.shopping_cart_checkout,
           size: 24,
+          color: Colors.white,
         ),
       ),
     );

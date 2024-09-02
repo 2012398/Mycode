@@ -85,8 +85,8 @@ class _MenuScreen1State extends State<MenuScreen1> {
         title: const Center(
             child: Text(
           "Babybloom",
-          style: TextStyle(fontWeight: FontWeight.w300),
-        )),
+          style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30,
+          color: Colors.black,))),
         backgroundColor: const Color(0xff374366),
         actions: [
           Padding(

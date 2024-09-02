@@ -86,20 +86,22 @@ class _OrdersState extends State<Orders> {
                         ),
                       ),
                       if (status != 'Approve') // Show status only if it's not pending
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4.0),
-                          decoration: BoxDecoration(
-                            color: status == 'Approved'
-                                ? Colors.green
-                                : Colors.red,
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Text(
-                            status,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.all(3.0),
+                            decoration: BoxDecoration(
+                              color: status == 'Approved'
+                                  ? Colors.green
+                                  : (status == 'Rejected' ? Colors.red : Colors.blue),
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            child: Text(
+                              status,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.0,
+                              ),
                             ),
                           ),
                         ),
