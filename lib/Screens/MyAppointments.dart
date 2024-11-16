@@ -67,7 +67,7 @@ class _MyAppointmentsState extends State<MyAppointments> {
                   final appointment = data[index];
                   final doctorName = appointment['doctorname'];
                   final timeSlot = appointment['selectedTime'];
-                  final status = appointment['Status'] ?? 'Pending';  // Default to Pending if status is not available
+                   final status = appointment['Status'] ?? '';  // Default to Pending if status is not available
 
                   return ListTile(
                     title: Row(

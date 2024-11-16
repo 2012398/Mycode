@@ -93,7 +93,7 @@ class AdminScreen extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   child: Text(
                     'Upload Products',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
               ),
@@ -117,7 +117,7 @@ class AdminScreen extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   child: Text(
                     '   Show Orders   ',
-                    style: TextStyle(fontSize: 20),
+                    style: TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
               ),

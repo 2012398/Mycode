@@ -101,7 +101,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                       ),
                     ),
                     const SizedBox(height: 4.0),
-                    Row(
+                    /*Row(
                       children: [
                         GestureDetector(
                           onTap: () {
@@ -150,7 +150,7 @@ class _ShowAppointmentsState extends State<ShowAppointments> {
                           ),
                         ),
                       ],
-                    )
+                    )*/
                   ],
                 ),
                 isThreeLine: true,
